@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>elldev</title>
+		<script type="text/javascript" src="lib.js"></script>
+		<script type="text/javascript" src="els.js"></script>
+		<script type="text/javascript">
+			var testCanvas = {
+				id : "c1",
+				type : "canvas",
+				name : "canvas one",
+				position : {
+					type : "canvas",
+					x : {
+						center : true,
+						width : 300
+					},
+					y : {
+						top : 120,
+						bottom : 120
+					}
+				},
+				children : []
+			};
+			var pos = {
+				type : "canvas",
+				x : {
+					center : true,
+					width : 300
+				},
+				y : {
+					top : 120,
+					bottom : 120
+			}
+			function init(){
+				$("body").appendChild(canvas(testCanvas));
+			}
+		</script>
+	</head>
+	<body onload="init()">
+		
+	</body>
+</html>
