@@ -11,27 +11,15 @@
 				name : "canvas one",
 				position : {
 					type : "canvas",
-					x : {
-						center : true,
-						width : 300
-					},
-					y : {
-						top : 120,
-						bottom : 120
-					}
+					centerx : true,
+					centery : false,
+					width : 300,
+					top : 120,
+					bottom : 120
 				},
 				children : []
 			};
-			var pos = {
-				type : "canvas",
-				x : {
-					center : true,
-					width : 300
-				},
-				y : {
-					top : 120,
-					bottom : 120
-			}
+			var pos = {type : "canvas", centery : true, centerx : false, left : 50, width : 200, height : 200}
 			function init(){
 				$("body").appendChild(canvas(testCanvas));
 			}
