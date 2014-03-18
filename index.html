@@ -2,6 +2,20 @@
 <html>
 	<head>
 		<title>elldev</title>
+		<style type="text/css">
+			*,*:before,*:after{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+			.nw, .n, .ne, .w, .e, .sw, .s, .se{position:absolute;}
+			.nw, .ne, .sw, .se{width:5px;height:5px;background:aqua;}
+			.n, .e, .w, .s{background:blue;}
+			.nw{top:0;left:0;cursor:nw-resize;}
+			.n{top:0;left:5px;right:5px;height:5px;cursor:ns-resize;}
+			.ne{top:0;right:0;cursor:ne-resize;}
+			.w{left:0;top:5px;bottom:5px;width:5px;cursor:ew-resize;}
+			.e{right:0;top:5px;bottom:5px;width:5px;cursor:ew-resize;}
+			.sw{bottom:0;left:0;cursor:sw-resize;}
+			.s{bottom:0;left:5px;right:5px;height:5px;cursor:ns-resize;}
+			.se{bottom:0;right:0;cursor:se-resize;}
+		</style>
 		<script type="text/javascript" src="lib.js"></script>
 		<script type="text/javascript" src="els.js"></script>
 		<script type="text/javascript">
@@ -84,5 +98,10 @@
 	</head>
 	<body onload="init()">
 		<div id="root" style="position:absolute;top:0px;left:0px;width:100%;height:100%;"></div>
+		<div style="position:absolute;width:300px;height:300px;border:1px solid black;top:20;left:50%;margin-left:-150px;">
+			<div class="nw"></div><div class="n"></div><div class="ne"></div>
+			<div class="w"></div><div class="e"></div>
+			<div class="sw"></div><div class="s"></div><div class="se"></div>
+		</div>
 	</body>
 </html>

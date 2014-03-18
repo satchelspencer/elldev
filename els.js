@@ -49,10 +49,13 @@ function el(o){
 			var vert = this.parentNode.j.props.vert;
 			this.style[vert ? "width" : "height"] = "100%";
 			this.style[vert ? "marginTop" : "marginLeft"] = k != 0 ? this.parentNode.j.props.margin+"px" : "0px";
+			this.style[!vert ? "marginTop" : "marginLeft"] = "";
 			this.style[vert ? "height" : "width"] = pos.size+"px";
-			//this.style.float = vert ? "" : "left";
 			this.style.display = vert ? "block" : "inline-block";
 		}
+	}
+	r.updatePosition = function(){
+		this.setPosition(this.j.position, false);
 	}
 	r.setProperties = function(props){
 		for(x in props){
@@ -63,9 +66,11 @@ function el(o){
 				for(i in props[x]) marginstr += props[x][i]+"px ";
 				this.style.padding = marginstr;
 			}else if(x == "vert"){
+				this.j.props.vert = props[x];
 				this.style[props[x] ? "overflowY" : "overflowX"] = "scroll";
 				this.style[props[x] ? "overflowX" : "overflowY"] = "hidden";
-				this.style.whiteSpace = "nowrap";
+				this.style.whiteSpace = props[x] ? "" : "nowrap";
+				for(y in this.childNodes)if(this.childNodes[y].nodeType == 1) this.childNodes[y].updatePosition();
 			}
 		}
 	}
@@ -76,11 +81,24 @@ function el(o){
 		this.parentNode.insertBefore(this, e.nextSibling);
 	}
 	r.moveTo = function(index){
-		if(this.parentNode.type == "sequence") log("my mom");
 		for(var k=0,e=this;e=e.previousSibling;k++);
+		if(k == index) return false;
+		if(this.parentNode.j.type == "sequence"){
+			var sibs = this.parentNode.getChildren(false);
+			if(index == 0){
+				sibs[0].style[this.parentNode.j.props.vert ? "marginTop" : "marginLeft"] = this.parentNode.j.props.margin+"px";
+				this.style[this.parentNode.j.props.vert ? "marginTop" : "marginLeft"] = "0px";
+			}else if(k == 0){
+				sibs[1].style[this.parentNode.j.props.vert ? "marginTop" : "marginLeft"] = "0px";
+				this.style[this.parentNode.j.props.vert ? "marginTop" : "marginLeft"] = this.parentNode.j.props.margin+"px";
+			}
+		}
 		if(index == this.parentNode.childNodes.length-1) index = -1;
 		if(k<index)index++;
-		this.parentNode.insertChild(el(this.j), index);
+		var e = el(this.j);
+		this.parentNode.insertChild(e, index);
+		e.setPosition(this.j.position, false);
+		e.setProperties(this.j.props);
 		this.remove();
 	}
 	if(r.j.type == "canvas" || r.j.type == "sequence"){

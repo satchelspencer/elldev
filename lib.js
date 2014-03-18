@@ -89,6 +89,10 @@ ext.rmEvent = function(ev){
    	e = this.addEventListener ? this.removeEventListener(ev, eval("evs."+this.id+"."+ev), false) : this.detachEvent("on"+ev, eval("evs."+this.id+"."+ev));
    	eval("delete evs."+this.id+"."+ev);
 }
+ext.clearEvents = function(){
+	for(x in evs[this.id]) this.rmEvent(x, evs[this.id][x]);
+	delete evs[this.id];
+}
 ext.getChildren = function(r){
 	if(this.childNodes){
 		var els = Array.prototype.slice.call(this.childNodes), arr = new Array();
@@ -124,10 +128,12 @@ ext.setAttributes = function(attr){
 	for(a in attr) this.setAttribute(a, attr[a]);
 }
 ext.clone = function(){
-	return this.cloneNode(false);
+	var el = extEl(this.cloneNode(false));
+	return el;
 }
 ext.remove = function(){
-	this.parentNode.removeChild(this);
+	if(this.parentNode) this.parentNode.removeChild(this);
+	this.clearEvents();
 }
 function stripTags(html){
    var tmp = document.createElement("DIV");
