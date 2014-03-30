@@ -9,7 +9,11 @@
 	}else if(isset($_POST['np'])){
 		chdir('../');	
 		mkdir(getcwd().$_POST['np'], 0755);
-		echo "aight";
+		exit;
+	}
+	else if(isset($_POST['del'])){
+		chdir('../');	
+		unlink(getcwd().$_POST['del']);
 		exit;
 	}
 ?>
