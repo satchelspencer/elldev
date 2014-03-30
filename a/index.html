@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>elldev</title>
+		<link rel="icon" href="i.png" type="image/png"/>
+		<style type="text/css">
+			body{font-family:arial;font-size:16px;}
+			*,*:before,*:after{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+			.nw, .n, .ne, .w, .e, .sw, .s, .se{position:absolute;}
+			.nw, .ne, .sw, .se{width:5px;height:5px;background:gray;}
+			.n, .e, .w, .s{background:#b5b5b5;}
+			.nw{top:0;left:0;cursor:nwse-resize;}
+			.n{top:0;left:5px;right:5px;height:5px;cursor:ns-resize;}
+			.ne{top:0;right:0;cursor:nesw-resize;}
+			.w{left:0;top:5px;bottom:5px;width:5px;cursor:ew-resize;}
+			.e{right:0;top:5px;bottom:5px;width:5px;cursor:ew-resize;}
+			.sw{bottom:0;left:0;cursor:nesw-resize;}
+			.s{bottom:0;left:5px;right:5px;height:5px;cursor:ns-resize;}
+			.se{bottom:0;right:0;cursor:nwse-resize;}
+			div{position:absolute;}
+			#root{
+				right:0px;
+				top:0px;
+				left:350px;
+				bottom:0px;
+				overflow-x:scroll;
+				background:grey;
+				background-size:cover;
+			}
+			#left{
+				left:0px;
+				top:0px;
+				bottom:0px;
+				width:350px;
+				box-shadow:0px 0px 2px 3px rgba(0,0,0,0.3);
+			}
+				#properties{
+					left:0px;
+					right:0px;
+					top:0px;
+					height:30%;
+					background:#373737;
+				}
+					#sizecanvas{
+						position:relative;
+						width:100%;
+						height:170px;
+					}
+						.hbar{top:50%;left:0;right:0;height:1px;background:white;margin-top:-1px;}
+						.vbar{top:0;left:50%;bottom:0;width:1px;background:white;margin-left:-1px;}
+						.origin{width:5px;height:5px;background:white;border-radius:2.5px;}
+						.hlabel, .vlabel{background:#373737;color:white;font-size:10px;padding:5px;}
+						.vlabel{-webkit-transform-origin:0 0;-webkit-transform:rotate(90deg);}
+						#size{
+							width:135px;
+							height:135px;
+							top:15px;
+							left:15px;
+							
+						}
+							#sizeorigin{
+								top:2.5px;left:2.5px;
+							}
+							#sizewidth{
+								top:0px;left:15px;
+								height:10px;
+								right:0px;
+								border-left:1px solid white;
+								border-right:1px solid white;
+							}
+								#widthlabel{
+									top:-7px;
+								}
+							#sizeheight{
+								top:15px;left:0px;
+								width:10px;
+								bottom:0px;
+								border-top:1px solid white;
+								border-bottom:1px solid white;
+							}
+								#heightlabel{
+									left:15px;
+								}
+							#sizebackground{
+								top:15px;
+								left:15px;
+								right:0px;
+								bottom:0px;
+								background:#474747;
+								border-radius:3px 0 0 0;
+							}
+						#positioncanvas{
+							width:135px;
+							height:135px;
+							top:15px;
+							right:15px;
+						}
+							.positionselector{
+								width:34px;
+								height:34px;
+								background:#474747;
+							}
+							#positionnw{top:15px;left:15px;}
+							#positionw{top:50px;left:15px;}
+							#positionsw{top:85px;left:15px;}
+							#positionn{top:15px;left:50px;}
+							#positionc{top:50px;left:50px;}
+							#positions{top:85px;left:50px;}
+							#positionne{top:15px;left:85px;}
+							#positione{top:50px;left:85px;}
+							#positionse{top:85px;left:85px;}
+							#originnw{top:2.5px;left:2.5px;}
+							#originsw{bottom:2.5px;left:2.5px;}
+							#originne{top:2.5px;right:2.5px;}
+							#originse{bottom:2.5px;right:2.5px;}
+							#positionright{
+								top:0px;right:15px;left:50px;height:10px;
+								border-right:1px solid white;
+							}
+								#rightlabel{
+									top:-7px;
+									right:0px;
+								}
+							#positionleft{
+								bottom:0px;left:15px;right:50px;height:10px;
+								border-left:1px solid white;
+							}
+								#leftlabel{
+									top:-7px;
+									left:0px;
+								}
+							#positiontop{
+								left:0px;top:15px;bottom:50px;width:10px;
+								border-top:1px solid white;
+							}
+								#toplabel{
+									left:15px;
+								}
+							#positionbottom{
+								right:0px;bottom:15px;top:50px;width:10px;
+								border-bottom:1px solid white;
+							}
+								#bottomlabel{
+									bottom:-21px;
+									left:-6px;
+									-webkit-transform:rotate(-90deg);
+								}
+						#positionsequence{
+							width:135px;
+							height:135px;
+							top:15px;
+							right:15px;
+						}
+							#positionbefore, #positionafter{
+								left:15px;right:15px;
+								height:45px;
+								border-top:1px solid white;
+								border-bottom:1px solid white;
+							}
+							#positionbefore{
+								top:0;
+							}
+							#positionafter{
+								bottom:0;
+							}
+							#positionorder{
+								top:45px;left:0;right:0;
+								height:45px;
+								background:#474747;
+								font-size:22px;
+								color:white;
+							}
+							#positionorderlabel{
+								width:100%;
+								top:10px;	
+								text-align:center;
+	
+							}
+								#positionordersuffix{
+									position:absolute;
+									font-size:10px;
+									margin-top:1px;
+									color:#b7b7b7;
+								}
+							#beforelabel, #afterlabel{
+								width:100%;
+								text-align:center;
+								top:10px;
+							}
+					#sequenceproperties{
+						position:relative;
+						width:100%;
+						height:75px;
+					}	
+						#sequencemarginbox{
+							top:0px;
+							left:15px;
+							right:50px;
+							bottom:15px;
+						}
+							#sequencemargininner{
+								top:15px;
+								left:15px;
+								bottom:15px;
+								right:15px;
+								background:#474747;
+							}	
+							#sequencemargintop, #sequencemarginbottom{
+								width:20px;
+								height:15px;
+								left:50%;
+								margin-left:-10px;
+								border-top:1px solid white;
+								border-bottom:1px solid white;
+							}
+							.marginlabel{
+								color:WHITE;
+								font-size:10px;
+								background:#373737;
+							}
+							#sequencemargintop{
+								top:0px;
+							} 
+								#margintoplabel{
+									top:1px;
+									left:15px;
+								}
+							#sequencemarginbottom{
+								bottom:0px;
+							} 
+								#marginbottomlabel{
+									bottom:1px;
+									left:15px;
+								}
+							#sequencemarginleft, #sequencemarginright{
+								width:15px;
+								height:20px;
+								top:50%;
+								margin-top:-10px;
+								border-left:1px solid white;
+								border-right:1px solid white;
+							}
+							#sequencemarginleft{
+								left:0px;
+							} 
+								#marginleftlabel{
+									left:20px;
+									top:3px;
+									background:none;
+								}
+							#sequencemarginright{
+								right:0px;
+							}
+								#marginrightlabel{
+									right:20px;
+									top:3px;
+									background:none;
+									width:100px;
+									text-align:right;
+								}
+						#sequenceorientation, #sequencescroll{
+							right:15px;
+							width:25px;
+							height:25px;
+							background:#474747;
+						}
+						#sequenceorientation{
+							background-image:url('orient.png');
+							-webkit-transform:rotate(90deg);
+						}
+						#sequencescroll{
+							top:35px;
+							background-image:url('scroll.png');
+							opacity:1;
+						}
+					#textproperties{
+						position:relative;
+						width:100%;
+						height:40px;
+						color:white;
+					}
+						#textfont{
+							top:0;
+							left:15px;
+							height:25px;
+							width:80px;
+							background:#474747;
+							text-align:center;
+							padding:3px;
+							font-size:16px;
+							overflow:hidden;
+							text-overflow:ellipsis;
+						}
+						#textcolor{
+							top:0;
+							left:110px;
+							height:25px;
+						}
+							#textcolorpreview{
+								width:25px;
+								height:100%;
+								background:#876267;
+								border:1px solid white;
+							}
+							#textcolorlabel{
+								height:100%;
+								left:30px;
+								padding-top:6px;
+								font-size:12px;
+							}
+						#textbold, #textunderline, #textitalic{
+							width:25px;
+							height:25px;
+							background:#474747;
+							text-align:center;
+							padding-top:4px;
+							font-size:16px;
+						}
+						#textbold{
+							left:200px;							
+							font-weight:bold;
+						}
+						#textunderline{
+							left:233px;							
+							text-decoration:underline;
+						}
+						#textitalic{
+							left:266px;							
+							font-style:italic;
+						}
+						#textsize{
+							left:296px;
+							right:15px;
+							height:25px;
+							padding-top:4px;
+							font-size:12px;
+							text-align:right;
+						}
+				#elements{
+					left:0px;
+					right:0px;
+					top:30%;
+					height:40%;
+					background:#272727;
+				}
+					#elementsparent{
+						top:0;
+						left:0;
+						bottom:0;
+						width:160px;
+						overflow-x:hidden;
+						overflow-y:scroll;
+					}
+					#elementschildren{
+						top:0;
+						left:160px;
+						right:0;
+						bottom:0;
+						box-shadow:-3px 0px 2px rgba(0,0,0,0.3);
+						overflow-x:hidden;
+						overflow-y:scroll;
+					}
+						.element{
+							position:relative;
+							height:25px;
+							width:100%;
+							color:white;
+							border-bottom:1px solid #575757;
+						}
+							.elementorder{
+								top:0;
+								left:0;
+								width:25px;
+								height:100%;
+								text-align:center;
+								padding:3px;
+								color:#676767;
+							}
+							.elementvbar{
+								top:3px;
+								left:25px;
+								bottom:3px;
+								width:1px;
+								background:white;
+							}
+							.elementname{
+								top:0;
+								height:100%;
+								left:29px;
+								right:30px;
+								overflow:hidden;
+								white-space:nowrap;
+								padding:5px;
+								font-size:12px;
+							}
+							.elementnamep{
+								top:0;
+								height:100%;
+								left:10px;
+								right:30px;
+								overflow:hidden;
+								white-space:nowrap;
+								padding:5px;
+								font-size:12px;
+							}
+							.elementchildren{
+								top:0;
+								font-size:10px;
+								height:100%;
+								width:25px;
+								right:0px;
+								font-size:20px;
+								padding:0px;
+								text-align:center;
+							}
+							.elementparent{
+								top:50%;
+								height:1px;
+								width:15px;
+								right:0px;
+								background:white;
+								z-index:1000;
+							}
+				#files{
+					left:0px;
+					right:0px;
+					bottom:0;
+					height:30%;
+					background:#474747;
+				}
+					.filesbarbutton{
+						top:0;
+						bottom:0;
+						width:30px;
+						text-align:center;
+						font-size:20px;
+						cursor:default;
+					}
+					#filesheader{
+						top:0;
+						left:0;
+						right:0;
+						height:35px;
+						background:#373737;
+						color:white;
+					}
+						#pathlabel{
+							top:0;
+							left:5px;
+							width:250px;
+							height:100%;
+							padding:10px;
+							font-size:12px;
+							overflow:hidden;
+							white-space:nowrap;
+							text-overflow:ellipsis;
+						}
+						#pathback{
+							right:30px;
+							padding:4px;
+						}
+						#pathnew{
+							right:0;
+							padding:6px;
+						}
+					#fileslist{
+						top:35px;
+						left:0;
+						width:60%;
+						bottom:0;
+						overflow-y:scroll;
+						cursor:default;
+					}
+						.file{
+							position:relative;
+							height:25px;
+							width:100%;
+							color:white;
+							border-bottom:1px solid #575757;
+						}
+							.filename{
+								top:0;
+								height:100%;
+								left:10px;
+								right:30px;
+								overflow:hidden;
+								white-space:nowrap;
+								text-overflow:ellipsis;
+								padding:5px;
+								font-size:12px;
+								outline:none;								
+							}
+							.filechildren{
+								top:0;
+								font-size:10px;
+								height:100%;
+								width:25px;
+								right:0px;
+								font-size:20px;
+								padding:0px;
+								text-align:center;
+							}
+					#fileinspect{
+						top:35px;
+						right:0;
+						left:60%;
+						bottom:0;
+						box-shadow:-3px 0px 2px rgba(0,0,0,0.3);
+						color:white;
+						padding-top:3px;
+						padding-left:10px;
+						padding-right:10px;
+						font-size:12px;
+						line-height:16px;
+						background:#272727;
+					}
+						#filename{
+							top:0;
+							font-size:12px;
+						}
+						.filelabel{
+							color:#999;
+							font-size:10px;
+						}
+						#fileoptions{
+							bottom:0;
+							left:0;
+							right:0;
+							height:35px;
+							background:#373737;
+						}
+							#filedelete{
+								right:0;
+								padding:9px;
+								color:#de1c1c;
+							}
+							#fileopen{
+								right:30px;
+								padding:7px;
+							}
+							#filesavestatus{
+								left:0px;
+								right:60px;
+								width:auto;
+								font-size:12px;
+								padding:9px;
+							}
+			#tools{
+				position:fixed;
+				top:10px;
+				right:10px;
+				width:35px;
+				height:35px;
+				background:#474747;
+				color:white;
+				font-size:32px;
+				padding:0px;
+				text-align:center;
+			}			
+		</style>
+		<script type="text/javascript" src="lib.js"></script>
+		<script type="text/javascript" src="els.js"></script>
+		<script type="text/javascript" src="gui.js"></script>
+		<script type="text/javascript">
+			var j = {
+				id : "c1",
+				type : "canvas",
+				name : "canvas one",
+				position : {
+					centerx : true,
+					centery : true,
+					width : 300,
+					height : 300
+				},
+				props : {
+					background : "#a61c1c"
+				},
+				children : [
+					{
+						id : "1",
+						type : "content",
+						name : "test1",
+						position : {
+							centerx : false,
+							centery : false,
+							top : 20,
+							left : 20,
+							width : 150,
+							height : 150
+						},
+						props : {
+							background : "black"
+						}
+					},
+					{
+						id : "2",
+						type : "content",
+						name : "testc",
+						position : {
+							centerx : false,
+							centery : false,
+							bottom : 20,
+							right : 20,
+							width : 150,
+							height : 150
+						},
+						props : {
+							background : "white"
+						}
+					},
+					{
+						id : "3",
+						type : "sequence",
+						name : "tcjha",
+						position : {
+							centerx : true,
+							centery : true,
+							width : 200,
+							height : 200
+						},
+						props : {
+							background : "red",
+							margin : 10,
+							innerMargin : [10, 10, 10, 10],
+							vert : true
+						},
+						children : [
+							{id : "i1", type : "content", position : {size : 40}, props : {background : "black"}},
+							{id : "i2", type : "content", position : {size : 60}, props : {background : "white"}},
+							{id : "i3", type : "content", position : {size : 80}, props : {background : "black"}},
+							{id : "i4", type : "content", position : {size : 100}, props : {background : "white"}} 
+						]						
+					}
+				]
+			};
+			var pos = {type : "canvas", centery : false, centerx : false, left : 0, top : 0, right : 0, bottom : 0}
+		</script>
+	</head>
+	<body onload="gui()">
+		<div id="root"></div>
+		<div id="left">
+			<div id="properties">
+				<div id="sizecanvas">
+					<div id="size">
+						<div id="sizeorigin" class="origin"></div>
+						<div id="sizewidth">
+							<div class="hbar"></div>
+							<div id="widthlabel" class="hlabel">225px</div>
+						</div>
+						<div id="sizeheight">
+							<div class="vbar"></div>
+							<div id="heightlabel" class="vlabel">2225px</div>
+						</div>
+						<div id="sizebackground"></div>
+					</div>
+					<div id="positioncanvas" style="display:none;">
+						<div id="positionnw" class="positionselector"></div>
+						<div id="positionn" style="background:#575757;" class="positionselector"></div>
+						<div id="positionne" class="positionselector"></div>
+						<div id="positionw" class="positionselector"></div>
+						<div id="positionc" class="positionselector"></div>
+						<div id="positione" class="positionselector"></div>
+						<div id="positionsw" class="positionselector"></div>
+						<div id="positions" style="background:#575757;" class="positionselector"></div>
+						<div id="positionse" class="positionselector"></div>
+						<div id="originne" class="origin" style="background:red;"></div>
+						<div id="positionright">
+							<div class="hbar"></div>
+							<div id="rightlabel" class="hlabel">30%</div>
+						</div>
+						<div id="originsw" class="origin"></div>
+						<div id="positionleft">
+							<div class="hbar"></div>
+							<div id="leftlabel" class="hlabel">69px</div>
+						</div>
+						<div id="originnw" class="origin"></div>
+						<div id="positiontop">
+							<div class="vbar"></div>
+							<div id="toplabel" class="vlabel">666px</div>
+						</div>
+						<div id="originse" class="origin"></div>
+						<div id="positionbottom">
+							<div class="vbar"></div>
+							<div id="bottomlabel" class="vlabel">679px</div>
+						</div>
+					</div>
+					<div id="positionsequence">
+						<div id="positionbefore">
+							<div class="vbar"></div>
+							<div id="beforelabel" class="hlabel">69px</div>
+						</div>
+						<div id="positionorder">
+							<div id="positionorderlabel">
+								69<span id="positionordersuffix">th</span>
+							</div>
+						</div>
+						<div id="positionafter">
+							<div class="vbar"></div>
+							<div id="afterlabel" class="hlabel">10px</div>
+						</div>
+					</div>
+				</div>
+				<div id="sequenceproperties">
+					<div id="sequencemarginbox">
+						<div id="sequencemargininner"></div>
+						<div id="sequencemargintop">
+							<div class="vbar"></div>
+							<div id="margintoplabel" class="marginlabel">5px</div>
+						</div>
+						<div id="sequencemarginbottom">
+							<div class="vbar"></div>
+							<div id="marginbottomlabel" class="marginlabel">8px</div>
+						</div>
+						<div id="sequencemarginleft">
+							<div class="hbar"></div>
+							<div id="marginleftlabel" class="marginlabel">13px</div>
+						</div>
+						<div id="sequencemarginright">
+							<div class="hbar"></div>
+							<div id="marginrightlabel" class="marginlabel">21px</div>
+						</div>
+					</div>
+					<div id="sequenceorientation"></div>
+					<div id="sequencescroll"></div>
+				</div>
+				<div id="textproperties">
+					<div id="textfont">arial</div>
+					<div id="textcolor">
+						<div id="textcolorpreview"></div>
+						<div id="textcolorlabel">#876267</div>
+					</div>
+					<div id="textbold">B</div>
+					<div id="textunderline">U</div>
+					<div id="textitalic">I</div>
+					<div id="textsize">999px</div>
+				</div>
+			</div>
+			<div id="elements">
+				<div id="elementsparent">
+					<div class="element">
+						<div class="elementnamep">container</div>
+						<div class="elementparent"></div>
+					</div>
+					<div class="element">
+						<div class="elementnamep">sibling</div>
+						<div class="elementchildren">&rsaquo;</div>
+					</div>
+				</div>
+				<div id="elementschildren">
+					<div class="element">
+						<div class="elementorder">1</div>
+						<div class="elementvbar"></div>
+						<div class="elementname">Body</div>
+						<div class="elementchildren">&rsaquo;</div>
+					</div>
+					<div class="element" >
+						<div class="elementorder">2</div>
+						<div class="elementvbar"></div>
+						<div class="elementname">Footer</div>
+						<div class="elementchildren">&rsaquo;</div>
+					</div>
+					<div class="element">
+						<div class="elementorder">3</div>
+						<div class="elementvbar"></div>
+						<div class="elementname">Header</div>
+						<div class="elementchildren">&rsaquo;</div>
+					</div>
+				</div>
+			</div>
+			<div id="files">
+				<div id="filesheader">
+					<div id="pathlabel">&rsaquo; /</div>
+					<div id="pathback" class="filesbarbutton">&lsaquo;</div>
+					<div id="pathnew" class="filesbarbutton">&#43;</div>
+				</div>
+				<div id="fileslist">
+					
+				</div>
+				<div id="fileinspect">
+					<b><span id="filename">12_06_14</span></b><br>
+					<span class="filelabel">title:</span><br>
+					blog day 12/6/14<br>
+					<span class="filelabel">description:</span><br>
+					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.
+					<div id="fileoptions">
+						<div id="filesavestatus" class="filesbarbutton">published</div>
+						<div id="filedelete" class="filesbarbutton">&times;</div>
+						<div id="fileopen" class="filesbarbutton">&raquo;</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="tools">
+		&#43;
+		</div>
+	</body>
+</html>

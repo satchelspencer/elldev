@@ -1,6 +1,7 @@
 var positionData = ["centerx", "centery", "width", "height", "top", "left", "bottom", "right"];
+var rid = 0;
 function el(o){
-	var r = extEl(element(o.id, "div", false));
+	var r = extEl(element("_"+rid++, "div", false));
 	r.j = o;
 	r.setId = function(id){
 		this.id = id;
@@ -70,7 +71,7 @@ function el(o){
 				this.style[props[x] ? "overflowY" : "overflowX"] = "scroll";
 				this.style[props[x] ? "overflowX" : "overflowY"] = "hidden";
 				this.style.whiteSpace = props[x] ? "" : "nowrap";
-				for(y in this.childNodes)if(this.childNodes[y].nodeType == 1) this.childNodes[y].updatePosition();
+				for(y in this.childNodes)if(this.childNodes[y].nodeType == 1 && !this.childNodes[y].className) this.childNodes[y].updatePosition();
 			}
 		}
 	}
@@ -103,12 +104,12 @@ function el(o){
 	}
 	if(r.j.type == "canvas" || r.j.type == "sequence"){
 		r.insertChild = function(e, index){
-			if(index == -1) this.appendChild(e);
+			if(index == -1 || this.childNodes.length == 0) this.appendChild(e);
 			else this.insertBefore(e, this.childNodes[index]);
 		}
 		for(x in o.children) r.insertChild(el(o.children[x]), -1);
 		var i = 0;
-		for(x in r.childNodes) if(r.childNodes[x].nodeType == 1){
+		for(x in r.childNodes) if(r.childNodes[x].nodeType == 1 && !r.childNodes[x].className){
 			var e = r.childNodes[x];
 			e.setPosition(o.children[i].position || false, false);
 			e.setProperties(o.children[i].props);
@@ -117,6 +118,9 @@ function el(o){
 		r.setPosition(o.position || false, false);
 		r.setProperties(o.props);
 	}
-	
+	r.event("mouseover", function(e){
+		event.stopPropagation();
+		log(e.el.id);
+	});
 	return r;
 }
