@@ -2,9 +2,10 @@ var currentDir = [];
 function gui(){
 	openDir("/");
 	$("pathback").event("click", dirBack);
-	$("pathnew").event("click", newPage)
+	$("pathnew").event("click", newPage);
+	$("filedelete").event("click", delFile);
 }
-var fileListId;
+var fileListId = 0;
 function listFiles(dir){
 	fileListId = 0;
 	$("pathlabel").innerHTML = "&rsaquo; "+currentDir.join("");
@@ -53,11 +54,12 @@ function fileListEl(name, children){
 function newPage(){
 	if(selId) $(selId).parentNode.style.background = "";
 	var id = "fl"+fileListId++;
-	newFileListId = id+"l";
+	var newFileListId = id+"l";
 	var r = element(id, "div", {"class" : "file"});
 	var n = element(newFileListId, "div", {"class" : "filename", "contenteditable" : "true"});
 	n.innerHTML = "";
 	r.appendChild(n);
+	log(newFileListId);
 	$("fileslist").appendChild(r);
 	var range = document.createRange();
     var sel = window.getSelection();
@@ -83,4 +85,11 @@ function validateNewPageName(e){
 		var hypInner = e.el.innerHTML+e.char;
 		if(!hypInner.match(/^[a-z0-9_]+$/i) || hypInner.length > 16) e.e.preventDefault();
 	}
+}
+function delFile(e){
+	ajax("io.php", {"del" : currentDir.join("")+$(selId).innerHTML}, false, function(d){
+		$(selId).parentNode.remove();
+		selId = false;
+		log(d);
+	});
 }
