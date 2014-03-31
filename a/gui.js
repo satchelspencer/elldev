@@ -33,8 +33,32 @@ function selectFile(e){
 	e.el.parentNode.style.background = "#272727";
 	inspectFile(e.el.innerHTML);
 }
+function deselectFile(){
+	if(selId){
+		$(selId).parentNode.style.background = "";
+		selId = false;
+	}
+	$("details").style.display = "none";
+	$("filedetails").style.display = "none";
+	$("pagedetails").style.display = "none";
+	$("nofile").style.display = "block";
+}
 function inspectFile(file){
 	$("filename").innerHTML = file;
+	$("details").style.display = "block";
+	$("nofile").style.display = "none";
+	if(file.match(/\./g)){
+		ajax("io.php", {"info" : currentDir.join("")+file}, false, function(d){
+			var data = d.split(",");
+			$("filesize").innerHTML = data[0];
+			$("filemod").innerHTML = data[1];
+			$("filedetails").style.display = "block";
+			$("pagedetails").style.display = "none";
+		});
+	}else{
+		$("pagedetails").style.display = "block";
+		$("filedetails").style.display = "none";
+	}
 }
 function fileListEl(name, children){
 	var r = element("fl"+fileListId, "div", {"class" : "file"});
@@ -52,6 +76,7 @@ function fileListEl(name, children){
 	return r;
 }
 function newPage(){
+	deselectFile();
 	if(selId) $(selId).parentNode.style.background = "";
 	var id = "fl"+fileListId++;
 	var newFileListId = id+"l";
@@ -59,7 +84,6 @@ function newPage(){
 	var n = element(newFileListId, "div", {"class" : "filename", "contenteditable" : "true"});
 	n.innerHTML = "";
 	r.appendChild(n);
-	log(newFileListId);
 	$("fileslist").appendChild(r);
 	var range = document.createRange();
     var sel = window.getSelection();
@@ -90,6 +114,6 @@ function delFile(e){
 	ajax("io.php", {"del" : currentDir.join("")+$(selId).innerHTML}, false, function(d){
 		$(selId).parentNode.remove();
 		selId = false;
-		log(d);
+		deselectFile();
 	});
 }
