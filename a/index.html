@@ -40,7 +40,6 @@
 					top:0px;
 					height:30%;
 					background:#373737;
-					overflow-y:scroll;
 				}
 					#sizecanvas{
 						position:relative;
@@ -341,7 +340,7 @@
 					left:0px;
 					right:0px;
 					top:30%;
-					bottom:30%;
+					height:40%;
 					background:#272727;
 				}
 					#elementsparent{
@@ -425,8 +424,8 @@
 				#files{
 					left:0px;
 					right:0px;
-					top:70%;
 					bottom:0;
+					height:30%;
 					background:#474747;
 				}
 					.filesbarbutton{
@@ -515,33 +514,14 @@
 						line-height:16px;
 						background:#272727;
 					}
-						#details{
+						#filename{
 							top:0;
-							left:0;
-							right:0;
-							bottom:35px;
-							padding:7px 10px;
-							overflow-y:scroll;	
-							display:none;					
+							font-size:12px;
 						}
-							#filename{
-								font-size:12px;
-							}
-							.filelabel{
-								color:#999;
-								font-size:10px;
-							}
-							#pagedetails, #filedetails{
-								display:none;
-							}
-						#nofile{
-							top:40%;
-							left:0;
-							right:0;
-							text-align:center;
-							font-size:20px;
-							color:#575757;
-						}	
+						.filelabel{
+							color:#999;
+							font-size:10px;
+						}
 						#fileoptions{
 							bottom:0;
 							left:0;
@@ -795,22 +775,11 @@
 				</div>
 				<div id="fileslist"></div>
 				<div id="fileinspect">
-					<div id="details">
-						<b><span id="filename">12_06_14</span></b><br>
-						<span id="pagedetails">
-							<span class="filelabel">title:</span><br>
-							<span id="pagetitle">blog day 12/6/14</span><br>
-							<span class="filelabel">description:</span><br>
-							<span id="pagedesc">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</span>
-						</span>
-						<span id="filedetails">
-							<span class="filelabel">size:</span><br>
-							<span id="filesize">12.5kb</span><br>
-							<span class="filelabel">last modified:</span><br>
-							<span id="filemod">12.5kb</span><br>
-						</span>
-					</div>
-					<div id="nofile">none</div>
+					<b><span id="filename">12_06_14</span></b><br>
+					<span class="filelabel">title:</span><br>
+					blog day 12/6/14<br>
+					<span class="filelabel">description:</span><br>
+					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.
 					<div id="fileoptions">
 						<div id="filesavestatus" class="filesbarbutton">published</div>
 						<div id="filedelete" class="filesbarbutton">&times;</div>
