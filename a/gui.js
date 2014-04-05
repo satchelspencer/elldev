@@ -10,11 +10,13 @@ var fileListId = 0;
 function listFiles(dir){
 	fileListId = 0;
 	$("pathlabel").innerHTML = "&rsaquo; "+currentDir.join("");
+	startLoadAnimation();
 	ajax("io.php", {"list" : currentDir.join("")}, false, function(d){
 		var list = JSON.parse(d);
 		var toDestroy = $("fileslist").getChildren();
 		for(x in toDestroy) toDestroy[x].remove();
 		for(x in list) $("fileslist").appendChild(fileListEl(list[x], !list[x].match(/\./g)));
+		stopLoadAnimation();
 	});
 }
 function openDir(dir){
@@ -108,9 +110,11 @@ function validateNewPageName(e){
 		e.el.rmEvent("keydown", validateNewPageName);
 		e.el.blur();
 		e.el.setAttribute("contenteditable", "false");
+		startLoadAnimation();
 		ajax("io.php", {"np" : currentDir.join("")+e.el.innerHTML}, false, function(d){
 			e.el.remove();
 			openDir("");
+			stopLoadAnimation();
 		});
 	}else if(e.code != 8){
 		var hypInner = e.el.innerHTML+e.char;
@@ -118,9 +122,41 @@ function validateNewPageName(e){
 	}
 }
 function delFile(e){
+	startLoadAnimation();
 	ajax("io.php", {"del" : currentDir.join("")+$(selId).innerHTML}, false, function(d){
 		$(selId).parentNode.remove();
 		selId = false;
 		deselectFile();
+		stopLoadAnimation();
 	});
+}
+var loadAni = false;
+var conColor = 120;
+var conColorUp = true;
+var timeLoading;
+function startLoadAnimation(){
+	if(!loadAni){
+		timeLoading = 0;
+		loadAni = setInterval(function(){
+			$("connection").style.background = "rgb("+conColor+", "+conColor+", "+conColor+")";
+			conColorUp ? conColor+=15 : conColor-=15;
+			if(conColor < 120 || conColor > 150) conColorUp = !conColorUp;
+			timeLoading += 50;
+		}, 50);
+	}
+}
+function stopLoadAnimation(fail){
+	if(loadAni){
+		clearInterval(loadAni);
+		loadAni = false;
+		var a = setInterval(function(){
+			$("connection").style.background = "rgb("+conColor+", "+conColor+", "+conColor+")";
+			conColor -= 15;
+			if(conColor <= 120){
+				clearInterval(a);
+				conColor = 120;
+				if(fail) $("connection").style.background = "red";
+			}
+		}, 50);
+	}
 }
