@@ -4,7 +4,8 @@ function gui(){
 	var pingInterval = setInterval(ping, 90000);
 	$("pathback").event("click", dirBack);
 	$("pathnew").event("click", newPage);
-	$("filedelete").event("click", delFile);
+	$("filedelete").event("mousedown", startDelFile);
+	$("filedelete").event("mouseup", stopDelFile);
 	$("fileopen").event("click", openSelectedFile);
 }
 var fileListId = 0;
@@ -14,14 +15,13 @@ function sendData(data, callback){
 	setConnectionStatus(2);
 	ajax("io.php", data, false, function(d){
 		clearInterval(i);
-		log(t+"ms");
 		if(connectionStatus > 0){
 			setConnectionStatus(1);
 			callback(d);
 		}
 	});
 	var i = setInterval(function(){
-		if(t > 5000){
+		if(t > 10000){
 			clearInterval(i);
 			setConnectionStatus(0);
 		}
@@ -33,10 +33,9 @@ function ping(){
 	ajax("io.php", {"p":"!"}, false, function(d){
 		if(d == ".") clearInterval(i);
 		if(connectionStatus == 0) setConnectionStatus(1);
-		log("ping:"+t+"ms");
 	});
 	var i = setInterval(function(){
-		if(t > 1000){
+		if(t > 2000){
 			clearInterval(i);
 			setConnectionStatus(0);
 		}
@@ -135,6 +134,7 @@ function fileListEl(name, children){
 	var r = element("fl"+fileListId, "div", {"class" : "file"});
 	var n = element("fl"+fileListId+"name", "div", {"class" : "filename"});
 	n.event("click", selectFile);
+	n.event("dblclick", rename);
 	n.innerHTML = name;
 	r.appendChild(n);
 	if(children){
@@ -180,10 +180,30 @@ function validateNewPageName(e){
 		if(!hypInner.match(/^[a-z0-9_]+$/i) || hypInner.length > 16) e.e.preventDefault();
 	}
 }
+var delTimer = 0;
+var delTimerInterval;
+function startDelFile(e){
+	delTimerInterval = setInterval(function(){
+		if(delTimer > 35){
+			stopDelFile(e);
+			delFile(e);
+		}
+		$("fileDeleteProg").style.height = delTimer+"px"; 
+		delTimer+=1;
+	}, 30);
+}
+function stopDelFile(e){
+	$("fileDeleteProg").style.height = "0px";
+	clearInterval(delTimerInterval);
+	delTimer = 0;
+}
 function delFile(e){
 	sendData({"del" : currentDir.join("")+$(selId).innerHTML}, function(d){
 		$(selId).parentNode.remove();
 		selId = false;
 		deselectFile();
 	});
+}
+function rename(e){
+	log(e.el);
 }

@@ -551,6 +551,13 @@ div{position:absolute;}
 					padding:9px;
 					color:#de1c1c;
 				}
+					#fileDeleteProg{
+						right:0;
+						bottom:0;
+						width:3px;
+						height:0px;
+						background:rgb(200, 0 ,0);
+					}
 				#filepublish{
 					right:30px;
 					padding:7px;
