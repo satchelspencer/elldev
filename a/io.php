@@ -1,4 +1,8 @@
 <?php
+	if(isset($_POST['p'])){
+		echo ".";
+		exit;
+	}
 	chdir('../');
 	function removeDir($dir){
 		$children = scandir($dir);
@@ -30,5 +34,6 @@
 		exit;
 	}else if(isset($_POST['info'])){
 		echo sizeConv(filesize(getcwd().$_POST['info'])).",".date("m d Y H:i", filemtime(getcwd().$_POST['info']));
+		exit;
 	}
 ?>

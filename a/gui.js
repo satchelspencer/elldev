@@ -7,16 +7,47 @@ function gui(){
 	$("fileopen").event("click", openSelectedFile);
 }
 var fileListId = 0;
+var connectionStatus = 0;
+function sendData(data, callback){
+	var t = 0;
+	setConnectionStatus(2);
+	ajax("io.php", data, false, function(d){
+		clearInterval(i);
+		if(connectionStatus > 0){
+			callback(d);
+			setConnectionStatus(1);
+		}
+	});
+	var i = setInterval(function(){
+		if(t > 10000){
+			clearInterval(i);
+			setConnectionStatus(0);
+		}
+		t+=10;
+	}, 10);
+}
+
+function setConnectionStatus(s){
+	connectionStatus = s;
+	if(s == 0){
+		$("connection").style.background = "red";
+		$("connection").setAttribute("title", "not connected");
+	}else if(s == 1){
+		$("connection").style.background = "green";
+		$("connection").setAttribute("title", "connected");
+	}else if(s == 2){
+		$("connection").style.background = "yellow";
+		$("connection").setAttribute("title", "connecting");
+	}
+}
 function listFiles(dir){
 	fileListId = 0;
 	$("pathlabel").innerHTML = "&rsaquo; "+currentDir.join("");
-	startLoadAnimation();
-	ajax("io.php", {"list" : currentDir.join("")}, false, function(d){
+	sendData({"list" : currentDir.join("")}, function(d){
 		var list = JSON.parse(d);
 		var toDestroy = $("fileslist").getChildren();
 		for(x in toDestroy) toDestroy[x].remove();
 		for(x in list) $("fileslist").appendChild(fileListEl(list[x], !list[x].match(/\./g)));
-		stopLoadAnimation();
 	});
 }
 function openDir(dir){
@@ -53,7 +84,7 @@ function inspectFile(file){
 	$("details").style.display = "block";
 	$("nofile").style.display = "none";
 	if(file.match(/\./g)){
-		ajax("io.php", {"info" : currentDir.join("")+file}, false, function(d){
+		sendData({"info" : currentDir.join("")+file}, function(d){
 			var data = d.split(",");
 			$("filesize").innerHTML = data[0];
 			$("filemod").innerHTML = data[1];
@@ -110,11 +141,9 @@ function validateNewPageName(e){
 		e.el.rmEvent("keydown", validateNewPageName);
 		e.el.blur();
 		e.el.setAttribute("contenteditable", "false");
-		startLoadAnimation();
-		ajax("io.php", {"np" : currentDir.join("")+e.el.innerHTML}, false, function(d){
+		sendData({"np" : currentDir.join("")+e.el.innerHTML}, function(d){
 			e.el.remove();
 			openDir("");
-			stopLoadAnimation();
 		});
 	}else if(e.code != 8){
 		var hypInner = e.el.innerHTML+e.char;
@@ -122,41 +151,9 @@ function validateNewPageName(e){
 	}
 }
 function delFile(e){
-	startLoadAnimation();
 	ajax("io.php", {"del" : currentDir.join("")+$(selId).innerHTML}, false, function(d){
 		$(selId).parentNode.remove();
 		selId = false;
 		deselectFile();
-		stopLoadAnimation();
 	});
-}
-var loadAni = false;
-var conColor = 120;
-var conColorUp = true;
-var timeLoading;
-function startLoadAnimation(){
-	if(!loadAni){
-		timeLoading = 0;
-		loadAni = setInterval(function(){
-			$("connection").style.background = "rgb("+conColor+", "+conColor+", "+conColor+")";
-			conColorUp ? conColor+=15 : conColor-=15;
-			if(conColor < 120 || conColor > 150) conColorUp = !conColorUp;
-			timeLoading += 50;
-		}, 50);
-	}
-}
-function stopLoadAnimation(fail){
-	if(loadAni){
-		clearInterval(loadAni);
-		loadAni = false;
-		var a = setInterval(function(){
-			$("connection").style.background = "rgb("+conColor+", "+conColor+", "+conColor+")";
-			conColor -= 15;
-			if(conColor <= 120){
-				clearInterval(a);
-				conColor = 120;
-				if(fail) $("connection").style.background = "red";
-			}
-		}, 50);
-	}
 }
