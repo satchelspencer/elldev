@@ -1,42 +1,70 @@
 var currentDir = [];
 function gui(){
 	openDir("/");
+	var pingInterval = setInterval(ping, 90000);
 	$("pathback").event("click", dirBack);
 	$("pathnew").event("click", newPage);
 	$("filedelete").event("click", delFile);
 	$("fileopen").event("click", openSelectedFile);
 }
 var fileListId = 0;
-var connectionStatus = 0;
+var connectionStatus = 1;
 function sendData(data, callback){
 	var t = 0;
 	setConnectionStatus(2);
 	ajax("io.php", data, false, function(d){
 		clearInterval(i);
+		log(t+"ms");
 		if(connectionStatus > 0){
-			callback(d);
 			setConnectionStatus(1);
+			callback(d);
 		}
 	});
 	var i = setInterval(function(){
-		if(t > 10000){
+		if(t > 5000){
 			clearInterval(i);
 			setConnectionStatus(0);
 		}
 		t+=10;
 	}, 10);
 }
-
+function ping(){
+	var t = 0;
+	ajax("io.php", {"p":"!"}, false, function(d){
+		if(d == ".") clearInterval(i);
+		if(connectionStatus == 0) setConnectionStatus(1);
+		log("ping:"+t+"ms");
+	});
+	var i = setInterval(function(){
+		if(t > 1000){
+			clearInterval(i);
+			setConnectionStatus(0);
+		}
+		t+=10;
+	}, 10);
+}
+var conAniInt;
+var conAniStat = false;
 function setConnectionStatus(s){
+	if(connectionStatus == 2) clearInterval(conAniInt);
+	if(connectionStatus == 0){
+		$("connection").rmEvent("click", openRoot);
+		$("connection").style.cursor = "default";
+	}
 	connectionStatus = s;
 	if(s == 0){
-		$("connection").style.background = "red";
+		$("connection").style.background = "#420000";
 		$("connection").setAttribute("title", "not connected");
+		$("connection").event("click", openRoot);
+		$("connection").style.cursor = "pointer";
 	}else if(s == 1){
-		$("connection").style.background = "green";
+		$("connection").style.background = "#aaaaaa";
 		$("connection").setAttribute("title", "connected");
 	}else if(s == 2){
-		$("connection").style.background = "yellow";
+		conAniInt = setInterval(function(){
+			$("connection").style.background = conAniStat ? "#aaaaaa" : "#777777";
+			conAniStat = !conAniStat;
+		},100);
 		$("connection").setAttribute("title", "connecting");
 	}
 }
@@ -49,6 +77,9 @@ function listFiles(dir){
 		for(x in toDestroy) toDestroy[x].remove();
 		for(x in list) $("fileslist").appendChild(fileListEl(list[x], !list[x].match(/\./g)));
 	});
+}
+function openRoot(){
+	currentDir.length > 0 ? openDir("") : openDir("/");
 }
 function openDir(dir){
 	deselectFile();
@@ -142,7 +173,6 @@ function validateNewPageName(e){
 		e.el.blur();
 		e.el.setAttribute("contenteditable", "false");
 		sendData({"np" : currentDir.join("")+e.el.innerHTML}, function(d){
-			e.el.remove();
 			openDir("");
 		});
 	}else if(e.code != 8){
@@ -151,7 +181,7 @@ function validateNewPageName(e){
 	}
 }
 function delFile(e){
-	ajax("io.php", {"del" : currentDir.join("")+$(selId).innerHTML}, false, function(d){
+	sendData({"del" : currentDir.join("")+$(selId).innerHTML}, function(d){
 		$(selId).parentNode.remove();
 		selId = false;
 		deselectFile();
