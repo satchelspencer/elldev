@@ -146,6 +146,49 @@ function fileListEl(name, children){
 	fileListId++;
 	return r;
 }
+function focusField(e, regex, callback){
+	var range = document.createRange();
+    var sel = window.getSelection();
+    range.setStart(e, 0);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    e.setAttribute("contenteditable", "true");
+    e.focus();
+    e.regex = regex;
+    e.callback = callback;
+    e.fieldVal = e.innerHTML;
+    e.toSub = false;
+    e.valid = true;
+    e.event("keyup", updateField);
+    e.event("keydown", validateField);
+}
+function validateField(e){
+	if(e.code == 13){
+		if(e.el.valid) e.el.toSub = true;
+		e.e.preventDefault();
+		return false;
+	}
+}
+function updateField(e){
+	if(e.el.toSub){
+		e.el.innerHTML = e.el.fieldVal;
+		e.el.callback(e.el.fieldVal);
+		blurField(e.el);
+	}else{
+		e.el.valid = e.el.innerHTML.match(e.el.regex) != null;
+		e.el.style.color = e.el.valid ? "white" : "red";
+		e.el.fieldVal = e.el.innerHTML;
+	}
+}
+function blurField(e){
+	e.setAttribute("contenteditable", "false");
+	e.rmEvent("keyup", updateField);
+	e.rmEvent("keydown", validateField);
+	delete e.regex;
+	delete e.callback;
+	e.blur(); 
+}
 function newPage(){
 	deselectFile();
 	if(selId) $(selId).parentNode.style.background = "";
@@ -156,33 +199,17 @@ function newPage(){
 	n.innerHTML = "";
 	r.appendChild(n);
 	$("fileslist").appendChild(r);
-	var range = document.createRange();
-    var sel = window.getSelection();
-    range.setStart($(id).childNodes[0], 0);
-    range.collapse(true);
-    sel.removeAllRanges();
-    sel.addRange(range);
-    $(newFileListId).focus();
-    $(newFileListId).event("keydown", validateNewPageName);
-    $(newFileListId).parentNode.style.background = "#272727";
-}
-function validateNewPageName(e){
-	var hypInner = e.code == 8 ? e.el.innerHTML : e.el.innerHTML+e.char;
-	if(e.code == 13){
-		e.el.rmEvent("keydown", validateNewPageName);
-		e.el.blur();
-		e.el.setAttribute("contenteditable", "false");
-		sendData({"np" : currentDir.join("")+e.el.innerHTML}, function(d){
+   	focusField($(id).childNodes[0], /^[a-z0-9]+$/i, function(x){
+   		sendData({"np" : currentDir.join("")+x}, function(d){
 			openDir("");
 		});
-	}else if(e.code != 8){
-		var hypInner = e.el.innerHTML+e.char;
-		if(!hypInner.match(/^[a-z0-9_]+$/i) || hypInner.length > 16) e.e.preventDefault();
-	}
+   	});
+    $(newFileListId).parentNode.style.background = "#272727";
 }
 var delTimer = 0;
 var delTimerInterval;
 function startDelFile(e){
+	var delTimer = 5;
 	delTimerInterval = setInterval(function(){
 		if(delTimer > 35){
 			stopDelFile(e);
@@ -205,5 +232,8 @@ function delFile(e){
 	});
 }
 function rename(e){
-	log(e.el);
+	selectFile(e);
+	focusField(e.el, /^[a-z0-9]+$/i, function(d){
+		log(d);
+	});
 }

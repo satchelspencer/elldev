@@ -545,6 +545,9 @@ div{position:absolute;}
 				right:0;
 				height:35px;
 				background:#373737;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
 			}
 				#filedelete{
 					right:0;
@@ -554,7 +557,7 @@ div{position:absolute;}
 					#fileDeleteProg{
 						right:0;
 						bottom:0;
-						width:3px;
+						width:4px;
 						height:0px;
 						background:rgb(200, 0 ,0);
 					}
