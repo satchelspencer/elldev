@@ -186,7 +186,6 @@ function blurField(e){
 	e.rmEvent("keyup", updateField);
 	e.rmEvent("keydown", validateField);
 	delete e.regex;
-	delete e.callback;
 	e.blur(); 
 }
 function newPage(){
@@ -233,7 +232,10 @@ function delFile(e){
 }
 function rename(e){
 	selectFile(e);
-	focusField(e.el, /^[a-z0-9]+$/i, function(d){
-		log(d);
+	var oldname = currentDir.join("")+e.el.innerHTML;
+	focusField(e.el, /^[a-z0-9]+$/i, function(x){
+		sendData({"newname" : currentDir.join("")+x, "oldname" : oldname}, function(d){
+			openDir("");
+		});
 	});
 }
