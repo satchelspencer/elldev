@@ -198,7 +198,7 @@ function newPage(){
 	n.innerHTML = "";
 	r.appendChild(n);
 	$("fileslist").appendChild(r);
-   	focusField($(id).childNodes[0], /^[a-z0-9]+$/i, function(x){
+   	focusField($(id).childNodes[0], /^[a-z0-9\-\_]{3,16}$/i, function(x){
    		sendData({"np" : currentDir.join("")+x}, function(d){
 			openDir("");
 		});
@@ -233,7 +233,7 @@ function delFile(e){
 function rename(e){
 	selectFile(e);
 	var oldname = currentDir.join("")+e.el.innerHTML;
-	focusField(e.el, /^[a-z0-9]+$/i, function(x){
+	focusField(e.el, /^[a-z0-9\-\_]{3,16}$/i, function(x){
 		sendData({"newname" : currentDir.join("")+x, "oldname" : oldname}, function(d){
 			openDir("");
 		});

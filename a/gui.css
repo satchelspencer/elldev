@@ -247,15 +247,17 @@ div{position:absolute;}
 				width:25px;
 				height:25px;
 				background:#474747;
+				color:white;
+				font-size:10px;
+				line-height:12px;
+				text-align:center;
 			}
 			#sequenceorientation{
-				background-image:url('orient.png');
-				-webkit-transform:rotate(90deg);
+				top:0px;
 			}
 			#sequencescroll{
 				top:35px;
-				background-image:url('scroll.png');
-				opacity:1;
+				padding-top:1px;
 			}
 		#textproperties{
 			position:relative;
