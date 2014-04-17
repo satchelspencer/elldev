@@ -3,6 +3,7 @@ function gui(){
 	openDir("/");
 	var pingInterval = setInterval(ping, 90000);
 	$("pathback").event("click", dirBack);
+	$("filesback").event("click", dirBack);
 	$("pathnew").event("click", newPage);
 	$("filedelete").event("mousedown", startDelFile);
 	$("filedelete").event("mouseup", stopDelFile);
@@ -134,6 +135,8 @@ function fileListEl(name, children){
 	var r = element("fl"+fileListId, "div", {"class" : "file"});
 	var n = element("fl"+fileListId+"name", "div", {"class" : "filename"});
 	n.event("click", selectFile);
+	r.event("mousedown", fileMouseInit);
+	$("body").event("mouseup", fileMouseStop);
 	n.event("dblclick", rename);
 	n.innerHTML = name;
 	r.appendChild(n);
@@ -146,7 +149,32 @@ function fileListEl(name, children){
 	fileListId++;
 	return r;
 }
-function focusField(e, regex, callback){
+var trackingFile;
+function fileMouseInit(e){
+	e.el.dy = (e.y-e.el.parentNode.getPosition().y);
+	e.el.inity = e.y;
+	trackingFile = e.el.id;
+	$("body").event("mousemove", fileMouseTrack);
+	$("body").setAttribute("class", "unselectable");
+}
+function fileMouseTrack(e){
+	var newpos = (e.y-($("fileslist").getPosition().y))-$(trackingFile).dy+35-$("fileslist").scrollTop;
+	var maxt = parseInt($("files").getStyle("height").replace("px", ""))-25;
+	if(Math.abs(e.y-$(trackingFile).inity) > 2){
+		if(newpos <= 35) newpos = 35;
+		if(newpos > maxt) newpos = maxt;
+		$(trackingFile).parentNode.style.display = "none";
+		$("draggingfile").innerHTML = $(trackingFile).innerHTML;
+		$("draggingfile").style.display = "block";
+		$("draggingfile").style.top = newpos+"px";
+	}
+}
+function fileMouseStop(e){
+	$("body").rmEvent("mousemove", fileMouseTrack);
+	$("body").rmEvent("mouseup", fileMouseStop);
+	$("body").setAttribute("class", "");
+}
+function focusField(e, regex, prog, callback){
 	var range = document.createRange();
     var sel = window.getSelection();
     range.setStart(e, 0);
@@ -157,6 +185,7 @@ function focusField(e, regex, callback){
     e.focus();
     e.regex = regex;
     e.callback = callback;
+    e.prog = prog;
     e.fieldVal = e.innerHTML;
     e.toSub = false;
     e.valid = true;
@@ -179,6 +208,7 @@ function updateField(e){
 		e.el.valid = e.el.innerHTML.match(e.el.regex) != null;
 		e.el.style.color = e.el.valid ? "white" : "red";
 		e.el.fieldVal = e.el.innerHTML;
+		if(e.el.valid && e.el.prog) e.el.prog(e.el.fieldVal);
 	}
 }
 function blurField(e){
@@ -198,7 +228,7 @@ function newPage(){
 	n.innerHTML = "";
 	r.appendChild(n);
 	$("fileslist").appendChild(r);
-   	focusField($(id).childNodes[0], /^[a-z0-9\-\_]{3,16}$/i, function(x){
+   	focusField($(id).childNodes[0], /^[a-z0-9\-\_]{1,16}$/i, false, function(x){
    		sendData({"np" : currentDir.join("")+x}, function(d){
 			openDir("");
 		});
@@ -233,7 +263,9 @@ function delFile(e){
 function rename(e){
 	selectFile(e);
 	var oldname = currentDir.join("")+e.el.innerHTML;
-	focusField(e.el, /^[a-z0-9\-\_]{3,16}$/i, function(x){
+	focusField(e.el, /^[a-z0-9\-\_]{1,16}$/i, function(x){
+		$("filename").innerHTML = x;
+	}, function(x){
 		sendData({"newname" : currentDir.join("")+x, "oldname" : oldname}, function(d){
 			openDir("");
 		});

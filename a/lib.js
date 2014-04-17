@@ -111,8 +111,9 @@ ext.getChildren = function(r){
 	}
 }
 ext.getPosition = function(){
-	var x = 0, y = 0, r = {}, el = this;
-	while(el && el.offsetLeft && el.offsetTop){
+	var x = 0, y = 0;
+	var el = this;
+	while(el){
 		x += el.offsetLeft - el.scrollLeft;
 		y += el.offsetTop - el.scrollTop;
 		el = el.offsetParent;
