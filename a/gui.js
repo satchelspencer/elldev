@@ -148,12 +148,17 @@ function fileListEl(name, children){
 	fileListId++;
 	return r;
 }
-var trackingFile;
+var trackingFile = false;
 var trackMoved = false;
+var dy = 0;
+var inity = 0;
+var trackingFilename = "";
+var overIndex = 0;
 function fileMouseInit(e){
-	e.el.dy = (e.y-e.el.parentNode.getPosition().y);
-	e.el.inity = e.y;
+	dy = (e.y-e.el.parentNode.getPosition().y);
+	inity = e.y;
 	trackingFile = e.el.id;
+	trackingFileName = e.el.innerHTML;
 	$("body").event("mousemove", fileMouseTrack);
 	$("fileslist").event("scroll", fileMouseTrack);
 	$("body").setAttribute("class", "unselectable");
@@ -161,17 +166,20 @@ function fileMouseInit(e){
 }
 function fileMouseTrack(e){
 	if(e.type == "scroll") for(i=0;i<$("fileslist").children.length;i++) $("fileslist").children[i].style.background = "";
-	var newpos = (e.y-($("fileslist").getPosition().y))-$(trackingFile).dy+35-$("fileslist").scrollTop;
+	var newpos = (e.y-($("fileslist").getPosition().y))-dy+35-$("fileslist").scrollTop;
 	var maxt = parseInt($("files").getStyle("height").replace("px", ""))-25;
-	if(Math.abs(e.y-$(trackingFile).inity) > 2){
+	if(Math.abs(e.y-inity) > 2){
 		trackMoved = true;
 		if(newpos <= 35) newpos = 35;
 		if(newpos > maxt) newpos = maxt;
-		$(trackingFile).parentNode.style.display = "none";
-		$("draggingfile").innerHTML = $(trackingFile).innerHTML;
+		if(trackingFile){
+			$(trackingFile).parentNode.remove();
+			trackingFile = false;
+		}
+		$("draggingfile").innerHTML = trackingFilename;
 		$("draggingfile").style.display = "block";
 		$("draggingfile").style.top = newpos+"px";
-		var overIndex = Math.floor((e.y-($("fileslist").getPosition().y))/25)+1;
+		overIndex = Math.floor((e.y-($("fileslist").getPosition().y))/25);
 		for(i=0;i<$("fileslist").children.length;i++) $("fileslist").children[i].style.background = (i == overIndex) ? "#373737" : "";
 	}
 }
@@ -183,7 +191,7 @@ function fileMouseStop(e){
 	$("fileslist").rmEvent("scroll", fileMouseTrack);
 	$("body").setAttribute("class", "");
 	if(trackMoved){
-		log($("fileslist").children[Math.floor((e.y-($("fileslist").getPosition().y)-$(trackingFile).dy)/25)+1].children[0].innerHTML);
+		log($("fileslist").children[overIndex].children[0].innerHTML);
 		trackMoved = false;
 	}
 }

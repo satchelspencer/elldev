@@ -21,6 +21,7 @@ div{position:absolute;}
 	bottom:0px;
 	width:350px;
 	box-shadow:0px 0px 2px 3px rgba(0,0,0,0.3);
+	min-height:600px;
 }
 	#properties{
 		left:0px;
@@ -538,6 +539,7 @@ div{position:absolute;}
 			-webkit-user-select: none;
 			-moz-user-select: none;
 			-ms-user-select: none;
+			opacity:.85;
 		}
 		#fileinspect{
 			top:35px;
