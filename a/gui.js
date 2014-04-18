@@ -136,7 +136,6 @@ function fileListEl(name, children){
 	var n = element("fl"+fileListId+"name", "div", {"class" : "filename"});
 	n.event("click", selectFile);
 	r.event("mousedown", fileMouseInit);
-	$("body").event("mouseup", fileMouseStop);
 	n.event("dblclick", rename);
 	n.innerHTML = name;
 	r.appendChild(n);
@@ -150,29 +149,43 @@ function fileListEl(name, children){
 	return r;
 }
 var trackingFile;
+var trackMoved = false;
 function fileMouseInit(e){
 	e.el.dy = (e.y-e.el.parentNode.getPosition().y);
 	e.el.inity = e.y;
 	trackingFile = e.el.id;
 	$("body").event("mousemove", fileMouseTrack);
+	$("fileslist").event("scroll", fileMouseTrack);
 	$("body").setAttribute("class", "unselectable");
+	$("body").event("mouseup", fileMouseStop);
 }
 function fileMouseTrack(e){
+	if(e.type == "scroll") for(i=0;i<$("fileslist").children.length;i++) $("fileslist").children[i].style.background = "";
 	var newpos = (e.y-($("fileslist").getPosition().y))-$(trackingFile).dy+35-$("fileslist").scrollTop;
 	var maxt = parseInt($("files").getStyle("height").replace("px", ""))-25;
 	if(Math.abs(e.y-$(trackingFile).inity) > 2){
+		trackMoved = true;
 		if(newpos <= 35) newpos = 35;
 		if(newpos > maxt) newpos = maxt;
 		$(trackingFile).parentNode.style.display = "none";
 		$("draggingfile").innerHTML = $(trackingFile).innerHTML;
 		$("draggingfile").style.display = "block";
 		$("draggingfile").style.top = newpos+"px";
+		var overIndex = Math.floor((e.y-($("fileslist").getPosition().y))/25)+1;
+		for(i=0;i<$("fileslist").children.length;i++) $("fileslist").children[i].style.background = (i == overIndex) ? "#373737" : "";
 	}
 }
 function fileMouseStop(e){
+	$("draggingfile").style.display = "none";
+	$("draggingfile").style.top = "35px";
 	$("body").rmEvent("mousemove", fileMouseTrack);
 	$("body").rmEvent("mouseup", fileMouseStop);
+	$("fileslist").rmEvent("scroll", fileMouseTrack);
 	$("body").setAttribute("class", "");
+	if(trackMoved){
+		log($("fileslist").children[Math.floor((e.y-($("fileslist").getPosition().y)-$(trackingFile).dy)/25)+1].children[0].innerHTML);
+		trackMoved = false;
+	}
 }
 function focusField(e, regex, prog, callback){
 	var range = document.createRange();
@@ -228,7 +241,7 @@ function newPage(){
 	n.innerHTML = "";
 	r.appendChild(n);
 	$("fileslist").appendChild(r);
-   	focusField($(id).childNodes[0], /^[a-z0-9\-\_]{1,16}$/i, false, function(x){
+   	focusField($(id).childNodes[0], /^[a-z0-9\-\_]{2,16}$/i, false, function(x){
    		sendData({"np" : currentDir.join("")+x}, function(d){
 			openDir("");
 		});
@@ -263,7 +276,7 @@ function delFile(e){
 function rename(e){
 	selectFile(e);
 	var oldname = currentDir.join("")+e.el.innerHTML;
-	focusField(e.el, /^[a-z0-9\-\_]{1,16}$/i, function(x){
+	focusField(e.el, /^[a-z0-9\-\_]{2,16}$/i, function(x){
 		$("filename").innerHTML = x;
 	}, function(x){
 		sendData({"newname" : currentDir.join("")+x, "oldname" : oldname}, function(d){

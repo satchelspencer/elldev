@@ -26,7 +26,7 @@ div{position:absolute;}
 		left:0px;
 		right:0px;
 		top:0px;
-		height:30%;
+		height:285px;
 		background:#373737;
 		overflow-y:scroll;
 	}
@@ -331,7 +331,7 @@ div{position:absolute;}
 	#elements{
 		left:0px;
 		right:0px;
-		top:30%;
+		top:285px;
 		bottom:30%;
 		background:#272727;
 	}

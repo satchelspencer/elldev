@@ -19,7 +19,7 @@
 	}
 	if(isset($_POST['list'])){
 		$files = scandir(getcwd().$_POST['list']);
-		foreach($files as $i => $ar) if($ar == "data.json" || $ar == "index.html" || $ar[0] == "." || ($ar == "a" && $_POST['list'] == "/")) unset($files[$i]);
+		foreach($files as $i => $ar) if($ar == "data.json" || $ar == "index.html" || $ar[0] == "." || (strlen($ar) == 1 && $_POST['list'] == "/")) unset($files[$i]);
 		$out = array("cwd" => getcwd(), "files" => $files);
 		echo json_encode(array_values($files));
 		exit;
