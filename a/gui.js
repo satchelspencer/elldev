@@ -154,6 +154,7 @@ var dy = 0;
 var inity = 0;
 var trackingFilename = "";
 var overIndex = 0;
+var filesBackIsOver = false;
 function fileMouseInit(e){
 	dy = (e.y-e.el.parentNode.getPosition().y);
 	inity = e.y;
@@ -161,8 +162,18 @@ function fileMouseInit(e){
 	trackingFileName = e.el.innerHTML;
 	$("body").event("mousemove", fileMouseTrack);
 	$("fileslist").event("scroll", fileMouseTrack);
+	$("filesback").event("mouseover", filesBackOver);
+	$("filesback").event("mouseout", filesBackOut);
 	$("body").setAttribute("class", "unselectable");
 	$("body").event("mouseup", fileMouseStop);
+} 
+function filesBackOver(e){
+	filesBackIsOver = true;
+	$("filesback").style.background = "#222222";
+}
+function filesBackOut(e){
+	filesBackIsOver = false;
+	$("filesback").style.background = "#272727";
 }
 function fileMouseTrack(e){
 	if(e.type == "scroll") for(i=0;i<$("fileslist").children.length;i++) $("fileslist").children[i].style.background = "";
@@ -176,11 +187,11 @@ function fileMouseTrack(e){
 			$(trackingFile).parentNode.remove();
 			trackingFile = false;
 		}
-		$("draggingfile").innerHTML = trackingFilename;
+		$("draggingfile").innerHTML = trackingFileName;
 		$("draggingfile").style.display = "block";
 		$("draggingfile").style.top = newpos+"px";
 		overIndex = Math.floor((e.y-($("fileslist").getPosition().y))/25);
-		for(i=0;i<$("fileslist").children.length;i++) $("fileslist").children[i].style.background = (i == overIndex) ? "#373737" : "";
+		for(i=0;i<$("fileslist").children.length;i++) $("fileslist").children[i].style.background = (i == overIndex && $("fileslist").children[i].children.length > 1 && !filesBackIsOver && e.x < 210) ? "#373737" : "";
 	}
 }
 function fileMouseStop(e){
@@ -190,8 +201,13 @@ function fileMouseStop(e){
 	$("body").rmEvent("mouseup", fileMouseStop);
 	$("fileslist").rmEvent("scroll", fileMouseTrack);
 	$("body").setAttribute("class", "");
+	$("filesback").rmEvent("mouseover", filesBackOver);
+	$("filesback").rmEvent("mouseout", filesBackOut);
 	if(trackMoved){
-		log($("fileslist").children[overIndex].children[0].innerHTML);
+		if(filesBackIsOver){
+			log("../");
+		}else if($("fileslist").children[overIndex].children.length > 1 && e.x < 210) log($("fileslist").children[overIndex].children[0].innerHTML);
+		else openDir("");
 		trackMoved = false;
 	}
 }

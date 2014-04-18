@@ -539,7 +539,7 @@ div{position:absolute;}
 			-webkit-user-select: none;
 			-moz-user-select: none;
 			-ms-user-select: none;
-			opacity:.85;
+			opacity:.9;
 		}
 		#fileinspect{
 			top:35px;
