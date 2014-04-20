@@ -36,6 +36,7 @@
 		echo sizeConv(filesize(getcwd().$_POST['info'])).",".date("m d Y H:i", filemtime(getcwd().$_POST['info']));
 		exit;
 	}else if(isset($_POST['newname'])){
+		echo getcwd().$_POST['oldname']."->".getcwd().$_POST['newname'];
 		rename(getcwd().$_POST['oldname'], getcwd().$_POST['newname']);
 		exit;
 	}

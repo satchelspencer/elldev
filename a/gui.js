@@ -91,7 +91,7 @@ function dirBack(){
 	if(currentDir.length > 1){
 		currentDir.pop();
 		listFiles(currentDir.join(""));
-	}
+	}else openDir("");
 }
 var selId = false;
 function selectFile(e){
@@ -184,6 +184,7 @@ function fileMouseTrack(e){
 	if(Math.abs(e.y-inity) > 2 || Math.abs(e.x-initx) > 2){
 		if(!trackMoved && currentDir.length > 1) showFilesBack(); 
 		trackMoved = true;
+		selId = false;
 		if(newpos <= 35) newpos = 35;
 		if(newpos > maxt) newpos = maxt;
 		if(trackingFile){
@@ -207,12 +208,17 @@ function fileMouseStop(e){
 	$("filesback").rmEvent("mouseover", filesBackOver);
 	$("filesback").rmEvent("mouseout", filesBackOut);
 	if(trackMoved){
-		hideFilesBack();
 		if(filesBackIsOver){
-			log("../");
+			hideFilesBack();
+			sendData({"newname" : currentDir.slice(0, -1).join("")+trackingFileName, "oldname" : currentDir.join("")+trackingFileName}, function(d){
+				dirBack();
+				log(d);
+			});
 		}else if(overIndex < $("fileslist").children.length){
 			if($("fileslist").children[overIndex].children.length > 1 && e.x < 210){
-				log($("fileslist").children[overIndex].children[0].innerHTML);
+				sendData({"newname" : currentDir.join("")+$("fileslist").children[overIndex].children[0].innerHTML+"/"+trackingFileName, "oldname" : currentDir.join("")+trackingFileName}, function(d){
+					openDir($("fileslist").children[overIndex].children[0].innerHTML+"/");
+				});
 			}else openDir("");
 		}else openDir("");
 		trackMoved = false;
@@ -224,6 +230,7 @@ function showFilesBack(){
 	$("draggingfile").style.left = "25px";
 }
 function hideFilesBack(){
+	filesBackIsOver = false;
 	$("filesback").style.display = "none";
 	$("fileslist").style.left = "0px";
 	$("draggingfile").style.left = "0px";
