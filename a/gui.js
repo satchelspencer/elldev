@@ -160,8 +160,8 @@ function fileMouseInit(e){
 	dy = (e.y-e.el.parentNode.getPosition().y);
 	inity = e.y;
 	initx = e.x;
-	trackingFile = e.el.id;
-	trackingFileName = e.el.innerHTML;
+	trackingFile = e.el.parentNode.children[0].id;
+	trackingFileName = $(trackingFile).innerHTML;
 	$("body").event("mousemove", fileMouseTrack);
 	$("fileslist").event("scroll", fileMouseTrack);
 	$("filesback").event("mouseover", filesBackOver);
@@ -171,11 +171,11 @@ function fileMouseInit(e){
 } 
 function filesBackOver(e){
 	filesBackIsOver = true;
-	$("filesback").style.background = "#222222";
+	$("filesback").style.background = "#575757";
 }
 function filesBackOut(e){
 	filesBackIsOver = false;
-	$("filesback").style.background = "#272727";
+	$("filesback").style.background = "#676767";
 }
 function fileMouseTrack(e){
 	if(e.type == "scroll") for(i=0;i<$("fileslist").children.length;i++) $("fileslist").children[i].style.background = "";
@@ -209,12 +209,11 @@ function fileMouseStop(e){
 	$("filesback").rmEvent("mouseout", filesBackOut);
 	if(trackMoved){
 		if(filesBackIsOver){
-			hideFilesBack();
 			sendData({"newname" : currentDir.slice(0, -1).join("")+trackingFileName, "oldname" : currentDir.join("")+trackingFileName}, function(d){
 				dirBack();
 				log(d);
 			});
-		}else if(overIndex < $("fileslist").children.length){
+		}else if(overIndex < $("fileslist").children.length && overIndex >=0){
 			if($("fileslist").children[overIndex].children.length > 1 && e.x < 210){
 				sendData({"newname" : currentDir.join("")+$("fileslist").children[overIndex].children[0].innerHTML+"/"+trackingFileName, "oldname" : currentDir.join("")+trackingFileName}, function(d){
 					openDir($("fileslist").children[overIndex].children[0].innerHTML+"/");
@@ -223,6 +222,7 @@ function fileMouseStop(e){
 		}else openDir("");
 		trackMoved = false;
 	}
+	hideFilesBack();
 }
 function showFilesBack(){
 	$("filesback").style.display = "block";
