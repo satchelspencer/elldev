@@ -83,7 +83,7 @@ function openRoot(){
 }
 function openDir(dir){
 	deselectFile();
-	currentDir.push(dir);
+	if(dir != "") currentDir.push(dir);
 	listFiles(currentDir.join(""));
 }
 function dirBack(){
@@ -152,12 +152,14 @@ var trackingFile = false;
 var trackMoved = false;
 var dy = 0;
 var inity = 0;
+var initx = 0;
 var trackingFilename = "";
 var overIndex = 0;
 var filesBackIsOver = false;
 function fileMouseInit(e){
 	dy = (e.y-e.el.parentNode.getPosition().y);
 	inity = e.y;
+	initx = e.x;
 	trackingFile = e.el.id;
 	trackingFileName = e.el.innerHTML;
 	$("body").event("mousemove", fileMouseTrack);
@@ -179,7 +181,8 @@ function fileMouseTrack(e){
 	if(e.type == "scroll") for(i=0;i<$("fileslist").children.length;i++) $("fileslist").children[i].style.background = "";
 	var newpos = (e.y-($("fileslist").getPosition().y))-dy+35-$("fileslist").scrollTop;
 	var maxt = parseInt($("files").getStyle("height").replace("px", ""))-25;
-	if(Math.abs(e.y-inity) > 2){
+	if(Math.abs(e.y-inity) > 2 || Math.abs(e.x-initx) > 2){
+		if(!trackMoved && currentDir.length > 1) showFilesBack(); 
 		trackMoved = true;
 		if(newpos <= 35) newpos = 35;
 		if(newpos > maxt) newpos = maxt;
@@ -204,12 +207,26 @@ function fileMouseStop(e){
 	$("filesback").rmEvent("mouseover", filesBackOver);
 	$("filesback").rmEvent("mouseout", filesBackOut);
 	if(trackMoved){
+		hideFilesBack();
 		if(filesBackIsOver){
 			log("../");
-		}else if($("fileslist").children[overIndex].children.length > 1 && e.x < 210) log($("fileslist").children[overIndex].children[0].innerHTML);
-		else openDir("");
+		}else if(overIndex < $("fileslist").children.length){
+			if($("fileslist").children[overIndex].children.length > 1 && e.x < 210){
+				log($("fileslist").children[overIndex].children[0].innerHTML);
+			}else openDir("");
+		}else openDir("");
 		trackMoved = false;
 	}
+}
+function showFilesBack(){
+	$("filesback").style.display = "block";
+	$("fileslist").style.left = "25px";
+	$("draggingfile").style.left = "25px";
+}
+function hideFilesBack(){
+	$("filesback").style.display = "none";
+	$("fileslist").style.left = "0px";
+	$("draggingfile").style.left = "0px";
 }
 function focusField(e, regex, prog, callback){
 	var range = document.createRange();

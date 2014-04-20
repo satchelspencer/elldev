@@ -472,6 +472,7 @@ div{position:absolute;}
 			width:25px;
 			background:#272727;
 			cursor:default;	
+			display:none;
 		}
 			#filesbackarrow{
 				color:white;
@@ -484,7 +485,7 @@ div{position:absolute;}
 			}
 		#fileslist{
 			top:35px;
-			left:25px;
+			left:0px;
 			right:40%;
 			bottom:0;
 			overflow-y:scroll;
@@ -526,7 +527,7 @@ div{position:absolute;}
 				}
 		#draggingfile{
 			top:35px;
-			left:25px;
+			left:0px;
 			width:60%;
 			height:25px;
 			background:#272727;
