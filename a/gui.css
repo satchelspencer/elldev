@@ -1,4 +1,4 @@
-body{font-family:arial;font-size:16px;}
+body{font-family:arial;font-size:16px;color:white;}
 *{-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
 .unselectable, .button{
 	-webkit-user-select: none;
@@ -17,6 +17,8 @@ div{position:absolute;}
 	overflow-x:scroll;
 	background:grey;
 	background-size:cover;
+	min-width:400px;
+	cursor:crosshair;
 }
 #left{
 	left:0px;
@@ -472,7 +474,7 @@ div{position:absolute;}
 			bottom:0px;
 			left:0;
 			width:25px;
-			background:#575757;
+			background:#676767;
 			cursor:default;	
 			display:none;
 		}
@@ -492,6 +494,7 @@ div{position:absolute;}
 			bottom:0;
 			overflow-y:scroll;
 			cursor:default;
+			box-shadow:0px 2px 3px rgba(0, 0, 0, 0.3);
 		}
 			.file{
 				position:relative;
@@ -537,13 +540,14 @@ div{position:absolute;}
 			font-size:12px;
 			display:none;
 			opacity:.9;
+			cursor:ns-resize;
 		}
 		#fileinspect{
 			top:35px;
 			right:0;
 			left:60%;
 			bottom:0;
-			box-shadow:-3px 0px 2px rgba(0,0,0,0.3);
+			box-shadow:-2px 0px 3px rgba(0,0,0,0.3);
 			color:white;
 			padding-top:3px;
 			padding-left:10px;
@@ -613,15 +617,53 @@ div{position:absolute;}
 					font-size:12px;
 					padding:9px;
 				}
-#tools{
-	position:fixed;
+.tool{
 	top:10px;
-	right:10px;
-	width:35px;
-	height:35px;
+	width:25px;
+	height:25px;
 	background:#474747;
 	color:white;
-	font-size:32px;
-	padding:0px;
 	text-align:center;
+	opacity:.9;
 }
+#add{
+	right:10px;
+	font-size:22px;
+	padding:0px;
+}
+#sel{
+	right:45px;
+	font-size:15px;
+	padding-top:3px;
+	background:#570000;
+}
+	#selv{
+		left:6px;
+		transform:rotate(15deg);
+		-ms-transform:rotate(15deg);		
+		-webkit-transform:rotate(15deg);
+	}
+#move{
+	right:80px;
+	font-size:14px;
+	padding-top:3px;
+}
+	#movev{
+		top:3px;
+		left:9px;
+	}
+#url{
+	top:12px;
+	height:20px;
+	width:250px;
+	right:115px;
+	background:#979797;
+	font-size:14px;
+	padding:2px 5px;
+}
+	#urlshow{
+		font-size:16px;
+		left:-13px;
+		top:2px;
+		color:#575757;
+	}

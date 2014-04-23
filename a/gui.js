@@ -68,7 +68,7 @@ function setConnectionStatus(s){
 		$("connection").setAttribute("title", "connecting");
 	}
 }
-function listFiles(dir){
+function listFiles(dir, callback){
 	fileListId = 0;
 	$("pathlabel").innerHTML = "&rsaquo; "+currentDir.join("");
 	sendData({"list" : currentDir.join("")}, function(d){
@@ -76,22 +76,23 @@ function listFiles(dir){
 		var toDestroy = $("fileslist").getChildren();
 		for(x in toDestroy) toDestroy[x].remove();
 		for(x in list) $("fileslist").appendChild(fileListEl(list[x], !list[x].match(/\./g)));
+		if(callback) callback();
 	});
 }
 function openRoot(){
 	currentDir.length > 0 ? openDir("") : openDir("/");
 }
-function openDir(dir){
+function openDir(dir, callback){
 	deselectFile();
 	if(dir != "") currentDir.push(dir);
-	listFiles(currentDir.join(""));
+	listFiles(currentDir.join(""), callback);
 }
-function dirBack(){
+function dirBack(callback){
 	deselectFile();
 	if(currentDir.length > 1){
 		currentDir.pop();
-		listFiles(currentDir.join(""));
-	}else openDir("");
+		listFiles(currentDir.join(""), callback);
+	}else openDir("", callback);
 }
 var selId = false;
 function selectFile(e){
@@ -99,6 +100,16 @@ function selectFile(e){
 	selId = e.el.id;
 	e.el.parentNode.style.background = "#272727";
 	inspectFile(e.el.innerHTML);
+}
+function selectFileByName(name){
+	var f = $("fileslist").children;
+	for(x=0;x<f.length;x++){ 
+		if(f[x].children[0].innerHTML == name){
+			selectFile({"el" : f[x].children[0]});
+			return true;
+		}
+	}
+	return false;
 }
 function deselectFile(){
 	if(selId){
@@ -128,7 +139,6 @@ function inspectFile(file){
 	}
 }
 function openSelectedFile(file){
-	log(file);
 	window.open(currentDir.join("")+$(selId).innerHTML);
 }
 function fileListEl(name, children){
@@ -140,7 +150,7 @@ function fileListEl(name, children){
 	n.innerHTML = name;
 	r.appendChild(n);
 	if(children){
-		var c = element("fl"+fileListId+"child", "div", {"class" : "filechildren"});
+		var c = element("fl"+fileListId+"child", "div", {"class" : "filechildren button"});
 		c.event("click", function(){openDir(name+"/")});
 		c.innerHTML = "&rsaquo;";
 		r.appendChild(c);
@@ -210,13 +220,16 @@ function fileMouseStop(e){
 	if(trackMoved){
 		if(filesBackIsOver){
 			sendData({"newname" : currentDir.slice(0, -1).join("")+trackingFileName, "oldname" : currentDir.join("")+trackingFileName}, function(d){
-				dirBack();
-				log(d);
+				dirBack(function(){
+					selectFileByName(trackingFileName);
+				});
 			});
 		}else if(overIndex < $("fileslist").children.length && overIndex >=0){
 			if($("fileslist").children[overIndex].children.length > 1 && e.x < 210){
 				sendData({"newname" : currentDir.join("")+$("fileslist").children[overIndex].children[0].innerHTML+"/"+trackingFileName, "oldname" : currentDir.join("")+trackingFileName}, function(d){
-					openDir($("fileslist").children[overIndex].children[0].innerHTML+"/");
+					openDir($("fileslist").children[overIndex].children[0].innerHTML+"/", function(){
+						selectFileByName(trackingFileName);
+					});
 				});
 			}else openDir("");
 		}else openDir("");
@@ -324,7 +337,8 @@ function delFile(e){
 function rename(e){
 	selectFile(e);
 	var oldname = currentDir.join("")+e.el.innerHTML;
-	focusField(e.el, /^[a-z0-9\-\_]{2,16}$/i, function(x){
+	var regex = oldname.match(/\./g) ? (/^[a-z0-9\-\_\.]{2,16}$/i) : (/^[a-z0-9\-\_]{2,16}$/i);
+	focusField(e.el, regex, function(x){
 		$("filename").innerHTML = x;
 	}, function(x){
 		sendData({"newname" : currentDir.join("")+x, "oldname" : oldname}, function(d){

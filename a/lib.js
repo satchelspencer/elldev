@@ -89,6 +89,22 @@ ext.rmEvent = function(ev){
    	e = this.addEventListener ? this.removeEventListener(ev, eval("evs."+this.id+"."+ev), false) : this.detachEvent("on"+ev, eval("evs."+this.id+"."+ev));
    	eval("delete evs."+this.id+"."+ev);
 }
+ext.addClass = function(c){
+	var classes = this.className.split(" ");
+	for(x in classes) if(classes[x] == c) return false;
+	classes.push(c);
+	this.className = classes.join(" ");
+	return true;
+}
+ext.rmClass = function(c){
+	var classes = this.className.split(" ");
+	var i = classes.indexOf(c);
+	if(i == -1) return false;
+	var newClasses = [];
+	for(x=0;x<classes.length;x++) if(classes[x] != c) newClasses.push(classes[x]);
+	this.className = newClasses.join(" ");
+	return true;
+}
 ext.clearEvents = function(){
 	for(x in evs[this.id]) this.rmEvent(x, evs[this.id][x]);
 	delete evs[this.id];
