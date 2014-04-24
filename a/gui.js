@@ -5,12 +5,21 @@ function gui(){
 	$("pathback").event("click", dirBack);
 	$("filesback").event("click", dirBack);
 	$("pathnew").event("click", newPage);
+	$("pathrefresh").event("click", refresh);
 	$("filedelete").event("mousedown", startDelFile);
 	$("filedelete").event("mouseup", stopDelFile);
 	$("fileopen").event("click", openSelectedFile);
+	$("fileslist").event("dragenter", stopEvent);
+	$("fileslist").event("dragexit", stopEvent);
+	$("fileslist").event("dragover", stopEvent);
+	$("fileslist").event("drop", fileDrop);
 }
 var fileListId = 0;
 var connectionStatus = 1;
+function stopEvent(e){
+	e.e.stopPropagation();
+	e.e.preventDefault();
+}
 function sendData(data, callback){
 	var t = 0;
 	setConnectionStatus(2);
@@ -71,6 +80,7 @@ function setConnectionStatus(s){
 function listFiles(dir, callback){
 	fileListId = 0;
 	$("pathlabel").innerHTML = "&rsaquo; "+currentDir.join("");
+	$("pathlabel").setAttribute("title", currentDir.join(""));
 	sendData({"list" : currentDir.join("")}, function(d){
 		var list = JSON.parse(d);
 		var toDestroy = $("fileslist").getChildren();
@@ -82,12 +92,15 @@ function listFiles(dir, callback){
 function openRoot(){
 	currentDir.length > 0 ? openDir("") : openDir("/");
 }
+function refresh(){
+	openDir("");
+}
 function openDir(dir, callback){
 	deselectFile();
 	if(dir != "") currentDir.push(dir);
 	listFiles(currentDir.join(""), callback);
 }
-function dirBack(callback){
+function dirBack(event, callback){
 	deselectFile();
 	if(currentDir.length > 1){
 		currentDir.pop();
@@ -220,7 +233,7 @@ function fileMouseStop(e){
 	if(trackMoved){
 		if(filesBackIsOver){
 			sendData({"newname" : currentDir.slice(0, -1).join("")+trackingFileName, "oldname" : currentDir.join("")+trackingFileName}, function(d){
-				dirBack(function(){
+				dirBack(false, function(){
 					selectFileByName(trackingFileName);
 				});
 			});
@@ -345,4 +358,21 @@ function rename(e){
 			openDir("");
 		});
 	});
+}
+function fileDrop(e){
+	stopEvent(e);
+	var fs = e.e.dataTransfer.files;
+	setConnectionStatus(2);
+	for(i=0;i<fs.length;i++){
+		var fd = new FormData();
+		fd.append("file", fs[i]);
+		fd.append("path", currentDir.join(""));
+		var xhr = new XMLHttpRequest();
+		xhr.addEventListener("load", function(e){
+			refresh();
+			setConnectionStatus(1);
+		}, false);
+		xhr.open("POST", "io.php");
+		xhr.send(fd);	
+	}
 }

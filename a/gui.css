@@ -453,13 +453,18 @@ div{position:absolute;}
 			#pathlabel{
 				top:0;
 				left:25px;
-				width:250px;
+				width:240px;
 				height:100%;
 				padding:10px;
 				font-size:12px;
 				overflow:hidden;
 				white-space:nowrap;
 				text-overflow:ellipsis;
+			}
+			#pathrefresh{
+				right:60px;
+				padding:5px;
+				font-size:16px;
 			}
 			#pathback{
 				right:30px;
@@ -617,53 +622,57 @@ div{position:absolute;}
 					font-size:12px;
 					padding:9px;
 				}
-.tool{
-	top:10px;
-	width:25px;
-	height:25px;
-	background:#474747;
-	color:white;
-	text-align:center;
-	opacity:.9;
+#toolbar{
+	top:0;
+	right:0;
 }
-#add{
-	right:10px;
-	font-size:22px;
-	padding:0px;
-}
-#sel{
-	right:45px;
-	font-size:15px;
-	padding-top:3px;
-	background:#570000;
-}
-	#selv{
-		left:6px;
-		transform:rotate(15deg);
-		-ms-transform:rotate(15deg);		
-		-webkit-transform:rotate(15deg);
+	.tool{
+		top:10px;
+		width:25px;
+		height:25px;
+		background:#474747;
+		color:white;
+		text-align:center;
+		opacity:.9;
 	}
-#move{
-	right:80px;
-	font-size:14px;
-	padding-top:3px;
-}
-	#movev{
-		top:3px;
-		left:9px;
+	#add{
+		right:10px;
+		font-size:22px;
+		padding:0px;
 	}
-#url{
-	top:12px;
-	height:20px;
-	width:250px;
-	right:115px;
-	background:#979797;
-	font-size:14px;
-	padding:2px 5px;
-}
-	#urlshow{
-		font-size:16px;
-		left:-13px;
-		top:2px;
-		color:#575757;
+	#sel{
+		right:45px;
+		font-size:15px;
+		padding-top:3px;
+		background:#570000;
 	}
+		#selv{
+			left:6px;
+			transform:rotate(15deg);
+			-ms-transform:rotate(15deg);		
+			-webkit-transform:rotate(15deg);
+		}
+	#move{
+		right:80px;
+		font-size:14px;
+		padding-top:3px;
+	}
+		#movev{
+			top:3px;
+			left:9px;
+		}
+	#url{
+		top:12px;
+		height:20px;
+		width:250px;
+		right:115px;
+		background:#979797;
+		font-size:14px;
+		padding:2px 5px;
+	}
+		#urlshow{
+			font-size:16px;
+			left:-13px;
+			top:2px;
+			color:#575757;
+		}

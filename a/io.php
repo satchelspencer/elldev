@@ -38,5 +38,8 @@
 	}else if(isset($_POST['newname'])){
 		rename(getcwd().$_POST['oldname'], getcwd().$_POST['newname']);
 		exit;
+	}else if(isset($_FILES['file'])){
+		move_uploaded_file($_FILES['file']['tmp_name'],  getcwd().$_POST['path'].basename($_FILES['file']['name']));
+		exit;
 	}
 ?>
