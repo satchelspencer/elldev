@@ -25,6 +25,9 @@
 		exit;
 	}else if(isset($_POST['np'])){
 		mkdir(getcwd().$_POST['np'], 0777);
+		chdir(getcwd().$_POST['np']);
+		file_put_contents("data.json", "{\"title\":\"".basename($_POST['np'])."\", \"desc\":\"".basename($_POST['np'])."\", \"savestatus\":\"published\", \"data\":{}}");
+		file_put_contents("index.html", "");
 		exit;
 	}else if(isset($_POST['del'])){
 		$del = substr($_POST['del'], 1);
@@ -34,6 +37,9 @@
 		exit;
 	}else if(isset($_POST['info'])){
 		echo sizeConv(filesize(getcwd().$_POST['info'])).",".date("m d Y H:i", filemtime(getcwd().$_POST['info']));
+		exit;
+	}else if(isset($_POST['pageinfo'])){
+		echo file_get_contents(getcwd().$_POST['pageinfo']."/data.json");
 		exit;
 	}else if(isset($_POST['newname'])){
 		rename(getcwd().$_POST['oldname'], getcwd().$_POST['newname']);

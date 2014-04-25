@@ -42,7 +42,7 @@ function ping(){
 	var t = 0;
 	ajax("io.php", {"p":"!"}, false, function(d){
 		if(d == ".") clearInterval(i);
-		if(connectionStatus == 0) setConnectionStatus(1);
+		if(connectionStatus == 0 && connectionStatus != 2) setConnectionStatus(1);
 	});
 	var i = setInterval(function(){
 		if(t > 2000){
@@ -109,10 +109,17 @@ function dirBack(event, callback){
 }
 var selId = false;
 function selectFile(e){
+	if(e.e.shiftKey && selId){
+		selectFiles(e.el.id);
+		return true;
+	}
 	if(selId) $(selId).parentNode.style.background = "";
 	selId = e.el.id;
 	e.el.parentNode.style.background = "#272727";
 	inspectFile(e.el.innerHTML);
+}
+function selectFiles(target){
+	log(selId+" <-> "+target);
 }
 function selectFileByName(name){
 	var f = $("fileslist").children;
@@ -149,6 +156,11 @@ function inspectFile(file){
 	}else{
 		$("pagedetails").style.display = "block";
 		$("filedetails").style.display = "none";
+		sendData({"pageinfo" : currentDir.join("")+file}, function(d){
+			var dat = JSON.parse(d);
+			$("pagetitle").innerHTML = dat.title;
+			$("pagedesc").innerHTML = dat.desc;
+		});
 	}
 }
 function openSelectedFile(file){
@@ -317,6 +329,7 @@ function newPage(){
 	$("fileslist").appendChild(r);
    	focusField($(id).childNodes[0], /^[a-z0-9\-\_]{2,16}$/i, false, function(x){
    		sendData({"np" : currentDir.join("")+x}, function(d){
+			log(d);
 			openDir("");
 		});
    	});
@@ -359,10 +372,13 @@ function rename(e){
 		});
 	});
 }
+var currentlyUploading = 0;
 function fileDrop(e){
 	stopEvent(e);
 	var fs = e.e.dataTransfer.files;
+	currentlyUploading = fs.length;
 	setConnectionStatus(2);
+	document.title = "elldev - uploading ("+currentlyUploading+")";
 	for(i=0;i<fs.length;i++){
 		var fd = new FormData();
 		fd.append("file", fs[i]);
@@ -370,7 +386,14 @@ function fileDrop(e){
 		var xhr = new XMLHttpRequest();
 		xhr.addEventListener("load", function(e){
 			refresh();
-			setConnectionStatus(1);
+			currentlyUploading--;
+			if(currentlyUploading > 0){
+				setConnectionStatus(2);
+				document.title = "elldev - uploading ("+currentlyUploading+")";
+			}else{
+				setConnectionStatus(1);
+				document.title = "elldev";
+			}
 		}, false);
 		xhr.open("POST", "io.php");
 		xhr.send(fd);	
