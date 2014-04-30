@@ -21,6 +21,7 @@
 		<script type="text/javascript" src="els.js"></script>
 		<script type="text/javascript" src="gui.js"></script>
 		<script type="text/javascript">
+			window.onload = gui;
 			var j = {
 				id : "c1",
 				type : "canvas",
@@ -95,7 +96,7 @@
 			var pos = {type : "canvas", centery : false, centerx : false, left : 0, top : 0, right : 0, bottom : 0}
 		</script>
 	</head>
-	<body onload="gui()">
+	<body>
 		<div id="root"></div>
 		<div id="left">
 			<div id="properties">
@@ -246,7 +247,8 @@
 							<span class="filelabel">title:</span><br>
 							<span id="pagetitle"></span><br>
 							<span class="filelabel">description:</span><br>
-							<span id="pagedesc"></span>
+							<span id="pagedesc"></span><br>
+							<span id="pageedit" class="button">edit</span>
 						</span>
 						<span id="filedetails">
 							<span class="filelabel">size:</span><br>
@@ -278,7 +280,7 @@
 			<div id="move" class="tool button">
 			&harr;<div id="movev">&varr;</div>
 			</div>
-			<div id="url"><div id="urlshow" class="button">&#9668;</div>http://elldev.co/test/</div>
+			<div id="url"><div id="urlshow" class="button">&#9668;</div>http://elldev.co<span id="urlField">/</span></div>
 		</div>
 	</body>
 </html>

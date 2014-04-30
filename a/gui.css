@@ -580,7 +580,7 @@ div{position:absolute;}
 				#pagedetails, #filedetails{
 					display:none;
 				}
-					#fileopen{	
+					#fileopen, #pageedit{	
 						text-decoration:underline;
 						cursor:pointer;
 					}

@@ -89,6 +89,11 @@ ext.rmEvent = function(ev){
    	e = this.addEventListener ? this.removeEventListener(ev, eval("evs."+this.id+"."+ev), false) : this.detachEvent("on"+ev, eval("evs."+this.id+"."+ev));
    	eval("delete evs."+this.id+"."+ev);
 }
+ext.cEvent = function(ev, fu, c){
+	this.event(ev, function(e){
+		if(c())fu(e);
+	});
+}
 ext.addClass = function(c){
 	var classes = this.className.split(" ");
 	for(x in classes) if(classes[x] == c) return false;
