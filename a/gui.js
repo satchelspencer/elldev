@@ -123,17 +123,10 @@ function dirBack(event, callback){
 }
 var selId = false;
 function selectFile(e){
-	if(e.e.shiftKey && selId){
-		selectFiles(e.el.id);
-		return true;
-	}
 	if(selId) $(selId).parentNode.style.background = "";
 	selId = e.el.id;
 	e.el.parentNode.style.background = "#272727";
 	inspectFile(e.el.innerHTML);
-}
-function selectFiles(target){
-	log(selId+" <-> "+target);
 }
 function selectFileByName(name){
 	var f = $("fileslist").children;
@@ -415,11 +408,4 @@ function fileDrop(e){
 		xhr.open("POST", "io.php");
 		xhr.send(fd);	
 	}
-}
-var currentPageData = false;
-function editPage(path){
-	$("urlField").innerHTML = path;
-	sendData({"pageinfo" : path}, function(d){
-		currentPageData = JSON.parse(d);
-	});
 }
