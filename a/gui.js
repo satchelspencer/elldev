@@ -73,6 +73,7 @@ function setConnectionStatus(s){
 		$("connection").style.background = "#aaaaaa";
 		$("connection").setAttribute("title", "connected");
 	}else if(s == 2){
+		$("connection").style.background = "#777777";
 		conAniInt = setInterval(function(){
 			$("connection").style.background = conAniStat ? "#aaaaaa" : "#777777";
 			conAniStat = !conAniStat;

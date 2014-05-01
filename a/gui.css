@@ -546,6 +546,9 @@ div{position:absolute;}
 			display:none;
 			opacity:.9;
 			cursor:ns-resize;
+			overflow:hidden;
+			white-space:nowrap;
+			text-overflow:ellipsis;
 		}
 		#fileinspect{
 			top:35px;
