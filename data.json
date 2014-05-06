@@ -1,1 +1,34 @@
-{title:"test page", desc:"here is a simple description", savestatus:"saved", data:{id:"c1",type:"canvas",name:"canvas one",position:{centerx:true,centery:true,width:300,height:300},props:{background:"#a61c1c"},children:[{id:"1",type:"content",name:"test1",position:{centerx:false,centery:false,top:20,left:20,width:150,height:150},props:{background:"black"}},{id:"2",type:"content",name:"testc",position:{centerx:false,centery:false,bottom:20,right:20,width:150,height:150},props:{background:"white"}},{id:"3",type:"sequence",name:"tcjha",position:{centerx:true,centery:true,width:200,height:200},props:{background:"red",margin:10,innerMargin:[10, 10, 10, 10],vert:true},children:[{id:"i1", type:"content", position:{size:40}, props:{background:"black"}},{id:"i2", type:"content", position:{size:60}, props:{background:"white"}},{id:"i3", type:"content", position:{size:80}, props:{background:"black"}},{id:"i4", type:"content", position:{size:100}, props:{background:"white"}}]}]}}
+{"title":"root", "desc":"this is your motherfucking root page, bitch", "savestatus":"published", "els":[
+	{
+		"id" : "head",
+		"name" : "head",
+		"type" : "canvas",
+		"position" : {
+			"left" : "0",
+			"right" : "0",
+			"top" : "0",
+			"height" : "200"
+		},
+		"props" : {
+			"background" : "black"
+		},
+		"children" : [
+			{
+				"id" : "inner",
+				"name" : "inner",
+				"type" : "content",
+				"position" : {
+					"top" : "10",
+					"left" : "0",
+					"right" : "0",
+					"height" : "100"
+				},
+				"props" : {
+					"background" : "pink",
+					"htmldata" : "<span style='color:red;'>hello</span>"
+				}
+			}
+		]
+			
+	}
+]}

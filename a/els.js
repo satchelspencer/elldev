@@ -72,6 +72,10 @@ function el(o){
 				this.style[props[x] ? "overflowX" : "overflowY"] = "hidden";
 				this.style.whiteSpace = props[x] ? "" : "nowrap";
 				for(y in this.childNodes)if(this.childNodes[y].nodeType == 1 && !this.childNodes[y].className) this.childNodes[y].updatePosition();
+			}else if(x == "htmldata"){
+				this.innerHTML = props[x];
+				this.setAttribute("contenteditable", "true");
+				this.style.outline = "0";
 			}
 		}
 	}
@@ -103,7 +107,7 @@ function el(o){
 		this.remove();
 	}
 	if(r.j.type == "canvas" || r.j.type == "sequence"){
-		r.insertChild = function(e, index){
+			r.insertChild = function(e, index){
 			if(index == -1 || this.childNodes.length == 0) this.appendChild(e);
 			else this.insertBefore(e, this.childNodes[index]);
 		}
@@ -118,9 +122,9 @@ function el(o){
 		r.setPosition(o.position || false, false);
 		r.setProperties(o.props);
 	}
-	r.event("mouseover", function(e){
+	r.event("click", function(e){
 		event.stopPropagation();
-		log(e.el.id);
+		selectEl(e.el.id);
 	});
 	return r;
 }
