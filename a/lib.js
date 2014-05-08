@@ -111,8 +111,11 @@ ext.rmClass = function(c){
 	return true;
 }
 ext.clearEvents = function(){
-	for(x in evs[this.id]) this.rmEvent(x, evs[this.id][x]);
-	delete evs[this.id];
+	if(evs[this.id]){
+		for(x in evs[this.id]) this.rmEvent(x, evs[this.id][x]);
+		delete evs[this.id];
+		return true;
+	}else return false;
 }
 ext.getChildren = function(r){
 	if(this.childNodes){
@@ -154,8 +157,22 @@ ext.clone = function(){
 	return el;
 }
 ext.remove = function(){
+	this.clear();
 	if(this.parentNode) this.parentNode.removeChild(this);
 	this.clearEvents();
+}
+ext.clear = function(){
+	var c = this.getChildren();
+	if(c.length > 0){
+		for(x=0;x<c.length;x++) c[x].remove();
+		return true;
+	}else return false;
+}
+ext.show = function(){
+	this.style.display = "block";
+}
+ext.hide = function(){
+	this.style.display = "none";
 }
 function stripTags(html){
    var tmp = document.createElement("DIV");

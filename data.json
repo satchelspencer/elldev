@@ -1,6 +1,5 @@
 {"title":"root", "desc":"this is your motherfucking root page, bitch", "savestatus":"published", "els":[
 	{
-		"id" : "head",
 		"name" : "head",
 		"type" : "canvas",
 		"position" : {
@@ -14,13 +13,12 @@
 		},
 		"children" : [
 			{
-				"id" : "inner",
 				"name" : "inner",
 				"type" : "content",
 				"position" : {
 					"top" : "10",
-					"left" : "0",
-					"right" : "0",
+					"centerx" : "true",
+					"width" : "200",
 					"height" : "100"
 				},
 				"props" : {

@@ -144,26 +144,26 @@ function deselectFile(){
 		$(selId).parentNode.style.background = "";
 		selId = false;
 	}
-	$("details").style.display = "none";
-	$("filedetails").style.display = "none";
-	$("pagedetails").style.display = "none";
-	$("nofile").style.display = "block";
+	$("details").hide();
+	$("filedetails").hide();
+	$("pagedetails").hide();
+	$("nofile").show();
 }
 function inspectFile(file){
 	$("filename").innerHTML = file;
-	$("details").style.display = "block";
-	$("nofile").style.display = "none";
+	$("details").show();
+	$("nofile").hide();
 	if(file.match(/\./g)){
 		sendData({"info" : currentDir.join("")+file}, function(d){
 			var data = d.split(",");
 			$("filesize").innerHTML = data[0];
 			$("filemod").innerHTML = data[1];
-			$("filedetails").style.display = "block";
-			$("pagedetails").style.display = "none";
+			$("filedetails").show();
+			$("pagedetails").hide();
 		});
 	}else{
-		$("pagedetails").style.display = "block";
-		$("filedetails").style.display = "none";
+		$("pagedetails").show();
+		$("filedetails").hide();
 		sendData({"pageinfo" : currentDir.join("")+file}, function(d){
 			var dat = JSON.parse(d);
 			$("pagetitle").innerHTML = dat.title;
@@ -238,14 +238,14 @@ function fileMouseTrack(e){
 			trackingFile = false;
 		}
 		$("draggingfile").innerHTML = trackingFileName;
-		$("draggingfile").style.display = "block";
+		$("draggingfile").show();
 		$("draggingfile").style.top = newpos+"px";
 		overIndex = Math.floor((e.y-($("fileslist").getPosition().y))/25);
 		for(i=0;i<$("fileslist").children.length;i++) $("fileslist").children[i].style.background = (i == overIndex && $("fileslist").children[i].children.length > 1 && !filesBackIsOver && e.x < 210) ? "#373737" : "";
 	}
 }
 function fileMouseStop(e){
-	$("draggingfile").style.display = "none";
+	$("draggingfile").hide();
 	$("draggingfile").style.top = "35px";
 	$("body").rmEvent("mousemove", fileMouseTrack);
 	$("body").rmEvent("mouseup", fileMouseStop);
@@ -274,13 +274,13 @@ function fileMouseStop(e){
 	hideFilesBack();
 }
 function showFilesBack(){
-	$("filesback").style.display = "block";
+	$("filesback").show();
 	$("fileslist").style.left = "25px";
 	$("draggingfile").style.left = "25px";
 }
 function hideFilesBack(){
 	filesBackIsOver = false;
-	$("filesback").style.display = "none";
+	$("filesback").hide();
 	$("fileslist").style.left = "0px";
 	$("draggingfile").style.left = "0px";
 }
