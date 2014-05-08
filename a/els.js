@@ -128,3 +128,7 @@ function el(o){
 	});
 	return r;
 }
+function isAbsolute(measure){
+	if(!measure) return false;
+	return measure.indexOf("%") == "-1";
+}

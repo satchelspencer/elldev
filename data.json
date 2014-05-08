@@ -16,7 +16,7 @@
 				"name" : "inner",
 				"type" : "content",
 				"position" : {
-					"top" : "10",
+					"centery" : "true",
 					"centerx" : "true",
 					"width" : "200",
 					"height" : "100"
