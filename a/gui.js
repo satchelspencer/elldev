@@ -340,7 +340,6 @@ function newPage(){
 	$("fileslist").appendChild(r);
    	focusField($(id).childNodes[0], /^[a-z0-9\-\_]{2,16}$/i, false, function(x){
    		sendData({"np" : currentDir.join("")+x}, function(d){
-			log(d);
 			openDir("");
 		});
    	});

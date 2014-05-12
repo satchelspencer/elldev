@@ -1,4 +1,4 @@
-{"title":"root", "desc":"this is your motherfucking root page, bitch", "savestatus":"published", "els":[
+{"title":"root", "desc":"here's your damn desc", "savestatus":"published", "els":[
 	{
 		"name" : "head",
 		"type" : "canvas",
@@ -6,27 +6,76 @@
 			"left" : "0",
 			"right" : "0",
 			"top" : "0",
-			"height" : "200"
+			"bottom" : "0"
 		},
 		"props" : {
-			"background" : "black"
+			"background" : "white"
 		},
 		"children" : [
 			{
-				"name" : "inner",
-				"type" : "content",
+				"name" : "header",
+				"type" : "canvas",
 				"position" : {
-					"centery" : "true",
-					"centerx" : "true",
-					"width" : "200",
-					"height" : "100"
+					"top" : "0",
+					"right" : "0",
+					"left" : "0",
+					"height" : "200"
 				},
 				"props" : {
-					"background" : "pink",
-					"htmldata" : "<span style='color:red;'>hello</span>"
-				}
+					"background" : "gray"
+				},
+				"children" : [
+					{
+						"name" : "title",
+						"type" : "content",
+						"position" : {
+							"top" : "10",
+							"left" : "10"
+						},
+						"props" : {
+							"htmldata" : "yo, ho"
+						}
+					}
+				]
+			},
+			{
+				"name" : "body",
+				"type" : "sequence",
+				"position" : {
+					"top" : "200",
+					"right" : "0",
+					"left" : "0"
+				},
+				"props" : {
+					"margin" : "10",
+					"innerMargin" : ["10", "0", "10", "0"],
+					"vert" : "true"
+				},
+				"children" : [
+					{
+						"name" : "post",
+						"type" : "content",
+						"position" : {
+							"size" : "auto"
+						},
+						"props" : {
+							"background" : "gray",
+							"htmldata" : "yo, ho bro no jo blow"
+						}
+					},
+					{
+						"name" : "post number 2",
+						"type" : "content",
+						"position" : {
+							"size" : "auto"
+						},
+						"props" : {
+							"background" : "gray",
+							"htmldata" : "yo, this is the second post"
+						}
+					}
+				]
 			}
-		]
-			
+		]		
 	}
 ]}
