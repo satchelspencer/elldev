@@ -15,6 +15,10 @@ function selectEl(id){
 	var j = $(id).j;
 	var pType = $(id).parentNode.j ? $(id).parentNode.j.type : "canvas";
 	var p = $(id).j.position;
+	var rainbow = {"canvas":{height:165,props:[]},"sequence":{height:245,props:["sequenceproperties"]},"content":{height:210,props:["textproperties"]}};
+	var c = $("toggleableproperties").children;
+	$("properties").style.height = rainbow[$(id).j.type].height+"px";
+	$("elements").style.top = rainbow[$(id).j.type].height+"px";
 	if(pType == "canvas"){
 		$("positioncanvas").show();
 		$("positionsequence").hide();
@@ -29,8 +33,18 @@ function selectEl(id){
 	}else if(pType == "sequence"){
 		$("positionsequence").show();
 		$("positioncanvas").hide();
+		$("beforelabel").innerHTML = ($(id).parentNode.j.props.margin || "0")+"px";
+		for(var k=1,e=$(id);e=e.previousSibling;k++);
+		$("positionorderbase").innerHTML = k;
+		$("positionsuffix").innerHTML = k>10&&k<20?"th":k%10==1?"st":k%10==2?"nd":k%10==3?"rd":"th";
+		$("afterlabel").innerHTML = ($(id).parentNode.j.props.margin || "0")+"px";
 	}
-	$("widthlabel").innerHTML = p.width ? p.width+(isAbsolute(p.width) ? "px" : "") : "auto";
-	$("heightlabel").innerHTML = p.height ? p.height+(isAbsolute(p.height) ? "px" : "") : "auto";
+	$("widthlabel").innerHTML = p.width ? p.width+(isAbsolute(p.width) ? "px" : "") : "auto&#8201;&#8201;<span class='uneditable'>"+$(id).getStyle("width")+"</span>";
+	$("heightlabel").innerHTML = p.height ? p.height+(isAbsolute(p.height) ? "px" : "") : "auto&#8201;&#8201;<span class='uneditable'>"+$(id).getStyle("height")+"</span>";
+	for(x=0;x<c.length;x++){
+		var s = false;
+		for(i in rainbow[$(id).j.type].props) if(rainbow[$(id).j.type].props[i] == c[x].id) s = true;
+		c[x].style.display = s ? "block" : "none";
+	}
 	
 }

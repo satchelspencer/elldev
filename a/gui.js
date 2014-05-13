@@ -16,6 +16,10 @@ function gui(){
 	$("fileslist").cEvent("dragexit", stopEvent, ready);
 	$("fileslist").cEvent("dragover", stopEvent, ready);
 	$("fileslist").cEvent("drop", fileDrop, ready);
+	window.onresize = function(){
+		if(!$(selectedElId).j.position.width) $("widthlabel").innerHTML = "auto&#8201;&#8201;<span class='uneditable'>"+$(selectedElId).getStyle("width")+"</span>";
+		if(!$(selectedElId).j.position.height) $("heightlabel").innerHTML = "auto&#8201;&#8201;<span class='uneditable'>"+$(selectedElId).getStyle("height")+"</span>";
+	}
 }
 var fileListId = 0;
 var connectionStatus = 1;

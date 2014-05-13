@@ -18,7 +18,7 @@ div{position:absolute;}
 	background:grey;
 	background-size:cover;
 	min-width:400px;
-	cursor:crosshair;
+	cursor:default;
 }
 #left{
 	left:0px;
@@ -32,7 +32,7 @@ div{position:absolute;}
 		left:0px;
 		right:0px;
 		top:0px;
-		height:285px;
+		height:165px;
 		background:#373737;
 		overflow-y:scroll;
 	}
@@ -46,6 +46,7 @@ div{position:absolute;}
 			.origin{width:5px;height:5px;background:white;border-radius:2.5px;}
 			.hlabel, .vlabel{background:#373737;color:white;font-size:10px;padding:5px;}
 			.vlabel{-webkit-transform-origin:0 0;-webkit-transform:rotate(90deg);}
+			.uneditable{color:#676767;}
 			#size{
 				width:135px;
 				height:135px;
@@ -171,7 +172,7 @@ div{position:absolute;}
 					text-align:center;
 
 				}
-					#positionordersuffix{
+					#positionsuffix{
 						position:absolute;
 						font-size:10px;
 						margin-top:1px;
@@ -183,6 +184,7 @@ div{position:absolute;}
 					top:10px;
 				}
 		#sequenceproperties{
+			display:none;
 			position:relative;
 			width:100%;
 			height:75px;
@@ -272,6 +274,7 @@ div{position:absolute;}
 				padding-top:1px;
 			}
 		#textproperties{
+			display:none;
 			position:relative;
 			width:100%;
 			height:40px;
@@ -337,7 +340,7 @@ div{position:absolute;}
 	#elements{
 		left:0px;
 		right:0px;
-		top:285px;
+		top:165px;
 		bottom:30%;
 		background:#272727;
 	}
