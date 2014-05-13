@@ -1,4 +1,6 @@
 Elldev
 ======
 
-don't ya dare look
+Environment:
+------------
+Apache, Php5 (with write permissions)
