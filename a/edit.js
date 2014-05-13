@@ -11,6 +11,7 @@ function editPage(path){
 }
 var selectedElId = false;
 function selectEl(id){
+	showEl($(id));
 	selectedElId = id;
 	var j = $(id).j;
 	var pType = $(id).parentNode.j ? $(id).parentNode.j.type : "canvas";
@@ -45,6 +46,29 @@ function selectEl(id){
 		var s = false;
 		for(i in rainbow[$(id).j.type].props) if(rainbow[$(id).j.type].props[i] == c[x].id) s = true;
 		c[x].style.display = s ? "block" : "none";
-	}
-	
+	}	
+}
+function showEl(el){
+	$("outline").style.display = "block";
+	$("outline").style.width = el.getStyle("width");
+	$("outline").style.height = el.getStyle("height");
+	$("outline").style.top = el.getPosition().y+"px";
+	$("outline").style.left = el.getPosition().x+"px";
+	var o = 0;
+	var i = setInterval(function(){
+		$("outline").style.opacity = o;
+		o+=.05;
+		if(o>=.5){
+			clearInterval(i);
+			var x = setInterval(function(){
+				$("outline").style.opacity = o;
+				o-=.05;
+				if(o<=0){
+					clearInterval(x);
+					$("outline").style.opacity = 0;
+					$("outline").style.display = "none";
+				}
+			},20);
+		}
+	}, 20);
 }

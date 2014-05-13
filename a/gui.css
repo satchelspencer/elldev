@@ -20,6 +20,11 @@ div{position:absolute;}
 	min-width:400px;
 	cursor:default;
 }
+#outline{
+	display:none;
+	background:white;
+	opacity:0;
+}
 #left{
 	left:0px;
 	top:0px;

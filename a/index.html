@@ -23,82 +23,11 @@
 		<script type="text/javascript" src="edit.js"></script>
 		<script type="text/javascript">
 			window.onload = gui;
-			var j = {
-				id : "c1",
-				type : "canvas",
-				name : "canvas one",
-				position : {
-					centerx : true,
-					centery : true,
-					width : 300,
-					height : 300
-				},
-				props : {
-					background : "#a61c1c"
-				},
-				children : [
-					{
-						id : "1",
-						type : "content",
-						name : "test1",
-						position : {
-							centerx : false,
-							centery : false,
-							top : 20,
-							left : 20,
-							width : 150,
-							height : 150
-						},
-						props : {
-							background : "black"
-						}
-					},
-					{
-						id : "2",
-						type : "content",
-						name : "testc",
-						position : {
-							centerx : false,
-							centery : false,
-							bottom : 20,
-							right : 20,
-							width : 150,
-							height : 150
-						},
-						props : {
-							background : "white"
-						}
-					},
-					{
-						id : "3",
-						type : "sequence",
-						name : "tcjha",
-						position : {
-							centerx : true,
-							centery : true,
-							width : 200,
-							height : 200
-						},
-						props : {
-							background : "red",
-							margin : 10,
-							innerMargin : [10, 10, 10, 10],
-							vert : true
-						},
-						children : [
-							{id : "i1", type : "content", position : {size : 40}, props : {background : "black"}},
-							{id : "i2", type : "content", position : {size : 60}, props : {background : "white"}},
-							{id : "i3", type : "content", position : {size : 80}, props : {background : "black"}},
-							{id : "i4", type : "content", position : {size : 100}, props : {background : "white"}} 
-						]						
-					}
-				]
-			};
-			var pos = {type : "canvas", centery : false, centerx : false, left : 0, top : 0, right : 0, bottom : 0}
 		</script>
 	</head>
 	<body>
 		<div id="root"></div>
+		<div id="outline"></div>
 		<div id="left">
 			<div id="properties">
 				<div id="sizecanvas">
