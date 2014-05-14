@@ -63,6 +63,7 @@ function siblingListEl(el, selected){
 	o.innerHTML = siblingListId+1;
 	var b = element(false, "div", {"class" : "elementvbar"});
 	var n = element("slname"+siblingListId, "div", {"class" : "elementname"});
+	n.event("click", function(e){selectEl(el.id)});
 	n.innerHTML = el.j.name;
 	e.appendChild(o);
 	e.appendChild(b);
@@ -70,6 +71,7 @@ function siblingListEl(el, selected){
 	if(el.j.children) if(el.j.children.length > 0){
 		var a = element("slar"+siblingListId, "div", {"class" : "elementchildren"});
 		a.innerHTML = "&rsaquo;"
+		a.event("click", function(e){selectEl(el.children[0].id);});
 		e.appendChild(a);
 	}
 	siblingListId++;
@@ -78,6 +80,7 @@ function siblingListEl(el, selected){
 function parentListEl(el, isParent){
 	var e = element("pl"+siblingListId, "div", {"class" : "element"});
 	var n = element("plname"+siblingListId, "div", {"class" : "elementnamep"});
+	n.event("click", function(e){selectEl(el.id)});
 	n.innerHTML = el.j.name;
 	e.appendChild(n);
 	if(isParent){
@@ -86,6 +89,7 @@ function parentListEl(el, isParent){
 	}else if(el.j.children) if(el.j.children.length > 0){
 		var a = element("plar"+siblingListId, "div", {"class" : "elementchildren"});
 		a.innerHTML = "&rsaquo;"
+		a.event("click", function(e){selectEl(el.children[0].id);});
 		e.appendChild(a);
 	}
 	siblingListId++;
