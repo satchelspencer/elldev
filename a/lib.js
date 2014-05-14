@@ -111,14 +111,17 @@ ext.rmClass = function(c){
 	return true;
 }
 ext.clearEvents = function(){
-	if(evs[this.id]){
-		for(x in evs[this.id]) this.rmEvent(x, evs[this.id][x]);
-		delete evs[this.id];
-		return true;
-	}else return false;
+	if(this.id){
+		if(evs[this.id]){
+			for(x in evs[this.id]) this.rmEvent(x, evs[this.id][x]);
+			delete evs[this.id];
+			return true;
+		}
+	}
+	return false;
 }
 ext.getChildren = function(r){
-	if(this.childNodes){
+	if(this.children){
 		var els = Array.prototype.slice.call(this.childNodes), arr = new Array();
 		for(var i = 0;i<els.length;i++){
 			arr[i] = extEl(els[i]);
@@ -157,14 +160,13 @@ ext.clone = function(){
 	return el;
 }
 ext.remove = function(){
-	this.clear();
 	if(this.parentNode) this.parentNode.removeChild(this);
 	this.clearEvents();
 }
 ext.clear = function(){
 	var c = this.getChildren();
 	if(c.length > 0){
-		for(x=0;x<c.length;x++) c[x].remove();
+		for(x=0;x<c.length;x++) this.removeChild(c[x]);
 		return true;
 	}else return false;
 }
