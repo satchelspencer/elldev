@@ -47,5 +47,8 @@
 	}else if(isset($_FILES['file'])){
 		move_uploaded_file($_FILES['file']['tmp_name'],  getcwd().$_POST['path'].basename($_FILES['file']['name']));
 		exit;
+	}else if(isset($_POST['putpageinfo'])){
+		file_put_contents(getcwd().$_POST['path']."data.json", $_POST['putpageinfo']);
+		exit;
 	}
 ?>

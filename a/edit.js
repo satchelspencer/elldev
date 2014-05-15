@@ -1,6 +1,8 @@
 var currentPageData = false;
+var currentPagePath = "/";
 function editPage(path){
 	$("urlField").innerHTML = path;
+	currentPagePath = path;
 	sendData({"pageinfo" : path}, function(d){
 		currentPageData = JSON.parse(d);
 		rid = 0;
@@ -64,6 +66,7 @@ function siblingListEl(el, selected){
 	var b = element(false, "div", {"class" : "elementvbar"});
 	var n = element("slname"+siblingListId, "div", {"class" : "elementname"});
 	n.event("click", function(e){selectEl(el.id)});
+	n.event("mouseover", function(e){showEl(el)});
 	n.innerHTML = el.j.name;
 	e.appendChild(o);
 	e.appendChild(b);
@@ -81,6 +84,7 @@ function parentListEl(el, isParent){
 	var e = element("pl"+siblingListId, "div", {"class" : "element"});
 	var n = element("plname"+siblingListId, "div", {"class" : "elementnamep"});
 	n.event("click", function(e){selectEl(el.id)});
+	n.event("mouseover", function(e){showEl(el)});
 	n.innerHTML = el.j.name;
 	e.appendChild(n);
 	if(isParent){
@@ -118,4 +122,7 @@ function showEl(el){
 			},25);
 		}
 	}, 25);
+}
+function save(){
+	sendData({"putpageinfo" : JSON.stringify(currentPageData), "path" : currentPagePath}, function(d){});
 }
