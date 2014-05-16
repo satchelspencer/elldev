@@ -19,7 +19,7 @@ function selectEl(id, noshow){
 	var j = $(id).j;
 	var pType = $(id).parentNode.j ? $(id).parentNode.j.type : "canvas";
 	var p = $(id).j.position;
-	var rainbow = {"canvas":{height:165,props:[]},"sequence":{height:245,props:["sequenceproperties"]},"content":{height:210,props:["textproperties"]}};
+	var rainbow = {"canvas":{height:245,props:[]},"sequence":{height:245,props:["sequenceproperties"]},"content":{height:245,props:["textproperties"]}};
 	var c = $("toggleableproperties").children;
 	$("properties").style.height = rainbow[$(id).j.type].height+"px";
 	$("elements").style.top = rainbow[$(id).j.type].height+"px";
@@ -74,7 +74,10 @@ function siblingListEl(el, selected){
 	if(el.j.children) if(el.j.children.length > 0){
 		var a = element("slar"+siblingListId, "div", {"class" : "elementchildren"});
 		a.innerHTML = "&rsaquo;"
-		a.event("click", function(e){selectEl(el.children[0].id);});
+		a.event("click", function(e){
+			showEl(el);
+			selectEl(el.children[0].id, true);
+		});
 		e.appendChild(a);
 	}
 	siblingListId++;
