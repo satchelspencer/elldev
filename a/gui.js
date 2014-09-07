@@ -354,11 +354,11 @@ var delTimerInterval;
 function startDelFile(e){
 	var delTimer = 5;
 	delTimerInterval = setInterval(function(){
-		if(delTimer > 35){
+		$("fileDeleteProg").style.height = delTimer+"px";
+		if(delTimer >= 35){
 			stopDelFile(e);
 			delFile(e);
-		}
-		$("fileDeleteProg").style.height = delTimer+"px"; 
+		} 
 		delTimer+=1;
 	}, 30);
 }
