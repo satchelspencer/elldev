@@ -1,0 +1,102 @@
+@font-face {
+  font-family: 'icon';
+  src: url('../fonts/fontawesome-webfont.eot?v=4.2.0');
+  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.2.0') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff?v=4.2.0') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.2.0') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.icon{font-family:icon;}
+body{font-family:arial;font-size:16px;color:white;margin:0;padding:0;}
+div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+*{outline:0px solid transparent;}
+.unselectable{
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+}
+.overflowEllipsis{
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+}
+#gui{
+	top:0;
+	left:0;
+	bottom:0;
+	width:350px;
+	min-height:600px;
+}
+	.separator{
+		left:0;
+		right:0;
+		height:5px;
+		background:#777777;
+		cursor:row-resize;
+		z-index:1000000;
+	}
+	#properties{
+		left:0;
+		right:0;
+		top:0;
+		height:400px;
+		background:#373737;
+		font-size:13px;
+	}
+	#propertiesSeparator{
+		top:400px;
+	}
+	#elements{
+		left:0;
+		right:0;
+		top:405px;
+		bottom:235px;
+		background:#272727;
+	}
+	#browserSeparator{
+		bottom:230px;
+	}
+	#browser{
+		left:0;
+		right:0;
+		height:230px;
+		bottom:0;
+		background:#474747;
+	}
+#canvas{
+	top:0;
+	left:350px;
+	right:0;
+	bottom:35px;
+}
+#bar{
+	left:350px;
+	bottom:0px;
+	right:0px;
+	height:35px;
+	background:#777777;
+	box-shadow:-2px 0px 4px rgba(0, 0, 0, 0.5);
+}
+#warn{
+	top:-40px;
+	right:0;
+	width:180px;
+	height:40px;
+	background:rgba(180, 0, 0, 0.7);
+	border-radius:0px 0px 0px 3px;
+	color:#f0f0f0;
+	box-shadow:-1px -1px 3px rgba(0, 0, 0, 0.3);
+}	
+	#warnIcon{
+		top:0;
+		left:0;
+		bottom:0;
+		width:40px;
+		font-size:30px;
+		padding:5px 6px;
+	}
+	#warnTitle{
+		top:10px;
+		left:50px;
+		font-size:15px;
+		font-weight:bold;
+	}

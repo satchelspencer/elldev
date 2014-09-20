@@ -1,1 +1,246 @@
-(;
+<!doctype html>
+<html>
+	<head>	
+		<title></title>
+		<script type="text/javascript" src="js/lib.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/main.css"/>
+		<link rel="stylesheet" type="text/css" href="css/props/props.css"/>
+		<link rel="stylesheet" type="text/css" href="css/props/bg.css"/>
+		<link rel="stylesheet" type="text/css" href="css/props/border.css"/>
+		<link rel="stylesheet" type="text/css" href="css/props/font.css"/>
+		<link rel="stylesheet" type="text/css" href="css/props/pos.css"/>
+		<link rel="stylesheet" type="text/css" href="css/elements.css"/>
+		<link rel="stylesheet" type="text/css" href="css/browser.css"/>
+		<link rel="stylesheet" type="text/css" href="css/bar.css"/>
+	</head>
+	<body>
+		<div id="bar">
+			<div id="tools">
+				<div id="select" class="tool icon">&#xf124;</div>
+				<div id="move" class="tool icon">&#xf047;</div>
+				<div id="add">
+					<div id="addIcon" class="tool icon">&#xf067;</div>
+					<div id="addOptions">
+						<div id="addContent" class="addOption">content</div>
+						<div id="addCanvas" class="addOption">canvas</div>
+						<div id="addSequence" class="addOption">sequence</div>
+					</div>
+				</div>
+			</div>
+			<div id="uriBar">
+				<span id="uriBase">elldev.co</span><span id="uriPath">/myPage/</span>
+				<div id="showUri" class="icon">&#xf08e;</div>
+			</div>
+		</div>
+		<div id="gui" class="unselectable">
+			<div id="properties">
+				<div id="propertiesHeader">
+					"<span id="elementTitle">My element name</span>" <span id="elementType">(canvas)</span>
+					<span class="elementIcon icon">&#xf0c9;</span>
+				</div>
+				<div id="propertiesList">
+					<div id="position" class="property">
+						<div class="propertyHead">Position <span class="propShowIcon">&#x2212;</span></div>
+						<div class="propertyBody">
+							<div id="rotation">
+								<div id="rotationCircle"></div>
+								<div id="rotationLabel">56<span class="rotationDeg">&deg;</span></div>
+								<div id="ticks">
+									<div id="deg0" class="tick"><div></div></div>
+									<div id="deg45" class="tick"><div></div></div>
+									<div id="deg90" class="tick"><div></div></div>
+									<div id="deg135" class="tick"><div></div></div>
+									<div id="deg180" class="tick"><div></div></div>
+									<div id="deg225" class="tick"><div></div></div>
+									<div id="deg270" class="tick"><div></div></div>
+									<div id="deg315" class="tick"><div></div></div>
+								</div>
+								<div id="rotationArm">
+									<div id="rotationArmHandle"></div>
+								</div>
+								<div id="rotationOrigin"></div>
+							</div>
+							<div id="boxPosition">
+								<div id="boxPositionBox">
+									<div id="boxPositionOrigin"></div>
+									<div id="boxPositionWidth"><div id="boxWidthLabel"><span class="innerLabel">600px</span></div><div class="hspanBar"></div></div>
+									<div id="boxPositionHeight"><div id="boxHeightLabel"><span class="innerLabel">auto</span></div><div class="vspanBar"></div></div>
+									<div id="boxOrder">993<span id="orderSuffix">rd</span></div>
+								</div>
+								<div id="boxTop"><div class="vlabel">106px</div><div class="vspan"><div class="vspanBar"></div></div></div>
+								<div id="boxBottom" class="positionDisabled"><div class="vlabel">100px</div><div class="vspan"><div class="vspanBar"></div></div></div>
+								<div id="boxLeft"><div class="hlabel">106px</div><div class="hspan"><div class="hspanBar"></div></div></div>
+								<div id="boxRight"><div class="hlabel">106px</div><div class="hspan"><div class="hspanBar"></div></div></div>
+							</div>
+						</div>
+					</div>
+					<div id="background" class="property">
+						<div class="propertyHead">Background <span class="propShowIcon">&#x2212;</span></div>
+						<div class="propertyBody">
+							<div class="backgroundSplit">
+								<div id="backgroundColor" class="color checkered"><div></div></div>
+							</div>
+							<div class="backgroundSplit">
+								<div id="backgroundTiling">
+									<div id="tileVert">
+										<div id="tileVertLine"></div>
+										<div id="tileVertRepeat" style="display:none;"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+									</div>
+									<div id="tileHor">
+										<div id="tileHorLine"></div>
+										<div id="tileHorRepeat"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+									</div>
+									<div id="tileCenter"></div>
+								</div>
+							</div>
+							<div class="backgroundSplit">
+								<div id="backgroundSize">
+									<div id="backgroundSizeNormal"></div>
+									<div id="backgroundSizeFit"></div>
+									<div id="backgroundSizeCover"></div>
+								</div>
+							</div>
+							<div class="backgroundSplit">
+								<div id="backgroundImage">
+									<div id="backgroundImageIcon" class="icon">&#xf1c5;</div>
+									<div id="backgroundImageClear">&times;</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="font" class="property">
+						<div class="propertyHead">Font <span class="propShowIcon">&#x2212;</span></div>
+						<div class="propertyBody">
+							<div id="fontColor" class="color checkered"><div></div></div>
+							<div id="fontFamily">Comic Sans</div>
+							<div id="fontAttributes">
+								<div id="fontAlign" class="icon">&#xf036;</div>
+								<div id="fontBold" class="icon">&#xf032;</div>
+								<div id="fontUnderline" class="icon">&#xf0cd;</div>
+								<div id="fontItalic" class="icon">&#xf033;</div>
+								<div id="fontClear" class="icon">&times;</div>
+							</div>
+							<div id="fontSize" class="slider">
+								<div class="sliderLabel">Font Size</div>
+								<div class="sliderValue">33px</div>
+								<div class="sliderArea"><div></div></div>
+							</div>
+							<div id="fontLineHeight" class="slider">
+								<div class="sliderLabel">Line Height</div>
+								<div class="sliderValue">12px</div>
+								<div class="sliderArea"><div></div></div>
+							</div>
+						</div>
+					</div>
+					<div id="border" class="property">
+						<div class="propertyHead">Border <span class="propShowIcon">&#x2212;</span></div>
+						<div class="propertyBody">
+							<div id="borderColor" class="color checkered"><div></div></div>
+							<div id="borderStyle">Solid</div>
+							<div id="borderProps"><div id="borderTop">
+								<div class="icon">&#xf00c;</div>
+							</div><div id="borderLeft">
+								<div class="icon">&#xf00c;</div>
+							</div><div id="borderBottom">
+								<div class="icon"></div>
+							</div><div id="borderRight">
+								<div class="icon">&#xf00c;</div>
+							</div>
+							</div>
+							<div id="borderWidth" class="slider">
+								<div class="sliderLabel">Width</div>
+								<div class="sliderValue">12px</div>
+								<div class="sliderArea"><div></div></div>
+							</div>
+							<div id="borderRadius" class="slider">
+								<div class="sliderLabel">Radius</div>
+								<div class="sliderValue">42px</div>
+								<div class="sliderArea"><div></div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="colorPicker">
+					<div id="red"><div id="rgbHandle" style="left:90px;"></div>
+						<div id="rgbLabel">90</div>
+					</div>
+					<div id="green"><div id="rgbHandle" style="left:120px;"></div>
+						<div id="rgbLabel">120</div>
+					</div>
+					<div id="blue"><div id="rgbHandle" style="left:230px;"></div>
+						<div id="rgbLabel">230</div>
+					</div>
+					<div id="alpha" class="checkered">
+						<div id="alphaOverlay"></div>
+						<div id="rgbHandle" style="left:80px;"></div>
+						<div id="rgbLabel">80</div>
+						
+					</div>
+				</div>
+			</div>
+			<div id="propertiesSeparator" class="separator"></div>
+			<div id="elements">
+				<div id="elementChildren"></div>
+				<div id="elementParent">
+					<div class="element"><div class="elementOrder">1</div><div class="elementName">Wrapper</div></div>
+				</div>
+				<div id="elementGrand">
+					<div class="element"><div class="elementOrder">1</div><div class="elementName">Header</div></div>
+					<div class="element"><div class="elementOrder">2</div><div class="elementName">Body</div></div>
+					<div class="element"><div class="elementOrder">3</div><div class="elementName">Footer</div></div>
+				</div>
+			</div>
+			<div id="browserSeparator" class="separator"></div>
+			<div id="browser">
+				<div id="browserInspector">
+					<div id="browserInspectorName" class="overflowEllipsis">
+						<span class="inspectorLabel">Name: </span>
+						<span contenteditable="true">Homepage, Bitch asdsaad</span>
+					</div>
+					<div id="browserInspectorDesc">
+						<span class="inspectorLabel">Descripion: </span>
+						<span contenteditable="true">here's your fucking description</span>
+					</div>
+					<div id="browserInspectorOptions" class="icon">
+						<span id="fileOpen">&#xf044;</span>
+						<span id="fileDownload">&#xf019;</span>
+						<span id="fileDelete">&#xf00d;</span>
+					</div>
+				</div>
+				<div id="parentPage">
+					<span id="parentPageName">Homepage</span>
+					<div id="browserAdd" class="icon">&#xf067;</div>
+				</div>
+				<div id="browserList">
+					<div class="browserListEl">Another Page</div>
+					<div class="browserListEl">You fuck</div>
+					<div class="browserListEl">Another Page</div>
+					<div class="browserListEl">You fuck</div>
+					<div class="browserListEl">Another Page</div>
+					<div class="browserListEl">You fuck</div>
+					<div class="browserListEl">Another Page</div>
+					<div class="browserListEl">You fuck</div>
+					<div class="browserListEl">Another Page</div>
+					<div class="browserListEl">You fuck</div>
+					
+				</div>
+				<div id="browserHead">
+					<div id="browserBack">&lsaquo;</div>
+					<div id="browserPath">
+						<span id="browserPathStart">&raquo;</span>
+						/archive/12_13_1994
+					</div>
+					<div id="browserMode">
+						<div id="pageMode"><u>pages</u></div><div id="assetMode">assets</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="canvas"></div>
+		<div id="warn">
+			<div id="warnIcon" class="icon">&#xf071;</div>
+			<div id="warnTitle">Have a warning</div>
+		</warn>
+	</body>
+</html>

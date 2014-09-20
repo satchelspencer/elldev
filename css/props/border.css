@@ -1,0 +1,64 @@
+#border{
+	height:130px;
+}
+	#borderColor{
+		top:0;
+		left:0;
+		width:25px;
+		height:25px;
+	}
+	#borderStyle{
+		top:0;
+		left:35px;
+		height:25px;
+		width:80px;
+		background:#272727;
+		text-align:center;
+		font-size:13px;
+		padding-top:5px;
+	}
+	#borderProps{
+		left:125px;
+		right:0px;
+		height:25px;
+	}
+		#borderProps > div{
+			position:relative;
+			display:inline-block;
+			width:25%;
+			height:100%;
+		}
+			#borderProps > div > div{
+				width:25px;
+				height:25px;
+				top:0;
+				left:50%;
+				margin-left:-12px;
+				padding-top:6px;
+				text-align:center;
+				background:#272727;
+			}
+		#borderTop > div{
+			border-top:1px solid white;
+		}
+		#borderLeft > div{
+			border-left:1px solid white;
+		}
+		#borderRight > div{
+			border-right:1px solid white;
+		}
+		#borderBottom > div{
+			border-bottom:1px solid white;
+		}
+	#borderWidth{
+		top:35px;
+	}
+		#borderWidth > .sliderLabel{width:40px;}
+		#borderWidth > .sliderArea{left:50px;right:40px;}
+		#borderWidth > .sliderValue{width:30px;}
+	#borderRadius{
+		top:65px;
+	}	
+		#borderRadius > .sliderLabel{width:40px;}
+		#borderRadius > .sliderArea{left:50px;right:40px;}
+		#borderRadius > .sliderValue{width:30px;}

@@ -1,0 +1,75 @@
+#tools{
+	top:0;
+	left:0;
+	bottom:0;
+	width:280px;
+}
+	.tool{
+		top:2px;
+		bottom:2px;
+		width:35px;
+		padding:5px 7px;
+		color:#272727;
+		font-size:20px;
+	}
+	#select{
+		left:0;		
+		padding-left:9px;
+		border-right:1px solid #f0f0f0;
+	}
+	#move{
+		left:35px;
+		border-right:1px solid #f0f0f0;
+	}
+	#add{
+		top:0;
+		bottom:0;
+		left:70px;
+		width:210px;
+	}
+		#addIcon{
+			left:0;
+		}
+		#addOptions{
+			left:25px;
+			right:0;
+			height:25px;
+			top:5px;
+			bottom:5px;
+		}
+		.addOption{
+			margin-top:2px;
+			position:relative;
+			height:20px;
+			padding-top:2px;
+			float:left;
+			padding:1px 7px;
+			font-size:13px;
+			font-color:#f0f0f0;
+		}
+		#addContent, #addCanvas{
+			border-right:1px solid #474747;
+		}
+		
+#uriBar{
+	top:4px;
+	right:4px;
+	bottom:5px;
+	left:285px;
+	background:white;
+	border-radius:3px 0px 0px 0px;
+	border:1px solid #777777;
+	box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.3);
+	color:#575757;
+	padding:4px 7px;
+	font-size:12.9px;
+}
+	#uriBase{
+		color:black;
+	}
+	#showUri{
+		top:5px;
+		right:4px;
+		color:#777777;
+		font-size:14px;
+	}
