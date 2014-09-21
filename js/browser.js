@@ -4,6 +4,7 @@ function listPageDir(dir){
 		var data = JSON.parse(d);
 		log(data);
 		pageDir = dir;
+		hideInspector();
 		$("#parentPageName").innerHTML = data.parent.title;
 		$("#browserPathLabel").innerHTML = dir;
 		$("#browserList").clear();
@@ -49,7 +50,7 @@ function pageListItem(data){
 	el.innerHTML = data.title;
 	el.event("click", function(){
 		$("#browserList").childs().css("background", "none");
-		el.css("background", "#575757");
+		el.css("background", "#373737");
 		inspectPage(data)
 	});
 	return el;

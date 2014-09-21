@@ -102,6 +102,9 @@ ext.css = function(p, v){
 	if(v) this.style[p] = v;
 	else return this.currentStyle ? this.currentStyle[p] : document.defaultView.getComputedStyle(this,null).getPropertyValue(p);
 }
+ext.cssn = function(p){
+	return parseFloat((this.currentStyle ? this.currentStyle[p] : document.defaultView.getComputedStyle(this,null).getPropertyValue(p)).replace("px", ""));
+}
 ext.class = function(c){
 	var cs = this.className.split(" ");
 	var ncs = c.split(" ");

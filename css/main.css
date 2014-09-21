@@ -6,7 +6,7 @@
   font-style: normal;
 }
 .icon{font-family:icon;}
-body{font-family:arial;font-size:16px;color:white;margin:0;padding:0;}
+body{font-family:arial;font-size:16px;color:white;margin:0;padding:0;min-width:800px;min-height:700px;overflow:hidden;}
 div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
 *{outline:0px solid transparent;}
 .unselectable{
@@ -61,6 +61,7 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 		height:230px;
 		bottom:0;
 		background:#474747;
+		overflow:hidden;
 	}
 #canvas{
 	top:0;
@@ -99,4 +100,24 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 		left:50px;
 		font-size:15px;
 		font-weight:bold;
+	}
+#stop{
+	display:none;
+	z-index:100000000;
+	position:fixed;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	background:rgba(180, 0, 0, 0.8);
+}
+	#stopMessage{
+		top:50%;
+		left:50%;
+		margin-left:-100px;
+		margin-top:-12px;
+		width:200px;
+		height:25px;
+		text-align:center;
+		color:white;
 	}
