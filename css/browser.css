@@ -72,7 +72,7 @@
 	top:50px;
 	left:0;
 	right:0;
-	bottom:63px;
+	bottom:0px;
 	overflow-y:scroll;
 }
 	.browserListEl{
@@ -82,11 +82,11 @@
 		height:25px;
 		font-size:13px;
 		border-bottom:1px solid #575757;
-		padding:6px 4px;
+		padding:4px 4px;
 	}
 #browserInspector{
 	right:0;
-	bottom:0;
+	bottom:-63px;
 	left:0;
 	height:63px;
 	background:#373737;

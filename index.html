@@ -4,6 +4,7 @@
 		<title></title>
 		<script type="text/javascript" src="js/lib.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
+		<script type="text/javascript" src="js/browser.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/main.css"/>
 		<link rel="stylesheet" type="text/css" href="css/props/props.css"/>
 		<link rel="stylesheet" type="text/css" href="css/props/bg.css"/>
@@ -196,11 +197,11 @@
 				<div id="browserInspector">
 					<div id="browserInspectorName" class="overflowEllipsis">
 						<span class="inspectorLabel">Name: </span>
-						<span contenteditable="true">Homepage, Bitch asdsaad</span>
+						<span id="browserInspectorNameValue" contenteditable="true">Homepage, Bitch asdsaad</span>
 					</div>
 					<div id="browserInspectorDesc">
 						<span class="inspectorLabel">Descripion: </span>
-						<span contenteditable="true">here's your fucking description</span>
+						<span id="browserInspectorDescValue" contenteditable="true">here's your fucking description</span>
 					</div>
 					<div id="browserInspectorOptions" class="icon">
 						<span id="fileOpen">&#xf044;</span>
@@ -208,28 +209,16 @@
 						<span id="fileDelete">&#xf00d;</span>
 					</div>
 				</div>
+				<div id="browserList"></div>
 				<div id="parentPage">
-					<span id="parentPageName">Homepage</span>
+					<span id="parentPageName"></span>
 					<div id="browserAdd" class="icon">&#xf067;</div>
-				</div>
-				<div id="browserList">
-					<div class="browserListEl">Another Page</div>
-					<div class="browserListEl">You fuck</div>
-					<div class="browserListEl">Another Page</div>
-					<div class="browserListEl">You fuck</div>
-					<div class="browserListEl">Another Page</div>
-					<div class="browserListEl">You fuck</div>
-					<div class="browserListEl">Another Page</div>
-					<div class="browserListEl">You fuck</div>
-					<div class="browserListEl">Another Page</div>
-					<div class="browserListEl">You fuck</div>
-					
 				</div>
 				<div id="browserHead">
 					<div id="browserBack">&lsaquo;</div>
 					<div id="browserPath">
 						<span id="browserPathStart">&raquo;</span>
-						/archive/12_13_1994
+						<span id="browserPathLabel"></span>
 					</div>
 					<div id="browserMode">
 						<div id="pageMode"><u>pages</u></div><div id="assetMode">assets</div>

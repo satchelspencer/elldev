@@ -172,7 +172,7 @@ ext.clear = function(){
 function element(id, tp, cl){
 	var el = extEl(document.createElement(tp));
 	if(id) el.id = id;
-	if(cl) el.class(cl);
+	if(cl) el.className = cl;
 	return el;
 }
 function ajax(url, data, prog, end){
