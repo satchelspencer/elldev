@@ -1,6 +1,5 @@
 window.onload = function(){
-	log("starting up");
-	listPageDir("/");
+	browserInit();
 	$("#propertiesSeparator").event("mousedown", function(){
 		$("body").event("mousemove", function(e){
 			$("#properties").css("height", e.y+"px");
@@ -32,13 +31,31 @@ window.onresize = function(){
 var halted = false;
 function halt(message){
 	if(halted) return false;
-	$("#stop").css("display", "block");
-	$("#stopMessage").innerHTML = message;
+	var o = 0;
 	halted = true;
+	$("#stopMessage").innerHTML = message;
+	$("#stop").css("display", "block");
+	var a = setInterval(function(){
+		o += .2;
+		if(o >= 1){
+			$("#stop").css("opacity", 1);
+			clearInterval(a);
+		}
+		$("#stop").css("opacity", o);
+	}, 30);
 }
 function unhalt(){
 	if(!halted) return false;
-	$("#stop").css("display", "none");
-	$("#stopMessage").innerHTML = "";
+	var o = 1;
 	halted = false;
+	$("#stopMessage").innerHTML = "";
+	var a = setInterval(function(){
+		o -= .2;
+		if(o <= 0){
+			$("#stop").css("opacity", 0);
+			$("#stop").css("display", "none");
+			clearInterval(a);
+		}
+		$("#stop").css("opacity", o);
+	}, 30);
 }

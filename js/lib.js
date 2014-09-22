@@ -80,14 +80,30 @@ function extBody(e){
 }
 var ext = {};
 ext.e = {};
-ext.event = function(ev, fu){
+ext.event = function(ev, f){
+	var fu;
+	if(ev == "sclick" || ev == "dclick"){
+		var clicks = 0;
+		var scf = ev == "sclick" ? f : this["sclick"] || function(){};
+		var dcf = ev == "dclick" ? f : this["dclick"] || function(){};
+		this[ev] = f;
+		fu = function(e){
+			if(clicks == 0) setTimeout(function(){
+				clicks == 1 ? scf(e) : dcf(e);
+				clicks = 0;
+			}, 300);
+			clicks++;
+		};
+		ev = "click";
+	}else fu = f;
 	if(this[ev] !== undefined) this.rmEvent(ev);
 	this[ev] = function(e){fu(extEv(e))};
    	this.addEventListener ? this.addEventListener(ev, this[ev], false) : this.attachEvent("on"+ev, this[ev]);
 }
 ext.rmEvent = function(ev){
 	if(!this[ev]) return false;
-   	this.addEventListener ? this.removeEventListener(ev, this[ev], false) : this.detachEvent("on"+ev, this[ev]);
+	if(ev == "sclick" || ev == "dclick") this.event(ev, function(){});
+   	else this.addEventListener ? this.removeEventListener(ev, this[ev], false) : this.detachEvent("on"+ev, this[ev]);
    	delete this[ev];
 }
 ext.cEvent = function(ev, fu, c){

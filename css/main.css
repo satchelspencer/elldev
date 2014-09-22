@@ -32,7 +32,6 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 		height:5px;
 		background:#777777;
 		cursor:row-resize;
-		z-index:1000000;
 	}
 	#properties{
 		left:0;
@@ -103,6 +102,7 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 	}
 #stop{
 	display:none;
+	opacity:0;
 	z-index:100000000;
 	position:fixed;
 	top:0;

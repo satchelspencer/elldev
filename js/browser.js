@@ -1,12 +1,21 @@
-var pageDir = "";
+var pageDir = [];
+function browserInit(){
+	listPageDir([]);
+	$("#browserBack").event("click", function(){
+		var d = pageDir;
+		d.pop();
+		listPageDir(d);
+	});
+}
 function listPageDir(dir){
-	ajax("io.php", {"opendir" : dir}, false, function(d){
-		var data = JSON.parse(d);
-		log(data);
+	var dirname = "/"+dir.join("/")+(dir.length > 0?"/":"");
+	ajax("io.php", {"opendir" : dirname}, false, function(d){
 		pageDir = dir;
+		$("#browserBack").css("color", pageDir.length>0?"white":"#676767");
+		var data = JSON.parse(d);
 		hideInspector();
 		$("#parentPageName").innerHTML = data.parent.title;
-		$("#browserPathLabel").innerHTML = dir;
+		$("#browserPathLabel").innerHTML = dirname;
 		$("#browserList").clear();
 		for(var i=0;i<data.children.length;i++){
 			$("#browserList").appendChild(pageListItem(data.children[i]));
@@ -29,7 +38,7 @@ function showInspector(){
 			inspectorOpen = true;
 		}
 		$("#browserInspector").css("bottom", "-"+b+"px");
-		b -= 7;
+		b -= 10;
 	}, 25);
 }
 function hideInspector(){
@@ -42,16 +51,19 @@ function hideInspector(){
 			inspectorOpen = false;
 		}
 		$("#browserInspector").css("bottom", "-"+b+"px");
-		b += 7;
+		b += 10;
 	}, 25);
 }
 function pageListItem(data){
 	var el = element(false, "div", "browserListEl");
 	el.innerHTML = data.title;
-	el.event("click", function(){
+	el.event("sclick", function(){
 		$("#browserList").childs().css("background", "none");
 		el.css("background", "#373737");
-		inspectPage(data)
+		inspectPage(data);
+	});
+	el.event("dclick", function(){
+		listPageDir(pageDir.concat(data.title));
 	});
 	return el;
 }
