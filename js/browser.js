@@ -65,5 +65,8 @@ function pageListItem(data){
 	el.event("dclick", function(){
 		listPageDir(pageDir.concat(data.title));
 	});
+	el.event("mousedown", function(){
+		el.css("background", "#404040");
+	});
 	return el;
 }

@@ -1,10 +1,13 @@
 window.onload = function(){
 	browserInit();
 	$("#propertiesSeparator").event("mousedown", function(){
+		var min = 200;
+		var max = $("body").viewHeight-$("#browser").cssn("height")-200;
 		$("body").event("mousemove", function(e){
-			$("#properties").css("height", e.y+"px");
-			$("#propertiesSeparator").css("top", e.y+"px");
-			$("#elements").css("top", (e.y+5)+"px");
+			var offset = e.y < min ? min : e.y > max ? max : e.y;
+			$("#properties").css("height", offset+"px");
+			$("#propertiesSeparator").css("top", offset+"px");
+			$("#elements").css("top", (offset+5)+"px");
 		});
 		$("body").event("mouseup", function(){
 			$("body").rmEvent("mousemove");
@@ -12,8 +15,11 @@ window.onload = function(){
 		});
 	});
 	$("#browserSeparator").event("mousedown", function(){
+		var min = $("#properties").cssn("height")+200;
+		var max = $("body").viewHeight-200;
 		$("body").event("mousemove", function(e){
-			var offset = $("body").viewHeight-e.y;
+			var ny = e.y < min ? min : e.y > max ? max : e.y;
+			var offset = $("body").viewHeight-ny;
 			$("#browser").css("height", offset+"px");
 			$("#browserSeparator").css("bottom", offset+"px");
 			$("#elements").css("bottom", (offset+5)+"px");
