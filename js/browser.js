@@ -1,11 +1,22 @@
 var pageDir = [];
 function browserInit(){
 	listPageDir([]);
-	$("#browserBack").event("click", function(){
-		var d = pageDir;
-		d.pop();
-		listPageDir(d);
+	$("#browserBack").event("click", gotoParent);
+	$("#parentPage").event("dclick", gotoParent);
+	$("#parentPage").event("click", function(){
+		inspectPage($("#parentPage").data);
+		$("#parentPage").css("background", "#373737");
+		if($("#browserList").childs()) $("#browserList").childs().css("background", "none");
+		
 	});
+	$("#parentPage").event("clickstart", function(){
+		$("#parentPage").css("background", "#404040");
+	});
+}
+function gotoParent(){
+	var d = pageDir;
+	d.pop();
+	listPageDir(d);
 }
 function listPageDir(dir){
 	var dirname = "/"+dir.join("/")+(dir.length > 0?"/":"");
@@ -14,7 +25,9 @@ function listPageDir(dir){
 		$("#browserBack").css("color", pageDir.length>0?"white":"#676767");
 		var data = JSON.parse(d);
 		hideInspector();
+		$("#parentPage").css("background", "none");
 		$("#parentPageName").innerHTML = data.parent.title;
+		$("#parentPage").data = data.parent;
 		$("#browserPathLabel").innerHTML = dirname;
 		$("#browserList").clear();
 		for(var i=0;i<data.children.length;i++){
@@ -58,15 +71,24 @@ function pageListItem(data){
 	var el = element(false, "div", "browserListEl");
 	el.innerHTML = data.title;
 	el.event("sclick", function(){
-		$("#browserList").childs().css("background", "none");
+		if($("#browserList").childs()) $("#browserList").childs().css("background", "none");
+		$("#parentPage").css("background", "none");
 		el.css("background", "#373737");
 		inspectPage(data);
 	});
 	el.event("dclick", function(){
 		listPageDir(pageDir.concat(data.title));
 	});
-	el.event("mousedown", function(){
+	el.event("clickstart", function(e){
 		el.css("background", "#404040");
+		var starty = e.y;
+		$("body").event("mousemove", function(e){
+			if(Math.abs(starty-e.y) > 5) log("go");
+		});
+		$("body").event("mouseup", function(e){
+			$("body").rmEvent("mousemove");
+			$("body").rmEvent("mouseup");
+		});
 	});
 	return el;
 }

@@ -82,19 +82,25 @@ var ext = {};
 ext.e = {};
 ext.event = function(ev, f){
 	var fu;
-	if(ev == "sclick" || ev == "dclick"){
+	if(ev == "sclick" || ev == "dclick" || ev == "clickstart"){
 		var clicks = 0;
 		var scf = ev == "sclick" ? f : this["sclick"] || function(){};
 		var dcf = ev == "dclick" ? f : this["dclick"] || function(){};
+		var stcf = ev == "clickstart" ? f : this["clickstart"] || function(){};
 		this[ev] = f;
 		fu = function(e){
-			if(clicks == 0) setTimeout(function(){
-				clicks == 1 ? scf(e) : dcf(e);
-				clicks = 0;
-			}, 300);
+			stcf(e);
 			clicks++;
+			if(clicks == 1) setTimeout(function(){
+				scf(e);
+				clicks = 0;
+			}, 200);
+			else{
+				dcf(e);
+				clicks = 0;
+			}
 		};
-		ev = "click";
+		ev = "mousedown";
 	}else fu = f;
 	if(this[ev] !== undefined) this.rmEvent(ev);
 	this[ev] = function(e){fu(extEv(e))};
