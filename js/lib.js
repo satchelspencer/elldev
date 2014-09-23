@@ -89,16 +89,21 @@ ext.event = function(ev, f){
 		var stcf = ev == "clickstart" ? f : this["clickstart"] || function(){};
 		this[ev] = f;
 		fu = function(e){
-			stcf(e);
 			clicks++;
-			if(clicks == 1) setTimeout(function(){
-				scf(e);
-				clicks = 0;
-			}, 200);
-			else{
-				dcf(e);
+			stcf(e);
+			var t;
+			clearInterval(t);
+			if(clicks > 1){
+				dcf();
 				clicks = 0;
 			}
+			var mu = function(e){
+				t = setTimeout(function(){
+					if(clicks == 1) scf(e);
+					clicks = 0;
+				}, 250);
+			};
+			if(clicks == 1) this.addEventListener ? this.addEventListener("mouseup", mu, false) : this.attachEvent("onmouseup", mu);
 		};
 		ev = "mousedown";
 	}else fu = f;

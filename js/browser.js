@@ -70,8 +70,11 @@ function hideInspector(){
 function pageListItem(data){
 	var el = element(false, "div", "browserListEl");
 	el.innerHTML = data.title;
+	el.selected = false;
 	el.event("sclick", function(){
-		if($("#browserList").childs()) $("#browserList").childs().css("background", "none");
+		if($("#browserList").childs()){
+			$("#browserList").childs().css("background", "none");
+		}
 		$("#parentPage").css("background", "none");
 		el.css("background", "#373737");
 		inspectPage(data);
@@ -83,7 +86,7 @@ function pageListItem(data){
 		el.css("background", "#404040");
 		var starty = e.y;
 		$("body").event("mousemove", function(e){
-			if(Math.abs(starty-e.y) > 5) log("go");
+			if(Math.abs(starty-e.y) > 5) log(e.y);
 		});
 		$("body").event("mouseup", function(e){
 			$("body").rmEvent("mousemove");
