@@ -43,12 +43,12 @@ function inspectPage(data){
 var inspectorOpen = false;
 function showInspector(){
 	if(inspectorOpen) return false;
+	inspectorOpen = true;
 	var b = 63;
 	var a = setInterval(function(){
 		if(Math.abs(b) < 2 || b < 0){
 			clearInterval(a);
 			$("#browserInspector").css("bottom", "0");
-			inspectorOpen = true;
 		}
 		$("#browserInspector").css("bottom", "-"+b+"px");
 		b -= 10;
@@ -56,12 +56,12 @@ function showInspector(){
 }
 function hideInspector(){
 	if(!inspectorOpen) return false;
+	inspectorOpen = false;
 	var b = 0;
 	var a = setInterval(function(){
 		if(Math.abs(b-63) < 2 || b > 63){
 			clearInterval(a);
 			$("#browserInspector").css("bottom", "-63px");
-			inspectorOpen = false;
 		}
 		$("#browserInspector").css("bottom", "-"+b+"px");
 		b += 10;
