@@ -1,6 +1,7 @@
 window.onload = function(){
 	browserInit();
 	$("#propertiesSeparator").event("mousedown", function(e){
+		$("body").class("unselectable");
 		var mouse = e.y;
 		var force = 0;
 		var mouseForce = 0;
@@ -30,9 +31,11 @@ window.onload = function(){
 			if(topForce == 0 && bottomForce == 0 && baseForce == 0) clearInterval(ani);
 			$("body").rmEvent("mousemove");
 			$("body").rmEvent("mouseup");
+			$("body").rmClass("unselectable");
 		});
 	});
 	$("#browserSeparator").event("mousedown", function(e){
+		$("body").class("unselectable");
 		var mouse = e.y;
 		var force = 0;
 		var mouseForce = 0;
@@ -62,6 +65,7 @@ window.onload = function(){
 			if(topForce == 0 && bottomForce == 0 && baseForce == 0) clearInterval(ani);
 			$("body").rmEvent("mousemove");
 			$("body").rmEvent("mouseup");
+			$("body").rmClass("unselectable");
 		});
 	});
 };

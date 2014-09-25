@@ -21,10 +21,13 @@
 		top:0;
 		left:25px;
 		bottom:0;
-		width:230px;
+		width:220px;
 		padding:5px 3px;
 		color:#777777;
 		font-size:13px;
+		overflow:hidden;
+		white-space:nowrap;
+		text-overflow:ellipsis;
 	}
 		#browserPathStart{
 			color:white;
@@ -90,6 +93,20 @@
 		border-bottom:1px solid #575757;
 		padding:4px 4px;
 		overflow:hidden;
+	}
+	.newPageInput{	
+		margin-top:4px;
+		margin-left:4px;
+	}
+	.browserListEnd{
+		top:0;
+		right:0;
+		bottom:0;
+		width:25px;
+		font-size:19px;
+		color:white;
+		text-align:center;
+		cursor:pointer;
 	}
 #browserListDrag{
 	display:none;

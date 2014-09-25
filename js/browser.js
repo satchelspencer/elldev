@@ -55,11 +55,13 @@ function showInspector(){
 	inspectorOpen = true;
 	var b = 63;
 	var a = setInterval(function(){
+		$("#browserInspector").css("bottom", "-"+b+"px");
+		$("#browserList").css("bottom", (63-b)+"px");
 		if(Math.abs(b) < 2 || b < 0){
 			clearInterval(a);
 			$("#browserInspector").css("bottom", "0");
+			$("#browserList").css("bottom", "63px");
 		}
-		$("#browserInspector").css("bottom", "-"+b+"px");
 		b -= 10;
 	}, 25);
 }
@@ -68,11 +70,13 @@ function hideInspector(){
 	inspectorOpen = false;
 	var b = 0;
 	var a = setInterval(function(){
+		$("#browserInspector").css("bottom", "-"+b+"px");
+		$("#browserList").css("bottom", (63-b)+"px");
 		if(Math.abs(b-63) < 2 || b > 63){
 			clearInterval(a);
 			$("#browserInspector").css("bottom", "-63px");
+			$("#browserList").css("bottom", "0");
 		}
-		$("#browserInspector").css("bottom", "-"+b+"px");
 		b += 10;
 	}, 25);
 }
@@ -92,16 +96,28 @@ function deselectAllPages(){
 	$("#parentPage").css("background", "none");
 	inspect();
 }
+var addingPage = false;
 function addPage(){
+	if(addingPage) return false;
+	addingPage = true;
 	deselectAllPages();
 	var newPageEl = element(false, "div", "browserListEl");
-	newPageEl.submitting = false;
-	newPageEl.event("onblur", function(){
-		if(!newPageEl.submitting) newPageEl.remove();
+	var input = element(false, "span", "newPageInput");
+	newPageEl.appendChild(input);
+	var cancel = element(false, "div", "icon browserListEnd");
+	cancel.innerHTML = "&times;";
+	cancel.event("click", function(){
+		newPageEl.remove();
+		addingPage = false;
 	});
+	newPageEl.appendChild(cancel);
+	newPageEl.submitting = false;
 	newPageEl.valid = false;
+	newPageEl.event("click", function(){
+		input.focus();
+	});
 	newPageEl.event("keyup", function(e){
-		newPageEl.valid = newPageEl.innerHTML.match(/^[a-z0-9\-\_]{2,16}$/i);
+		newPageEl.valid = input.innerHTML.match(/^[a-z0-9\-\_]{2,32}$/i);
 		newPageEl.css("color", newPageEl.valid?"white":"red");
 	});
 	newPageEl.event("keydown", function(e){
@@ -110,20 +126,20 @@ function addPage(){
 				newPageEl.submitting = true;
 				newPageEl.attr("contenteditable", "false");
 				var dirname = "/"+pageDir.join("/")+(pageDir.length > 0?"/":"");
-				ajax("io.php", {"newpage" : dirname+newPageEl.innerHTML}, false, function(d){
-					log(d);
+				ajax("io.php", {"newpage" : dirname+input.innerHTML}, false, function(d){
 					dispDirData(JSON.parse(d), dirname);
+					addingPage = false;
 				});
 			}
 			e.e.preventDefault();
 			return false;
 		}
 	});
-	newPageEl.attr("contenteditable", "true");
+	input.attr("contenteditable", "true");
 	if($("#browserList").childs()) $("#browserList").insertBefore(newPageEl, $("#browserList").firstChild);
 	else $("#browserList").appendChild(newPageEl);
 	newPageEl.css("background", "#373737");
-	newPageEl.focus();
+	input.focus();
 }
 function pageListItem(data){
 	var el = element(false, "div", "browserListEl");
@@ -137,8 +153,28 @@ function pageListItem(data){
 			el.css("background", "none");
 		}else{
 			var pages = $("#browserList").childs();
-			if(e.shiftKey){
-			
+			if(e.shiftKey && !el.selected){
+				el.selected = true;
+				el.css("background", "#373737");
+				var clickIndex = pages.indexOf(el);
+				var selectBeforeIndex = clickIndex;
+				for(var i=clickIndex-1;i>=0;i--){
+					if(pages[i].selected){
+						selectBeforeIndex = i;
+						break;
+					}
+				}
+				var selectAfterIndex = clickIndex;
+				for(var i=clickIndex+1;i<pages.length;i++){
+					if(pages[i].selected){
+						selectAfterIndex = i;
+						break;
+					}
+				}
+				for(var j=selectBeforeIndex+1;j<selectAfterIndex;j++){
+					pages[j].selected = true;
+					pages[j].css("background", "#373737");
+				}
 			}else if(e.metaKey){
 				el.selected = !el.selected;
 				el.css("background", el.selected?"#373737":"none");

@@ -7,7 +7,7 @@
 	}else if(isset($_POST['newpage'])){
 		$pageArr = explode("/", $_POST['newpage']);
 		$name = array_pop($pageArr);
-		$parent = count($pageArr) > 1 ? implode("/", $pageArr) : "/";
+		$parent = implode("/", $pageArr)."/";
 		mkdir($cwd.$_POST['newpage']);
 		$data = "{\"title\":\"".$name."\", \"desc\":\"no description\", \"savestatus\":\"published\", \"path\": \"".$_POST['newpage']."\"}";
 		file_put_contents($cwd.$_POST['newpage']."/h.json", $data);
