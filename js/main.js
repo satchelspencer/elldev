@@ -48,8 +48,8 @@ window.onload = function(){
 			mouseForce = mousedown ? mouse-bottom : 0;
 			topForce = p > 300?0:(1/300)*Math.pow((p-300), 2);
 			bottomForce = (bottom-p) > 100?0:(-1/100)*Math.pow(((bottom-p)-100), 2);
-			baseForce = (base-p) > 300?0:(-1/300)*Math.pow(((base-p)-300), 2);
-			force = ((topForce+bottomForce)/2);
+			baseForce = (base-bottom) > 300?0:(-1/200)*Math.pow(((base-bottom)-200), 2);
+			force = ((topForce+bottomForce)/3);
 			setPsepy(p+force);
 			setBsepy(bottom+((-bottomForce+baseForce+mouseForce)/3));
 			if(!mousedown && Math.abs(((-bottomForce+baseForce+mouseForce)/3)) < 1) clearInterval(ani);
