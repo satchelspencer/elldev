@@ -34,4 +34,17 @@
 		$output["children"] = $children;
 		return $output;
 	}
+	function removeDir($dir){
+		$children = scandir($dir);
+		foreach($children as $child) if($child[0] != "."){
+			if(is_dir($dir."/".$child)) removeDir($dir."/".$child);
+			else unlink($dir."/".$child);
+		}
+		rmdir($dir);
+	}
+	function sizeConv($bytes, $decimals = 3) {
+  		$sz = array("bytes", "Kb", "Mb", "Gb", "Tb", "Pb");
+  		$factor = floor((strlen($bytes)-1)/3);
+ 		return sprintf("%.{$decimals}f",$bytes/pow(1024, $factor))." ".@$sz[$factor];
+	}
 ?>

@@ -12,6 +12,12 @@ function browserInit(){
 	$("#parentPageName").event("clickstart", function(){
 		$("#parentPage").css("background", "#404040");
 	});
+	$("#parentPageName").event("mouseover", function(e){
+		if(browserDragging) $("#parentPage").css("background", "#373737");
+	});
+	$("#parentPageName").event("mouseout", function(e){
+		if(browserDragging) $("#parentPage").css("background", "none");
+	});
 	$("#browserAdd").event("click", addPage);
 	$("#browserList").event("click", function(e){
 		if(e.el.id == "browserList") deselectAllPages();
@@ -34,7 +40,7 @@ function dispDirData(data, dirname){
 	hideInspector();
 	$("#parentPage").css("background", "none");
 	$("#parentPageName").innerHTML = data.parent.title;
-	$("#parentPage").data = data.parent;
+	$("#parentPageName").data = data.parent;
 	$("#browserPathLabel").innerHTML = dirname;
 	$("#browserList").clear();
 	for(var i=0;i<data.children.length;i++){
@@ -110,7 +116,17 @@ function addPage(){
 	var cancel = element(false, "div", "icon browserListEnd");
 	cancel.innerHTML = "&times;";
 	cancel.event("click", function(){
-		newPageEl.remove();
+		input.blur();
+		var h = 25;
+		var a = setInterval(function(){
+			h -= 5;
+			if(h <= 0){
+				newPageEl.css("height", "0");
+				clearInterval(a);
+				newPageEl.remove();
+			}
+			newPageEl.css("height", h+"px");
+		}, 30);
 		addingPage = false;
 	});
 	newPageEl.appendChild(cancel);
@@ -119,8 +135,10 @@ function addPage(){
 	newPageEl.event("click", function(){
 		input.focus();
 	});
+	var pages = $("#browserList").childs();
 	newPageEl.event("keyup", function(e){
 		newPageEl.valid = input.innerHTML.match(/^[a-z0-9\-\_\.]{2,32}$/i);
+		if(pages) for(var i=0;i<pages.length;i++) if(pages[i].innerHTML == input.innerHTML) newPageEl.valid = false;
 		newPageEl.css("color", newPageEl.valid?"white":"red");
 	});
 	newPageEl.event("keydown", function(e){
@@ -144,6 +162,7 @@ function addPage(){
 	newPageEl.css("background", "#373737");
 	input.focus();
 }
+var browserDragging = false;
 function pageListItem(data){
 	var el = element(false, "div", "browserListEl");
 	el.innerHTML = data.title;
@@ -196,35 +215,66 @@ function pageListItem(data){
 	el.event("dclick", function(){
 		listPageDir(pageDir.concat(data.title));
 	});
+	var pages;
 	el.event("clickstart", function(e){
 		el.css("background", "#404040");
 		var starty = e.y;
+		var offset = el.y()-e.y;
 		$("body").event("mousemove", function(e){
 			if(Math.abs(starty-e.y) > 5 && !el.dragging){
+				browserDragging = true;
+				$("body").class("unselectable");
+				$("body").css("cursor", "ns-resize");
 				el.dragging = true;
 				el.selected = true;
 				hideInspector();
-				log("drag");
-				var pages = getSelectedPages();
+				pages = getSelectedPages();
 				var h = 25;
 				var ani = setInterval(function(){
-					h = h-3;
+					h -= 5;
 					for(var p in pages) pages[p].css("height", h+"px");
 					if(h <= 0){
 						clearInterval(ani);
 						for(var p in pages) pages[p].css("display", "none");
 					}
 				}, 30);
+				$("#browserListDrag").css("display", "block");
+				$("#browserListDrag").innerHTML = pages.length>1?pages.length+" pages":pages[0].data.title;
 			}
 			if(el.dragging){
-			
+				var top = e.y-$("#browser").y()+offset;
+				$("#browserListDrag").css("top", top+"px");
 			}
 		});
 		$("body").event("mouseup", function(e){
-			if(el.dragging) log("drop");
+			if(el.dragging){
+				$("body").rmClass("unselectable");
+				$("body").css("cursor", "default");
+				if(e.el.data) log(e.el.data.title);
+				else{
+					var h = 0;
+					for(var p in pages) pages[p].css("display", "block");
+					var ani = setInterval(function(){
+						h += 5;
+						for(var p in pages) pages[p].css("height", h+"px");
+						if(h >= 25){
+							clearInterval(ani);
+							for(var p in pages) pages[p].css("height", "25px");
+						}
+					}, 30);
+				}
+				$("#browserListDrag").css("display", "none");
+				browserDragging = false;
+			}
 			$("body").rmEvent("mousemove");
 			$("body").rmEvent("mouseup");
 		});
+	});
+	el.event("mouseover", function(e){
+		if(browserDragging) el.css("background", "#373737");
+	});
+	el.event("mouseout", function(e){
+		if(browserDragging) el.css("background", "none");
 	});
 	return el;
 }

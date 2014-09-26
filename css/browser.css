@@ -116,8 +116,10 @@
 	height:25px;
 	font-size:13px;
 	border-bottom:1px solid #575757;
-	padding:4px 4px;
+	padding:4px 16px;
 	background:rgba(0, 0, 0, 0.4);
+	pointer-events:none;
+	cursor:ns-resize;
 }
 #browserInspector{
 	right:0;
