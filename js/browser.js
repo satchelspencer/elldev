@@ -13,6 +13,9 @@ function browserInit(){
 		$("#parentPage").css("background", "#404040");
 	});
 	$("#browserAdd").event("click", addPage);
+	$("#browserList").event("click", function(e){
+		if(e.el.id == "browserList") deselectAllPages();
+	});
 }
 function gotoParent(){
 	var d = pageDir;
@@ -117,7 +120,7 @@ function addPage(){
 		input.focus();
 	});
 	newPageEl.event("keyup", function(e){
-		newPageEl.valid = input.innerHTML.match(/^[a-z0-9\-\_]{2,32}$/i);
+		newPageEl.valid = input.innerHTML.match(/^[a-z0-9\-\_\.]{2,32}$/i);
 		newPageEl.css("color", newPageEl.valid?"white":"red");
 	});
 	newPageEl.event("keydown", function(e){
