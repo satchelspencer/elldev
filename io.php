@@ -12,6 +12,8 @@
 		$data = "{\"title\":\"".$name."\", \"desc\":\"no description\", \"savestatus\":\"published\", \"path\": \"".$_POST['newpage']."\"}";
 		file_put_contents($cwd.$_POST['newpage']."/h.json", $data);
 		echo json_encode(getDir($parent));
+	}else if(isset($_POST['movepages'])){
+		var_dump(json_decode($_POST['movepages']));
 	}
 	function error($message){
 		echo $message;

@@ -47,16 +47,16 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 		left:0;
 		right:0;
 		top:405px;
-		bottom:235px;
+		bottom:285px;
 		background:#272727;
 	}
 	#browserSeparator{
-		bottom:230px;
+		bottom:280px;
 	}
 	#browser{
 		left:0;
 		right:0;
-		height:230px;
+		height:280px;
 		bottom:0;
 		background:#474747;
 		overflow:hidden;

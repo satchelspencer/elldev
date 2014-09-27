@@ -115,3 +115,36 @@ function unhalt(){
 		$("#stop").css("opacity", o);
 	}, 30);
 }
+var warned = false;
+function warn(warning, callback){
+	warned = true;
+	$("#warnTitle").innerHTML = warning;
+	var t = 40;
+	var a = setInterval(function(){
+		t-=8;
+		if(t<=0){
+			clearInterval(a);
+			$("#warn").css("top", "0px");
+			$("#warn").event("click", function(){unwarn(callback)});
+			$("body").event("keydown", function(e){
+				if(e.code == 13) unwarn(callback);
+			});
+		}
+		$("#warn").css("top", "-"+t+"px");
+	}, 30);
+}
+function unwarn(callback){
+	warned = false;
+	var t = 0;
+	var a = setInterval(function(){
+		t+=8;
+		if(t>=40){
+			clearInterval(a);
+			$("#warn").css("top", "-40px");
+			$("#warn").rmEvent("click");
+			$("body").rmEvent("keydown");
+			if(callback) callback();
+		}
+		$("#warn").css("top", "-"+t+"px");
+	}, 30);
+}
