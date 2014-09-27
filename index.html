@@ -5,6 +5,7 @@
 		<script type="text/javascript" src="js/lib.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
 		<script type="text/javascript" src="js/browser.js"></script>
+		<link rel="stylesheet" type="text/css" href="fonts/icon-codes.css"/>
 		<link rel="stylesheet" type="text/css" href="css/main.css"/>
 		<link rel="stylesheet" type="text/css" href="css/props/props.css"/>
 		<link rel="stylesheet" type="text/css" href="css/props/bg.css"/>
@@ -18,10 +19,10 @@
 	<body>
 		<div id="bar">
 			<div id="tools">
-				<div id="select" class="tool icon">&#xe804;</div>
-				<div id="move" class="tool icon">&#xe805;</div>
+				<div id="select" class="tool icon icon-direction"></div>
+				<div id="move" class="tool icon icon-move"></div>
 				<div id="add">
-					<div id="addIcon" class="tool icon">&#xe803;</div>
+					<div id="addIcon" class="tool icon icon-plus"></div>
 					<div id="addOptions">
 						<div id="addContent" class="addOption">content</div>
 						<div id="addCanvas" class="addOption">canvas</div>
@@ -31,14 +32,14 @@
 			</div>
 			<div id="uriBar">
 				<span id="uriBase">elldev.co</span><span id="uriPath">/myPage/</span>
-				<div id="showUri" class="icon">&#xe800;</div>
+				<div id="showUri" class="icon icon-link-ext"></div>
 			</div>
 		</div>
 		<div id="gui" class="unselectable">
 			<div id="properties">
 				<div id="propertiesHeader">
 					"<span id="elementTitle">My element name</span>" <span id="elementType">(canvas)</span>
-					<span class="elementIcon icon">&#xe802;</span>
+					<span class="elementIcon icon icon-menu"></span>
 				</div>
 				<div id="propertiesList">
 					<div id="position" class="property">
@@ -104,7 +105,7 @@
 							</div>
 							<div class="backgroundSplit">
 								<div id="backgroundImage">
-									<div id="backgroundImageIcon" class="icon">&#xe80f;</div>
+									<div id="backgroundImageIcon" class="icon icon-file-image"></div>
 									<div id="backgroundImageClear">&times;</div>
 								</div>
 							</div>
@@ -116,10 +117,10 @@
 							<div id="fontColor" class="color checkered"><div></div></div>
 							<div id="fontFamily">Comic Sans</div>
 							<div id="fontAttributes">
-								<div id="fontAlign" class="icon">&#xe806;</div>
-								<div id="fontBold" class="icon">&#xe80b;</div>
-								<div id="fontUnderline" class="icon">&#xe80a;</div>
-								<div id="fontItalic" class="icon">&#xe80c;</div>
+								<div id="fontAlign" class="icon icon-align-left"></div>
+								<div id="fontBold" class="icon icon-bold"></div>
+								<div id="fontUnderline" class="icon icon-underline"></div>
+								<div id="fontItalic" class="icon icon-italic"></div>
 								<div id="fontClear" class="icon">&times;</div>
 							</div>
 							<div id="fontSize" class="slider">
@@ -140,13 +141,13 @@
 							<div id="borderColor" class="color checkered"><div></div></div>
 							<div id="borderStyle">Solid</div>
 							<div id="borderProps"><div id="borderTop">
-								<div class="icon">&#xe80d;</div>
+								<div class="icon icon-ok"></div>
 							</div><div id="borderLeft">
-								<div class="icon">&#xe80d;</div>
+								<div class="icon icon-ok"></div>
 							</div><div id="borderBottom">
 								<div class="icon"></div>
 							</div><div id="borderRight">
-								<div class="icon">&#xe80d;</div>
+								<div class="icon icon-ok"></div>
 							</div>
 							</div>
 							<div id="borderWidth" class="slider">
@@ -205,14 +206,14 @@
 						<span id="browserInspectorDescValue" contenteditable="true"></span>
 					</div>
 					<div id="browserInspectorOptions" class="icon">
-						<span id="fileOpen">&#xe815;</span>
-						<span id="fileDownload">&#xe816;</span>
-						<span id="fileDelete">&#xe814;</span>
+						<span id="fileOpen" class="icon-edit"></span>
+						<span id="fileDownload" class="icon-download"></span>
+						<span id="fileDelete" class="icon-cancel"></span>
 					</div>
 				</div>
 				<div id="parentPage">
 					<div id="parentPageName"></div>
-					<div id="browserAdd" class="icon">&#xe803;</div>
+					<div id="browserAdd" class="icon icon-plus"></div>
 				</div>
 				<div id="browserHead">
 					<div id="browserBack">&lsaquo;</div>
@@ -229,9 +230,9 @@
 		</div>
 		<div id="canvas"></div>
 		<div id="warn">
-			<div id="warnIcon" class="icon">&#xe80e;</div>
-			<div id="warnTitle">Have a warning</div>
-		</warn>
+			<div id="warnIcon" class="icon icon-attention"></div>
+			<div id="warnTitle"></div>
+		</div>
 		<div id="stop">
 			<div id="stopMessage"></div>
 		</div>

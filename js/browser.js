@@ -28,8 +28,9 @@ function gotoParent(){
 	d.pop();
 	listPageDir(d);
 }
-function getCurrentDir(){
-	return "/"+pageDir.join("/")+(pageDir.length > 0?"/":"");
+function getCurrentDir(dirArr){
+	dirArr = dirArr || pageDir;
+	return "/"+dirArr.join("/")+(dirArr.length > 0?"/":"");
 }
 function listPageDir(dir){
 	var dirname = "/"+dir.join("/")+(dir.length > 0?"/":"");
@@ -165,6 +166,23 @@ function addPage(){
 	newPageEl.css("background", "#373737");
 	input.focus();
 }
+function cancelDrop(pages){
+	var h = 0;
+	for(var p in pages) pages[p].css("display", "block");
+	var ani = setInterval(function(){
+		h += 5;
+		for(var p in pages) pages[p].css("height", h+"px");
+		if(h >= 25){
+			clearInterval(ani);
+			for(var p in pages) pages[p].css("height", "25px");
+		}
+	}, 30);
+	setTimeout(function(){browserDragging = false;}, 300);
+	for(var i=0;i<pages.length;i++){
+		pages[i].select();
+	}
+	inspect();
+}
 var browserDragging = false;
 function pageListItem(data){
 	var el = element(false, "div", "browserListEl");
@@ -255,30 +273,19 @@ function pageListItem(data){
 			if(el.dragging){
 				$("body").rmClass("unselectable");
 				$("body").css("cursor", "default");
-				if(e.el.data){;
+				if(e.el.data && e.el.data.path != "/"){
 					var toMove = [];
 					for(var p in pages) toMove.push(pages[p].data.path);
-					var moveTo = e.el.data.path == "/"?"/":getCurrentDir()+e.el.data.title; 
+					var moveTo = e.el.className?getCurrentDir()+e.el.data.title+"/":getCurrentDir(pageDir.slice(0, pageDir.length-1)); 
 					ajax("io.php", {"movepages" : JSON.stringify({"from" : toMove, "to" : moveTo})}, false, function(d){
-						log(d);
-					});
-				}else{
-					var h = 0;
-					for(var p in pages) pages[p].css("display", "block");
-					var ani = setInterval(function(){
-						h += 5;
-						for(var p in pages) pages[p].css("height", h+"px");
-						if(h >= 25){
-							clearInterval(ani);
-							for(var p in pages) pages[p].css("height", "25px");
+						var data = JSON.parse(d);
+						if(data.error){
+							cancelDrop(pages);
+							warn("<u>"+data.error+"</u> already exists");
 						}
-					}, 30);
-					setTimeout(function(){browserDragging = false;}, 300);
-					for(var i=0;i<pages.length;i++){
-						pages[i].select();
-					}
-					inspect();
-				}
+						else log(data);
+					});
+				}else cancelDrop(pages)
 				$("#browserListDrag").css("display", "none");
 			}
 			$("body").rmEvent("mousemove");

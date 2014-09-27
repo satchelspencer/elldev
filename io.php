@@ -13,10 +13,17 @@
 		file_put_contents($cwd.$_POST['newpage']."/h.json", $data);
 		echo json_encode(getDir($parent));
 	}else if(isset($_POST['movepages'])){
-		var_dump(json_decode($_POST['movepages']));
+		$data = json_decode($_POST['movepages']);
+		$fromto = array();
+		foreach($data->from as $toMove){
+			$to = $data->to.array_pop(explode("/", $toMove));
+			if(file_exists($cwd.$to)) error($to);
+			array_push($fromto, array($cwd.$toMove, $cwd.$to));
+		}
+		echo json_encode($fromto);
 	}
 	function error($message){
-		echo $message;
+		echo "{\"error\":\"$message\"}";
 		exit;
 	}
 	function getDir($path){

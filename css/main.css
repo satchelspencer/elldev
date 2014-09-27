@@ -78,26 +78,26 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 #warn{
 	top:-40px;
 	right:0;
-	width:180px;
+	text-align:right;
+	width:auto;
 	height:40px;
 	background:rgba(180, 0, 0, 0.7);
 	border-radius:0px 0px 0px 3px;
 	color:#f0f0f0;
 	box-shadow:-1px -1px 3px rgba(0, 0, 0, 0.3);
-}	
+}
 	#warnIcon{
-		top:0;
-		left:0;
-		bottom:0;
-		width:40px;
-		font-size:30px;
-		padding:5px 6px;
-	}
+		position:relative;
+		float:left;
+		height:100%;
+		padding:7px 7px;
+		font-size:25px;
+	}	
 	#warnTitle{
-		top:10px;
-		left:50px;
-		font-size:15px;
-		font-weight:bold;
+		position:relative;
+		float:right;
+		height:100%;
+		padding:10px 5px;
 	}
 #stop{
 	display:none;
