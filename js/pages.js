@@ -3,13 +3,7 @@ var sendingPageData = false;
 function browserInit(){
 	listPageDir([]);
 	$("#browserBack").event("click", gotoParent);
-	$("#parentPageName").event("dclick", gotoParent);
-	$("#parentPageName").event("sclick", function(){
-		inspect($("#parentPageName").data);
-		$("#parentPage").css("background", "#373737");
-		if($("#browserList").childs()) $("#browserList").childs().css("background", "none");
-		
-	});
+	$("#parentPageName").event("click", gotoParent);
 	$("#parentPageName").event("clickstart", function(){
 		$("#parentPage").css("background", "#404040");
 	});
@@ -54,8 +48,12 @@ function filesDelete(){
 function gotoParent(){
 	if(sendingPageData) return false;
 	var d = pageDir;
-	d.pop();
-	listPageDir(d);
+	var prev = d.pop();
+	listPageDir(d, function(){
+		var els = $("#browserList").childs();
+		for(var i=0;i<els.length;i++) if(els[i].data.title == prev) els[i].select();
+		inspect();
+	});
 }
 function getCurrentDir(dirArr){
 	dirArr = dirArr || pageDir;
