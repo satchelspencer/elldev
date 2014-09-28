@@ -89,7 +89,7 @@ function halt(message){
 	if(halted) return false;
 	var o = 0;
 	halted = true;
-	$("#stopMessage").innerHTML = message;
+	if(message) $("#stopMessage").innerHTML = message;
 	$("#stop").css("display", "block");
 	var a = setInterval(function(){
 		o += .2;
@@ -116,7 +116,7 @@ function unhalt(){
 	}, 30);
 }
 var warned = false;
-function warn(warning, callback){
+function warn(warning, callback, abort){
 	warned = true;
 	$("#warnTitle").innerHTML = warning;
 	var t = 40;
@@ -125,7 +125,7 @@ function warn(warning, callback){
 		if(t<=0){
 			clearInterval(a);
 			$("#warn").css("top", "0px");
-			$("body").event("click", function(){unwarn(callback)});
+			$("#warn").event("click", function(){unwarn(callback)});
 			$("body").event("keydown", function(e){
 				if(e.code == 13) unwarn(callback);
 			});
@@ -141,10 +141,39 @@ function unwarn(callback){
 		if(t>=40){
 			clearInterval(a);
 			$("#warn").css("top", "-40px");
-			$("body").rmEvent("click");
+			$("#warn").rmEvent("click");
 			$("body").rmEvent("keydown");
 			if(callback) callback();
 		}
 		$("#warn").css("top", "-"+t+"px");
 	}, 30);
+}
+function sendData(data, callback){
+	var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    xmlhttp.open("POST","io.php",true);
+ 	xmlhttp.onreadystatechange  = function(){
+        if(xmlhttp.readyState == 4 && xmlhttp.status == 200) callback(xmlhttp.responseText);
+        else if(xmlhttp.status == 0){
+        	var link = element("false", "span", "stopRetry");
+        	link.event("click", function(){
+        		sendData(data, function(d){
+        			unhalt();
+        			callback(d);
+        		});
+        	});
+        	link.innerHTML = "try again";
+        	$("#stopMessage").innerHTML = "no connection <br>";
+        	$("#stopMessage").appendChild(link);
+        	halt();
+        } 
+    };
+    xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	var dataStr = "", ri = 0;
+	for(var i in data){
+		var dat = encodeURIComponent(data[i]);
+		if(ri != 0) dataStr += "&"+i+"="+dat;
+		else dataStr += i+"="+dat;
+		ri++;
+	}
+	xmlhttp.send(dataStr);
 }

@@ -1,10 +1,11 @@
 var pageDir = [];
+var sendingPageData = false;
 function browserInit(){
 	listPageDir([]);
 	$("#browserBack").event("click", gotoParent);
 	$("#parentPageName").event("dclick", gotoParent);
 	$("#parentPageName").event("sclick", function(){
-		inspect($("#parentPage").data);
+		inspect($("#parentPageName").data);
 		$("#parentPage").css("background", "#373737");
 		if($("#browserList").childs()) $("#browserList").childs().css("background", "none");
 		
@@ -22,8 +23,46 @@ function browserInit(){
 	$("#browserList").event("click", function(e){
 		if(e.el.id == "browserList" && !browserDragging) deselectAllPages();
 	});
+	$("#fileOpen").event("click", fileOpen);
+	$("#filePublish").event("click", filesPublish);
+	$("#fileDelete").event("click", filesDelete);
+}
+function sendPageData(data, callback){
+	sendingPageData = true;
+	sendData(data, function(d){
+		sendingPageData = false;
+		callback(d);
+	});
+}
+function fileOpen(){
+	var s = getSelectedPages();
+	if(s.length > 1) return false;
+	log(s[0].data.path);
+}
+function filesPublish(){
+	
+}
+function filesDelete(){
+	var s = getSelectedPages();
+	var toDelete = [];
+	for(var i in s) toDelete.push(s[i].data.path);
+	warn("delete "+toDelete.length+" page"+(toDelete.length>1?"s":"")+"?", function(){
+		sendPageData({"delete" : JSON.stringify(toDelete)}, function(d){
+			var h = 25;
+			var a = setInterval(function(){
+				h-=8;
+				for(var i in s) s[i].css("height", h+"px");
+				if(h<=0){
+					clearInterval(a);
+					for(var i in s) s[i].remove();
+					deselectAllPages();
+				}
+			}, 30);
+		});
+	});
 }
 function gotoParent(){
+	if(sendingPageData) return false;
 	var d = pageDir;
 	d.pop();
 	listPageDir(d);
@@ -32,12 +71,13 @@ function getCurrentDir(dirArr){
 	dirArr = dirArr || pageDir;
 	return "/"+dirArr.join("/")+(dirArr.length > 0?"/":"");
 }
-function listPageDir(dir){
-	var dirname = "/"+dir.join("/")+(dir.length > 0?"/":"");
-	ajax("io.php", {"opendir" : dirname}, false, function(d){
+function listPageDir(dir, callback){
+	var dirname = getCurrentDir(dir);
+	sendPageData({"opendir" : dirname}, function(d){
 		pageDir = dir;
 		$("#browserBack").css("color", pageDir.length>0?"white":"#676767");
 		dispDirData(JSON.parse(d), dirname);
+		if(callback) callback();
 	});
 }
 function dispDirData(data, dirname){
@@ -55,11 +95,17 @@ function inspect(data){
 	var sel = data?[{"data":data}]:getSelectedPages();
 	if(sel.length == 0) hideInspector();
 	else if(sel.length == 1){
+		$("#browserInspectorDesc").css("display", "block");
+		$("#browserInspectorName").childs()[0].innerHTML = "Name:";
 		$("#browserInspectorNameValue").innerHTML = sel[0].data.title;
 		$("#browserInspectorDescValue").innerHTML = sel[0].data.desc;
+		$("#fileOpen").css("color", "#777777");
 		showInspector();
 	}else{
-		$("#browserInspectorNameValue").innerHTML = "multi";
+		$("#browserInspectorName").childs()[0].innerHTML = "Selected:";
+		$("#browserInspectorDesc").css("display", "none");
+		$("#browserInspectorNameValue").innerHTML = sel.length + " pages";
+		$("#fileOpen").css("color", "#474747");
 		showInspector();
 	}
 }
@@ -97,22 +143,23 @@ function hideInspector(){
 function getSelectedPages(){
 	var r = [];
 	var pages = $("#browserList").childs();
-	for(var c=0;c<pages.length;c++) if(pages[c].selected) r.push(pages[c]);
+	if(pages) for(var c=0;c<pages.length;c++) if(pages[c].selected) r.push(pages[c]);
 	return r;
 }
 function deselectAllPages(){
 	var pages = $("#browserList").childs();
-	if(!pages) return false;
-	for(var c=0;c<pages.length;c++){
-		pages[c].css("background", "none");
-		pages[c].selected = false;
+	if(pages){
+		for(var c=0;c<pages.length;c++){
+			pages[c].css("background", "none");
+			pages[c].selected = false;
+		}
+		$("#parentPage").css("background", "none");
 	}
-	$("#parentPage").css("background", "none");
 	inspect();
 }
 var addingPage = false;
 function addPage(){
-	if(addingPage) return false;
+	if(addingPage || sendingPageData) return false;
 	addingPage = true;
 	deselectAllPages();
 	var newPageEl = element(false, "div", "browserListEl");
@@ -120,8 +167,7 @@ function addPage(){
 	newPageEl.appendChild(input);
 	var cancel = element(false, "div", "icon browserListEnd");
 	cancel.innerHTML = "&times;";
-	cancel.event("click", function(){
-		input.blur();
+	newPageEl.cancel = function(){
 		var h = 25;
 		var a = setInterval(function(){
 			h -= 5;
@@ -133,7 +179,9 @@ function addPage(){
 			newPageEl.css("height", h+"px");
 		}, 30);
 		addingPage = false;
-	});
+	};
+	input.event("blur", newPageEl.cancel);
+	cancel.event("click", newPageEl.cancel);
 	newPageEl.appendChild(cancel);
 	newPageEl.submitting = false;
 	newPageEl.valid = false;
@@ -151,7 +199,7 @@ function addPage(){
 			if(newPageEl.valid){
 				newPageEl.submitting = true;
 				newPageEl.attr("contenteditable", "false");
-				ajax("io.php", {"newpage" : getCurrentDir()+input.innerHTML}, false, function(d){
+				sendPageData({"newpage" : getCurrentDir()+input.innerHTML}, function(d){
 					dispDirData(JSON.parse(d), getCurrentDir());
 					addingPage = false;
 				});
@@ -165,23 +213,6 @@ function addPage(){
 	else $("#browserList").appendChild(newPageEl);
 	newPageEl.css("background", "#373737");
 	input.focus();
-}
-function cancelDrop(pages){
-	var h = 0;
-	for(var p in pages) pages[p].css("display", "block");
-	var ani = setInterval(function(){
-		h += 5;
-		for(var p in pages) pages[p].css("height", h+"px");
-		if(h >= 25){
-			clearInterval(ani);
-			for(var p in pages) pages[p].css("height", "25px");
-		}
-	}, 30);
-	setTimeout(function(){browserDragging = false;}, 300);
-	for(var i=0;i<pages.length;i++){
-		pages[i].select();
-	}
-	inspect();
 }
 var browserDragging = false;
 function pageListItem(data){
@@ -233,7 +264,7 @@ function pageListItem(data){
 		}
 	});
 	el.event("dclick", function(){
-		listPageDir(pageDir.concat(data.title));
+		if(!sendingPageData && !addingPage) listPageDir(pageDir.concat(data.title));
 	});
 	var pages;
 	el.event("clickstart", function(e){
@@ -273,17 +304,28 @@ function pageListItem(data){
 			if(el.dragging){
 				$("body").rmClass("unselectable");
 				$("body").css("cursor", "default");
-				if(e.el.data && e.el.data.path != "/"){
+				if(e.el.data && e.el.data.path != "/" && !sendingPageData && !addingPage){
 					var toMove = [];
 					for(var p in pages) toMove.push(pages[p].data.path);
-					var moveTo = e.el.className?getCurrentDir()+e.el.data.title+"/":getCurrentDir(pageDir.slice(0, pageDir.length-1)); 
-					ajax("io.php", {"movepages" : JSON.stringify({"from" : toMove, "to" : moveTo})}, false, function(d){
+					var moveTo = e.el.className?getCurrentDir()+e.el.data.title+"/":getCurrentDir(pageDir.slice(0, pageDir.length-1));
+					var newDir =  e.el.className?pageDir.concat(e.el.data.title):pageDir.slice(0, pageDir.length-1);
+					sendPageData({"movepages" : JSON.stringify({"from" : toMove, "to" : moveTo})}, function(d){
 						var data = JSON.parse(d);
 						if(data.error){
 							cancelDrop(pages);
 							warn("<u>"+data.error+"</u> already exists");
+						}else{
+							browserDragging = false;
+							listPageDir(newDir, function(){
+								var els = $("#browserList").childs();
+								for(var i=0;i<els.length;i++){
+									for(var p in pages){
+										if(els[i].data.title == pages[p].data.title) els[i].select();
+									}
+								}
+								inspect();
+							});
 						}
-						else log(data);
 					});
 				}else cancelDrop(pages)
 				$("#browserListDrag").css("display", "none");
@@ -303,4 +345,21 @@ function pageListItem(data){
 		this.css("background", "#373737");	
 	};
 	return el;
+}
+function cancelDrop(pages){
+	var h = 0;
+	for(var p in pages) pages[p].css("display", "block");
+	var ani = setInterval(function(){
+		h += 5;
+		for(var p in pages) pages[p].css("height", h+"px");
+		if(h >= 25){
+			clearInterval(ani);
+			for(var p in pages) pages[p].css("height", "25px");
+		}
+	}, 30);
+	setTimeout(function(){browserDragging = false;}, 300);
+	for(var i=0;i<pages.length;i++){
+		pages[i].select();
+	}
+	inspect();
 }

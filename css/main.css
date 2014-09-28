@@ -4,7 +4,7 @@
   font-weight: normal;
   font-style: normal;
 }
-.icon{font-family:icon;}
+.icon{font-family:icon;cursor:pointer;}
 body{font-family:arial;font-size:16px;color:white;margin:0;padding:0;min-width:800px;min-height:700px;overflow:hidden;}
 div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
 *{outline:0px solid transparent;}
@@ -119,4 +119,11 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 		height:25px;
 		text-align:center;
 		color:white;
+	}
+	.stopRetry{
+		text-decoration:underline;
+		cursor:pointer;
+	}
+	.stopRetry:active{
+		text-deocration:none;
 	}

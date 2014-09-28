@@ -18,9 +18,18 @@
 		foreach($data->from as $toMove){
 			$to = $data->to.array_pop(explode("/", $toMove));
 			if(file_exists($cwd.$to)) error($to);
-			array_push($fromto, array($cwd.$toMove, $cwd.$to));
+			array_push($fromto, array($toMove, $to));
 		}
-		echo json_encode($fromto);
+		foreach($fromto as $ft){
+			rename($cwd.$ft[0], $cwd.$ft[1]);
+			$header = json_decode(file_get_contents($cwd.$ft[1]."/h.json"));
+			$header->path = $ft[1];
+			file_put_contents($cwd.$ft[1]."/h.json", json_encode($header));
+		}
+		echo json_encode($data->to);
+	}else if(isset($_POST['delete'])){
+		$data = json_decode($_POST['delete']);
+		foreach($data as $torm) removeDir($cwd.$torm);
 	}
 	function error($message){
 		echo "{\"error\":\"$message\"}";

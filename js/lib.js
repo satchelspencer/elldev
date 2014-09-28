@@ -94,7 +94,7 @@ ext.event = function(ev, f){
 			var t;
 			clearInterval(t);
 			if(clicks > 1){
-				dcf();
+				dcf(e);
 				clicks = 0;
 			}
 			var mu = function(e){
@@ -224,7 +224,6 @@ function ajax(url, data, prog, end){
     	xmlhttp.send(dataStr);
     }else if(Object.prototype.toString.call(data) == '[object String]') xmlhttp.send(encodeURIComponent(data));  
     else xmlhttp.send(data);
-    
 }
 function log(e, w){
 	if(console.log) w ? console.warn(e) : console.log(e);
