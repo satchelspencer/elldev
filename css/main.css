@@ -97,7 +97,8 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 		position:relative;
 		float:right;
 		height:100%;
-		padding:10px 5px;
+		font-size:13px;
+		padding:12px 7px;
 	}
 #stop{
 	display:none;

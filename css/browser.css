@@ -123,35 +123,41 @@
 }
 #browserInspector{
 	right:0;
-	bottom:-63px;
+	bottom:-25px;
 	left:0;
-	height:63px;
+	height:25px;
 	background:#373737;
 	box-shadow:-2px 0px 4px rgba(0,0,0,0.5);
 	font-size:13px;
+	padding-top:5px;
+	padding-left:10px;
+	color:#777777;
 }
-	#browserInspectorName{
-		top:7px;
-		left:10px;
-		height:15px;
-		right:25px;
-	}
-		.inspectorLabel{
-			color:#777777;
-		}
-	#browserInspectorDesc{
-		top:25px;
-		left:10px;
-		right:25px;
-		bottom:7px;
-		overflow:hidden;
-	}
-	#browserInspectorOptions{
+#browserInspectorLen{
+	color:white;
+}
+	#browserInspectorOptions, .browserListOptions{
 		right:5px;
-		top:4px;
-		bottom:10px;
-		width:13px;
-		font-size:15px;
+		top:0px;
+		bottom:0px;
+		letter-spacing:2px;
+		float:right;
+		font-size:13px;
 		line-height:19px;
+		padding-top:3px;
 		color:#777777;
+	}
+	#browserInspectorOptions span:active, .browserListOptions span:active{
+		color:white;
+	}
+	.browserListOptions{
+		display:none;
+	}
+	.published{
+		color:white;
+		font-size:10px;
+		top:3px;
+		right:18px;
+		width:auto;
+		height:auto;
 	}

@@ -23,9 +23,7 @@ function browserInit(){
 	$("#browserList").event("click", function(e){
 		if(e.el.id == "browserList" && !browserDragging) deselectAllPages();
 	});
-	$("#fileOpen").event("click", fileOpen);
-	$("#filePublish").event("click", filesPublish);
-	$("#fileDelete").event("click", filesDelete);
+	
 }
 function sendPageData(data, callback){
 	sendingPageData = true;
@@ -33,14 +31,6 @@ function sendPageData(data, callback){
 		sendingPageData = false;
 		callback(d);
 	});
-}
-function fileOpen(){
-	var s = getSelectedPages();
-	if(s.length > 1) return false;
-	log(s[0].data.path);
-}
-function filesPublish(){
-	
 }
 function filesDelete(){
 	var s = getSelectedPages();
@@ -93,19 +83,20 @@ function dispDirData(data, dirname){
 }
 function inspect(data){
 	var sel = data?[{"data":data}]:getSelectedPages();
-	if(sel.length == 0) hideInspector();
-	else if(sel.length == 1){
-		$("#browserInspectorDesc").css("display", "block");
-		$("#browserInspectorName").childs()[0].innerHTML = "Name:";
-		$("#browserInspectorNameValue").innerHTML = sel[0].data.title;
-		$("#browserInspectorDescValue").innerHTML = sel[0].data.desc;
-		$("#fileOpen").css("color", "#777777");
-		showInspector();
-	}else{
-		$("#browserInspectorName").childs()[0].innerHTML = "Selected:";
-		$("#browserInspectorDesc").css("display", "none");
-		$("#browserInspectorNameValue").innerHTML = sel.length + " pages";
-		$("#fileOpen").css("color", "#474747");
+	var pages = $("#browserList").childs();
+	if(pages) for(var c=0;c<pages.length;c++) pages[c].lastChild.css("display", "none");
+	if(sel.length == 1){
+		sel[0].lastChild.css("display", "block");
+		var published = sel[0].data.published == "true";
+		var k = sel[0].lastChild.children;
+		for(var i in k) if(k[i].className == "published icon-ok") k[i].style.display = published?"block":"none";
+	}
+	if(sel.length <= 1) hideInspector();
+	else{
+		var published = true;
+		for(var i in sel) if(sel[i].data.published != "true") published = false;
+		$("#multiPublished").css("display", published?"block":"none");
+		$("#browserInspectorLen").innerHTML = sel.length;
 		showInspector();
 	}
 }
@@ -113,14 +104,14 @@ var inspectorOpen = false;
 function showInspector(){
 	if(inspectorOpen) return false;
 	inspectorOpen = true;
-	var b = 63;
+	var b = 25;
 	var a = setInterval(function(){
 		$("#browserInspector").css("bottom", "-"+b+"px");
-		$("#browserList").css("bottom", (63-b)+"px");
+		$("#browserList").css("bottom", (25-b)+"px");
 		if(Math.abs(b) < 2 || b < 0){
 			clearInterval(a);
 			$("#browserInspector").css("bottom", "0");
-			$("#browserList").css("bottom", "63px");
+			$("#browserList").css("bottom", "25px");
 		}
 		b -= 10;
 	}, 25);
@@ -131,10 +122,10 @@ function hideInspector(){
 	var b = 0;
 	var a = setInterval(function(){
 		$("#browserInspector").css("bottom", "-"+b+"px");
-		$("#browserList").css("bottom", (63-b)+"px");
-		if(Math.abs(b-63) < 2 || b > 63){
+		$("#browserList").css("bottom", (25-b)+"px");
+		if(Math.abs(b-25) < 2 || b > 25){
 			clearInterval(a);
-			$("#browserInspector").css("bottom", "-63px");
+			$("#browserInspector").css("bottom", "-25px");
 			$("#browserList").css("bottom", "0");
 		}
 		b += 10;
@@ -268,7 +259,7 @@ function pageListItem(data){
 	});
 	var pages;
 	el.event("clickstart", function(e){
-		el.css("background", "#404040");
+		if(!el.selected) el.css("background", "#404040");
 		var starty = e.y;
 		var offset = el.y()-e.y;
 		$("body").event("mousemove", function(e){
@@ -344,6 +335,8 @@ function pageListItem(data){
 		this.selected = true;
 		this.css("background", "#373737");	
 	};
+	var opt = $("#browserListOptions").clone();
+	el.appendChild(opt);
 	return el;
 }
 function cancelDrop(pages){

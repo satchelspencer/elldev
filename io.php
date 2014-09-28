@@ -9,7 +9,7 @@
 		$name = array_pop($pageArr);
 		$parent = implode("/", $pageArr)."/";
 		mkdir($cwd.$_POST['newpage']);
-		$data = "{\"title\":\"".$name."\", \"desc\":\"no description\", \"savestatus\":\"published\", \"path\": \"".$_POST['newpage']."\"}";
+		$data = "{\"title\":\"".$name."\", \"desc\":\" - \", \"published\":\"true\", \"path\": \"".$_POST['newpage']."\"}";
 		file_put_contents($cwd.$_POST['newpage']."/h.json", $data);
 		echo json_encode(getDir($parent));
 	}else if(isset($_POST['movepages'])){

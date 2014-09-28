@@ -191,6 +191,8 @@ ext.attr = function(attr, val){
 }
 ext.clone = function(){
 	var el = extEl(this.cloneNode(false));
+	el.id = "";
+	el.innerHTML = this.innerHTML;
 	return el;
 }
 ext.remove = function(){

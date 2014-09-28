@@ -125,7 +125,7 @@ function warn(warning, callback, abort){
 		if(t<=0){
 			clearInterval(a);
 			$("#warn").css("top", "0px");
-			$("#warn").event("click", function(){unwarn(callback)});
+			$("body").event("click", function(){unwarn(callback)});
 			$("body").event("keydown", function(e){
 				if(e.code == 13) unwarn(callback);
 			});
@@ -141,7 +141,7 @@ function unwarn(callback){
 		if(t>=40){
 			clearInterval(a);
 			$("#warn").css("top", "-40px");
-			$("#warn").rmEvent("click");
+			$("body").rmEvent("click");
 			$("body").rmEvent("keydown");
 			if(callback) callback();
 		}
