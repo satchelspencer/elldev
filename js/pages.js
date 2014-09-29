@@ -19,9 +19,18 @@ function browserInit(){
 	});
 	
 }
+var loadAng = 0;
+var loadAni;
 function sendPageData(data, callback){
 	sendingPageData = true;
+	loadAni = setInterval(function(){
+		$("#browserLoad").css("transform", "rotate("+loadAng+"deg)");
+		loadAng = (loadAng+5)%360;
+	},30);
+	$("#browserLoad").css("color", "#272727");
 	sendData(data, function(d){
+		clearInterval(loadAni);
+		$("#browserLoad").css("color", "#404040");
 		sendingPageData = false;
 		callback(d);
 	});

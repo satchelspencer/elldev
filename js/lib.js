@@ -126,8 +126,11 @@ ext.clEvents = function(){
 	this.e = {};
 }
 ext.css = function(p, v){
-	if(v) this.style[p] = v;
-	else return this.currentStyle ? this.currentStyle[p] : document.defaultView.getComputedStyle(this,null).getPropertyValue(p);
+	if(v){
+		var prefixes = ["webkitTransform", "MozTransform", "msTransform", "OTransform", "transform"];
+		if(p == "transform") for(var i in prefixes) this.style[prefixes[i]] = v;
+		else this.style[p] = v;
+	}else return this.currentStyle ? this.currentStyle[p] : document.defaultView.getComputedStyle(this,null).getPropertyValue(p);
 }
 ext.cssn = function(p){
 	return parseFloat((this.currentStyle ? this.currentStyle[p] : document.defaultView.getComputedStyle(this,null).getPropertyValue(p)).replace("px", ""));
