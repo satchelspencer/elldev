@@ -17,7 +17,8 @@ function browserInit(){
 	$("#browserList").event("click", function(e){
 		if(e.el.id == "browserList" && !browserDragging) deselectAllPages();
 	});
-	
+	$("#multiFilePublish").event("click", function(){});
+	$("#multiFileDelete").event("click", filesDelete);
 }
 var loadAng = 0;
 var loadAni;
@@ -35,24 +36,22 @@ function sendPageData(data, callback){
 		callback(d);
 	});
 }
-function filesDelete(){
+function filesDelete(e){
 	var s = getSelectedPages();
 	var toDelete = [];
 	for(var i in s) toDelete.push(s[i].data.path);
-	warn("delete "+toDelete.length+" page"+(toDelete.length>1?"s":"")+"?", function(){
-		sendPageData({"delete" : JSON.stringify(toDelete)}, function(d){
-			var h = 25;
-			var a = setInterval(function(){
-				h-=8;
-				for(var i in s) s[i].css("height", h+"px");
-				if(h<=0){
-					clearInterval(a);
-					for(var i in s) s[i].remove();
-					deselectAllPages();
-				}
-			}, 30);
-		});
-	});
+	sendPageData({"delete" : JSON.stringify(toDelete)}, function(d){
+		var h = 25;
+		var a = setInterval(function(){
+			h-=8;
+			for(var i in s) s[i].css("height", h+"px");
+			if(h<=0){
+				clearInterval(a);
+				for(var i in s) s[i].remove();
+				deselectAllPages();
+			}
+		}, 30);
+	});	
 }
 function gotoParent(){
 	if(sendingPageData) return false;
@@ -96,13 +95,13 @@ function inspect(data){
 		sel[0].lastChild.css("display", "block");
 		var published = sel[0].data.published == "true";
 		var k = sel[0].lastChild.children;
-		for(var i in k) if(k[i].className == "published icon-ok") k[i].style.display = published?"block":"none";
+		for(var i in k) if(k[i].className == "published icon-ok") k[i].style.display = published?"inline":"none";
 	}
 	if(sel.length <= 1) hideInspector();
 	else{
 		var published = true;
 		for(var i in sel) if(sel[i].data.published != "true") published = false;
-		$("#multiPublished").css("display", published?"block":"none");
+		$("#multiPublished").css("display", published?"inline":"none");
 		$("#browserInspectorLen").innerHTML = sel.length;
 		showInspector();
 	}
@@ -343,6 +342,9 @@ function pageListItem(data){
 		this.css("background", "#373737");	
 	};
 	var opt = $("#browserListOptions").clone();
+	opt.childs()[0].event("click", function(){});
+	opt.childs()[1].event("click", function(){});
+	opt.childs()[2].event("click", filesDelete);
 	el.appendChild(opt);
 	return el;
 }

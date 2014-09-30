@@ -162,8 +162,18 @@
 	.published{
 		color:white;
 		font-size:10px;
-		top:3px;
-		right:18px;
+		margin-left:-18px;
+		margin-top:-4px;
 		width:auto;
 		height:auto;
+	}
+	.fileDelete{
+		background:#373737;
+		padding-left:1.5px;
+		font-size:14px;
+	}
+	.fileDeleteWarn{
+		margin-right:-41px;
+		letter-spacing:normal;
+		color:red;
 	}
