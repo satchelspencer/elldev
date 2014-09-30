@@ -9,8 +9,8 @@
 		$name = array_pop($pageArr);
 		$parent = implode("/", $pageArr)."/";
 		mkdir($cwd.$_POST['newpage']);
-		$data = "{\"title\":\"".$name."\", \"desc\":\" - \", \"published\":\"true\", \"path\": \"".$_POST['newpage']."\"}";
-		file_put_contents($cwd.$_POST['newpage']."/h.json", $data);
+		$data = "{\"title\":\"".$name."\", \"desc\":\" - \", \"published\":\"true\", \"path\": \"".$_POST['newpage']."\"}\n{}";
+		file_put_contents($cwd.$_POST['newpage']."/data", $data);
 		echo json_encode(getDir($parent));
 	}else if(isset($_POST['movepages'])){
 		$data = json_decode($_POST['movepages']);
@@ -22,7 +22,7 @@
 		}
 		foreach($fromto as $ft){
 			rename($cwd.$ft[0], $cwd.$ft[1]);
-			$header = json_decode(file_get_contents($cwd.$ft[1]."/h.json"));
+			$header = json_decode(getHead($cwd.$ft[1]."/data"));
 			$header->path = $ft[1];
 			file_put_contents($cwd.$ft[1]."/h.json", json_encode($header));
 		}
@@ -35,6 +35,15 @@
 		echo "{\"error\":\"$message\"}";
 		exit;
 	}
+	function getHead($file){
+		$f = fopen($file, 'r');
+		$head = fgets($f);
+		fclose($f);
+		return $head;
+	}
+	function getBody($file){
+		return preg_replace('/^.+\n/', '', file_get_contents($file));
+	}
 	function getDir($path){
 		$cwd = getcwd();
 		$reserved = array("a", "as");
@@ -45,10 +54,10 @@
 		foreach($dirs as $dir){
 			$dirn = substr($dir, strlen($dirPath), strlen($dir));
 			if(!in_array($dirn, $reserved)){ 
-				array_push($children, json_decode(file_get_contents("$dir/h.json")));
+				array_push($children, json_decode(getHead("$dir/data")));
 			}
 		}
-		$output["parent"] = json_decode(file_get_contents("$dirPath/h.json"));
+		$output["parent"] = json_decode(getHead("$dirPath/data"));
 		$output["children"] = $children;
 		return $output;
 	}

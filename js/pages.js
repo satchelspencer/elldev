@@ -3,7 +3,10 @@ var sendingPageData = false;
 function browserInit(){
 	listPageDir([]);
 	$("#browserBack").event("click", gotoParent);
-	$("#parentPageName").event("click", gotoParent);
+	$("#parentPageName").event("click", function(e){
+		if(e.el.data.path == "/") inspect(e.el.data);
+		else gotoParent(e);
+	});
 	$("#parentPageName").event("clickstart", function(){
 		$("#parentPage").css("background", "#404040");
 	});
@@ -22,16 +25,24 @@ function browserInit(){
 }
 var loadAng = 0;
 var loadAni;
+function setLoadBright(c){
+	c = Math.round(c);
+	$("#browserLoad").css("color", "rgb("+c+","+c+","+c+")");
+}
 function sendPageData(data, callback){
 	sendingPageData = true;
+	var adone = false;
+	ani(64, 150, 10, setLoadBright, function(){
+		adone = true;
+		if(!sendingPageData) ani(150, 64, 10, setLoadBright);
+	});
 	loadAni = setInterval(function(){
 		$("#browserLoad").css("transform", "rotate("+loadAng+"deg)");
 		loadAng = (loadAng+5)%360;
 	},30);
-	$("#browserLoad").css("color", "#272727");
 	sendData(data, function(d){
+		if(adone) ani(150, 64, 10, setLoadBright);
 		clearInterval(loadAni);
-		$("#browserLoad").css("color", "#404040");
 		sendingPageData = false;
 		callback(d);
 	});
