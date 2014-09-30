@@ -87,66 +87,46 @@ function setBsepy(y){
 var halted = false;
 function halt(message){
 	if(halted) return false;
-	var o = 0;
 	halted = true;
 	if(message) $("#stopMessage").innerHTML = message;
 	$("#stop").css("display", "block");
-	var a = setInterval(function(){
-		o += .2;
-		if(o >= 1){
-			$("#stop").css("opacity", 1);
-			clearInterval(a);
-		}
+	ani(0, 1, 5, function(o){
 		$("#stop").css("opacity", o);
-	}, 30);
+	})
 }
 function unhalt(){
 	if(!halted) return false;
-	var o = 1;
 	halted = false;
 	$("#stopMessage").innerHTML = "";
-	var a = setInterval(function(){
-		o -= .2;
-		if(o <= 0){
-			$("#stop").css("opacity", 0);
-			$("#stop").css("display", "none");
-			clearInterval(a);
-		}
+	ani(1, 0, 5, function(o){
 		$("#stop").css("opacity", o);
-	}, 30);
+	}, function(){
+		$("#stop").css("display", "none");
+	});
 }
 var warned = false;
 function warn(warning, callback, abort){
 	warned = true;
 	$("#warnTitle").innerHTML = warning;
-	var t = 40;
-	var a = setInterval(function(){
-		t-=8;
-		if(t<=0){
-			clearInterval(a);
-			$("#warn").css("top", "0px");
-			$("body").event("click", function(){unwarn(callback)});
-			$("body").event("keydown", function(e){
-				if(e.code == 13) unwarn(callback);
-			});
-		}
+	ani(30, 0, 4, function(t){
 		$("#warn").css("top", "-"+t+"px");
-	}, 30);
+	}, function(){
+		$("body").event("click", function(){unwarn(callback)});
+		$("body").event("keydown", function(e){
+			if(e.code == 13) unwarn(callback);
+		});
+	});
 }
 function unwarn(callback){
 	warned = false;
-	var t = 0;
-	var a = setInterval(function(){
-		t+=8;
-		if(t>=40){
-			clearInterval(a);
-			$("#warn").css("top", "-40px");
-			$("body").rmEvent("click");
-			$("body").rmEvent("keydown");
-			if(callback) callback();
-		}
+	ani(0, 30, 4, function(t){
 		$("#warn").css("top", "-"+t+"px");
-	}, 30);
+	}, function(){
+		$("#warn").css("top", "-40px");
+		$("body").rmEvent("click");
+		$("body").rmEvent("keydown");
+		if(callback) callback();
+	});
 }
 function sendData(data, callback){
 	var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");

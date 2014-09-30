@@ -41,16 +41,12 @@ function filesDelete(e){
 	var toDelete = [];
 	for(var i in s) toDelete.push(s[i].data.path);
 	sendPageData({"delete" : JSON.stringify(toDelete)}, function(d){
-		var h = 25;
-		var a = setInterval(function(){
-			h-=8;
+		ani(25, 0, 4, function(h){
 			for(var i in s) s[i].css("height", h+"px");
-			if(h<=0){
-				clearInterval(a);
-				for(var i in s) s[i].remove();
-				deselectAllPages();
-			}
-		}, 30);
+		}, function(){
+			for(var i in s) s[i].remove();
+			deselectAllPages();
+		});
 	});	
 }
 function gotoParent(){
@@ -110,32 +106,19 @@ var inspectorOpen = false;
 function showInspector(){
 	if(inspectorOpen) return false;
 	inspectorOpen = true;
-	var b = 25;
-	var a = setInterval(function(){
+	ani(25, 0, 4, function(b){
 		$("#browserInspector").css("bottom", "-"+b+"px");
 		$("#browserList").css("bottom", (25-b)+"px");
-		if(Math.abs(b) < 2 || b < 0){
-			clearInterval(a);
-			$("#browserInspector").css("bottom", "0");
-			$("#browserList").css("bottom", "25px");
-		}
-		b -= 10;
-	}, 25);
+	});
 }
 function hideInspector(){
 	if(!inspectorOpen) return false;
 	inspectorOpen = false;
 	var b = 0;
-	var a = setInterval(function(){
+	ani(0, 25, 4, function(b){
 		$("#browserInspector").css("bottom", "-"+b+"px");
 		$("#browserList").css("bottom", (25-b)+"px");
-		if(Math.abs(b-25) < 2 || b > 25){
-			clearInterval(a);
-			$("#browserInspector").css("bottom", "-25px");
-			$("#browserList").css("bottom", "0");
-		}
-		b += 10;
-	}, 25);
+	});
 }
 function getSelectedPages(){
 	var r = [];
@@ -165,16 +148,11 @@ function addPage(){
 	var cancel = element(false, "div", "icon browserListEnd");
 	cancel.innerHTML = "&times;";
 	newPageEl.cancel = function(){
-		var h = 25;
-		var a = setInterval(function(){
-			h -= 5;
-			if(h <= 0){
-				newPageEl.css("height", "0");
-				clearInterval(a);
-				newPageEl.remove();
-			}
+		ani(25, 0, 4, function(h){
 			newPageEl.css("height", h+"px");
-		}, 30);
+		}, function(){
+			newPageEl.remove();
+		});
 		addingPage = false;
 	};
 	input.event("blur", newPageEl.cancel);
@@ -277,18 +255,14 @@ function pageListItem(data){
 				el.selected = true;
 				pages = getSelectedPages();
 				deselectAllPages();
-				var h = 25;
-				var ani = setInterval(function(){
-					h -= 5;
+				ani(25, 0, 4, function(h){
 					for(var p in pages) pages[p].css("height", h+"px");
-					if(h <= 0){
-						clearInterval(ani);
-						for(var p in pages){
-							pages[p].css("display", "none");
-							pages[p].css("background", "none");
-						}
+				}, function(){
+					for(var p in pages){
+						pages[p].css("display", "none");
+						pages[p].css("background", "none");
 					}
-				}, 30);
+				});
 				$("#browserListDrag").css("display", "block");
 				$("#browserListDrag").innerHTML = pages.length>1?pages.length+" pages":pages[0].data.title;
 			}
@@ -351,14 +325,9 @@ function pageListItem(data){
 function cancelDrop(pages){
 	var h = 0;
 	for(var p in pages) pages[p].css("display", "block");
-	var ani = setInterval(function(){
-		h += 5;
+	ani(0, 25, 4, function(h){
 		for(var p in pages) pages[p].css("height", h+"px");
-		if(h >= 25){
-			clearInterval(ani);
-			for(var p in pages) pages[p].css("height", "25px");
-		}
-	}, 30);
+	});
 	setTimeout(function(){browserDragging = false;}, 300);
 	for(var i=0;i<pages.length;i++){
 		pages[i].select();

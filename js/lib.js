@@ -129,6 +129,10 @@ ext.css = function(p, v){
 	if(v){
 		var prefixes = ["webkitTransform", "MozTransform", "msTransform", "OTransform", "transform"];
 		if(p == "transform") for(var i in prefixes) this.style[prefixes[i]] = v;
+		if(p == "opcaity"){
+			this.style.opacity = v;
+			this.style.filter = "alpha(opacity="+(v*100)+")";
+		}
 		else this.style[p] = v;
 	}else return this.currentStyle ? this.currentStyle[p] : document.defaultView.getComputedStyle(this,null).getPropertyValue(p);
 }
@@ -233,4 +237,18 @@ function ajax(url, data, prog, end){
 function log(e, w){
 	if(console.log) w ? console.warn(e) : console.log(e);
 	else alert(e);
+}
+function ani(start, finish, steps, call, callback){
+	var step = (finish-start)/steps;
+	var init = start;
+	var a = setInterval(function(){
+		call(start);
+		if(init<finish?start>=finish:finish>=start){
+			clearInterval(a);
+			if(start != finish) call(finish);
+			if(callback) callback();
+			return false;
+		}
+		start += step;
+	}, 30);
 }
