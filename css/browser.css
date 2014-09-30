@@ -152,6 +152,8 @@
 		line-height:19px;
 		padding-top:3px;
 		color:#777777;
+		right:-3px;
+		padding-right:3px;
 	}
 	#browserInspectorOptions span:active, .browserListOptions span:active{
 		color:white;
@@ -168,12 +170,16 @@
 		height:auto;
 	}
 	.fileDelete{
-		background:#373737;
+		position:relative;
+		display:inline-block;
 		padding-left:1.5px;
 		font-size:14px;
 	}
 	.fileDeleteWarn{
-		margin-right:-41px;
+		position:relative;
+		display:inline-block;
+		margin-right:-45px;
 		letter-spacing:normal;
 		color:red;
+		background:#373737;
 	}

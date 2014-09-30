@@ -40,14 +40,38 @@ function filesDelete(e){
 	var s = getSelectedPages();
 	var toDelete = [];
 	for(var i in s) toDelete.push(s[i].data.path);
-	sendPageData({"delete" : JSON.stringify(toDelete)}, function(d){
-		ani(25, 0, 4, function(h){
-			for(var i in s) s[i].css("height", h+"px");
-		}, function(){
-			for(var i in s) s[i].remove();
-			deselectAllPages();
+	var w = e.el.next();
+	var el = e.el;
+	ani(41, 0, 7, function(r){
+		w.css("marginRight", "-"+r+"px");
+		el.css("marginRight", "-"+((41-r)*(18/41))+"px");
+		el.css("transform", "rotate(-"+(2*(41-r))+"deg)");
+	}, function(){
+		$("body").event("click", function(e){
+			$("body").rmEvent("click");
+			if(e.el.className == "fileDeleteWarn"){
+				for(var i in s) s[i].clEvents();
+				ani(1, 0.5, 5, function(o){
+					for(var i in s) s[i].css("opacity", o);
+				});
+				sendPageData({"delete" : JSON.stringify(toDelete)}, function(d){
+					ani(25, 0, 4, function(h){
+						for(var i in s) s[i].css("height", h+"px");
+					}, function(){
+						for(var i in s) s[i].remove();
+						deselectAllPages();
+					});
+				});
+			}
+			if(e.el.className != "fileDeleteWarn" || e.el.id == "multiFileDeleteWarn"){
+				ani(0, 41, 7, function(r){
+					w.css("marginRight", "-"+r+"px");
+					el.css("marginRight", "-"+((41-r)*(18/41))+"px");
+					el.css("transform", "rotate(-"+(2*(41-r))+"deg)");
+				});
+			}
 		});
-	});	
+	});
 }
 function gotoParent(){
 	if(sendingPageData) return false;
@@ -55,7 +79,7 @@ function gotoParent(){
 	var prev = d.pop();
 	listPageDir(d, function(){
 		var els = $("#browserList").childs();
-		for(var i=0;i<els.length;i++) if(els[i].data.title == prev) els[i].select();
+		if(els) for(var i=0;i<els.length;i++) if(els[i].data.title == prev) els[i].select();
 		inspect();
 	});
 }
@@ -227,7 +251,7 @@ function pageListItem(data){
 				el.selected = !el.selected;
 				el.css("background", el.selected?"#373737":"none");
 			}else{
-				for(var c=0;c<pages.length;c++){
+				if(pages.length) for(var c=0;c<pages.length;c++){
 					pages[c].css("background", "none");
 					pages[c].selected = false;
 				}

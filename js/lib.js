@@ -177,6 +177,16 @@ ext.childs = function(){
 		return extLi(r);
 	}else return undefined;
 }
+ext.next = function(){
+	var r = this.nextSibling;
+	while(r && r.nodeType != 1) r = r.nextSibling;
+	return r?extEl(r):false;
+}
+ext.prev = function(){
+	var r = this.previousSibling;
+	while(r && r.nodeType != 1) r = r.previousSibling;
+	return r?extEl(r):false;
+}
 ext.pos = function(){
 	var x = 0, y = 0;
 	var el = this;
