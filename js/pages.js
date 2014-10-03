@@ -125,8 +125,10 @@ function inspectRoot(data){
 	$("#inspectMessage").innerHTML = data.title;
 	$("#browserInspectorLen").css("display", "none");
 	$("#multiFileDelete").css("display", "none");
+	$("#multiFileDeleteWarn").css("display", "none");
 	$("#inspectorEdit").css("display", "inline");
-	$("#multiPublished").css("display", data.published?"inline":"none");
+	var published = data.published == "true";
+	$("#multiPublished").css("display", published?"inline-block":"none");
 	showInspector();
 }
 function inspect(data){
@@ -138,16 +140,17 @@ function inspect(data){
 		sel[0].lastChild.css("display", "block");
 		var published = sel[0].data.published == "true";
 		var k = sel[0].lastChild.children;
-		for(var i in k) if(k[i].className == "published icon-ok") k[i].style.display = published?"inline":"none";
+		for(var i in k) if(k[i].className == "published icon-ok") k[i].style.display = published?"inline-block":"none";
 	}
 	if(sel.length <= 1) hideInspector();
 	else{
 		$("#inspectMessage").innerHTML = " pages selected";
 		var published = true;
 		for(var i in sel) if(sel[i].data.published != "true") published = false;
-		$("#multiPublished").css("display", published?"inline":"none");
+		$("#multiPublished").css("display", published?"inline-block":"none");
 		$("#browserInspectorLen").css("display", "inline");
 		$("#multiFileDelete").css("display", "inline");
+		$("#multiFileDeleteWarn").css("display", "inline");
 		$("#inspectorEdit").css("display", "none");
 		$("#browserInspectorLen").innerHTML = sel.length;
 		$("#multiFilePublish").event("click", function(){log("pub")});
@@ -182,7 +185,7 @@ function getSelectedPages(){
 function deselectAllPages(){
 	var pages = $("#browserList").childs();
 	if(pages || $("#parentPage").selected){
-		for(var c=0;c<pages.length;c++){
+		if(pages) for(var c=0;c<pages.length;c++){
 			pages[c].css("background", "none");
 			pages[c].selected = false;
 		}
@@ -220,7 +223,7 @@ function addPage(){
 	var pages = $("#browserList").childs();
 	newPageEl.event("keyup", function(e){
 		newPageEl.valid = input.innerHTML.match(/^[a-z0-9\-\_\.]{2,32}$/i);
-		for(var i=0;i<pages.length;i++) if(pages[i].firstChild.innerHTML == input.innerHTML) newPageEl.valid = false;
+		if(pages) for(var i=0;i<pages.length;i++) if(pages[i].firstChild.innerHTML == input.innerHTML) newPageEl.valid = false;
 		newPageEl.css("color", newPageEl.valid?"white":"red");
 	});
 	newPageEl.event("keydown", function(e){
@@ -377,7 +380,7 @@ function pageListItem(data){
 	};
 	var n = element(false, "span", "pageName");
 	n.innerHTML = data.title;
-	n.attr("contenteditable", "true");
+	//n.attr("contenteditable", "true");
 	el.appendChild(n);
 	var opt = $("#browserListOptions").clone();
 	opt.childs()[0].event("click", function(){});

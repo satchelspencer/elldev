@@ -24,7 +24,7 @@
 			rename($cwd.$ft[0], $cwd.$ft[1]);
 			$header = json_decode(getHead($cwd.$ft[1]."/data"));
 			$header->path = $ft[1];
-			file_put_contents($cwd.$ft[1]."/h.json", json_encode($header));
+			writeHead($cwd.$ft[1]."/data", json_encode($header));
 		}
 		echo json_encode($data->to);
 	}else if(isset($_POST['delete'])){
@@ -41,8 +41,18 @@
 		fclose($f);
 		return $head;
 	}
+	function writeHead($file, $str){
+		$lines = file($file);
+		$lines[0] = $str;
+		file_put_contents($file, implode("\n", $lines));
+	}
 	function getBody($file){
 		return preg_replace('/^.+\n/', '', file_get_contents($file));
+	}
+	function writeBody($file, $str){
+		$lines = file($file);
+		$head = $lines[0];
+		file_put_contents($file, $head."\n".$str);
 	}
 	function getDir($path){
 		$cwd = getcwd();
