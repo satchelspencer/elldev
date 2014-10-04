@@ -177,6 +177,12 @@ ext.childs = function(){
 		return extLi(r);
 	}else return undefined;
 }
+ext.first = function(){
+	return extEl(this.firstChild);
+}
+ext.last = function(){
+	return extEl(this.lastChild);
+}
 ext.next = function(){
 	var r = this.nextSibling;
 	while(r && r.nodeType != 1) r = r.nextSibling;

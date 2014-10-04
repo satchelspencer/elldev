@@ -1,6 +1,6 @@
 var pageDir = [];
 var sendingPageData = false;
-function browserInit(){
+function pagesInit(){
 	listPageDir([]);
 	$("#browserBack").event("click", gotoParent);
 	$("#parentPageName").event("click", function(e){
@@ -92,10 +92,6 @@ function gotoParent(){
 		if(els) for(var i=0;i<els.length;i++) if(els[i].data.title == prev) els[i].select();
 		inspect();
 	});
-}
-function getCurrentDir(dirArr){
-	dirArr = dirArr || pageDir;
-	return "/"+dirArr.join("/")+(dirArr.length > 0?"/":"");
 }
 function listPageDir(dir, callback){
 	var dirname = getCurrentDir(dir);
@@ -380,7 +376,6 @@ function pageListItem(data){
 	};
 	var n = element(false, "span", "pageName");
 	n.innerHTML = data.title;
-	//n.attr("contenteditable", "true");
 	el.appendChild(n);
 	var opt = $("#browserListOptions").clone();
 	opt.childs()[0].event("click", function(){});

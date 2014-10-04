@@ -5,6 +5,7 @@
 		<script type="text/javascript" src="js/lib.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
 		<script type="text/javascript" src="js/pages.js"></script>
+		<script type="text/javascript" src="js/assets.js"></script>
 		<link rel="stylesheet" type="text/css" href="fonts/icon-codes.css"/>
 		<link rel="stylesheet" type="text/css" href="css/main.css"/>
 		<link rel="stylesheet" type="text/css" href="css/props/props.css"/>
@@ -195,30 +196,39 @@
 			</div>
 			<div id="browserSeparator" class="separator"></div>
 			<div id="browser">
-				<div id="browserList"></div>
-				<div id="browserListOptions" class="icon browserListOptions">
-					<span class="icon-edit"></span>
-					<span class="icon-download">
-						<span class="published icon-ok"></span>
-					</span>
-					<span class="icon-cancel fileDelete"></span>
-					<div class="fileDeleteWarn">delete</div>
-				</div>
-				<div id="browserInspector">
-					<span id="multiTitle"><span id="browserInspectorLen">3</span> <span id="inspectMessage">pages selected</span></span>
-					<span id="homeTitle"></span>
-					<div id="browserInspectorOptions" class="icon">
-						<span id="inspectorEdit" class="icon-edit"></span>
-						<span id="multiFilePublish" class="icon-download">
-							<span id="multiPublished" class="published icon-ok"></span>
-						</span>
-						<span id="multiFileDelete" class="icon-cancel fileDelete"></span>
-						<div id="multiFileDeleteWarn" class="fileDeleteWarn">delete</div>
+				<div id="browserSlider">
+					<div id="pages">
+						<div id="browserList"></div>
+						<div id="browserListOptions" class="icon browserListOptions">
+							<span class="icon-edit"></span>
+							<span class="icon-download">
+								<span class="published icon-ok"></span>
+							</span>
+							<span class="icon-cancel fileDelete"></span>
+							<div class="fileDeleteWarn">delete</div>
+						</div>
+						<div id="browserInspector">
+							<span id="multiTitle"><span id="browserInspectorLen">3</span> <span id="inspectMessage">pages selected</span></span>
+							<span id="homeTitle"></span>
+							<div id="browserInspectorOptions" class="icon">
+								<span id="inspectorEdit" class="icon-edit"></span>
+								<span id="multiFilePublish" class="icon-download">
+									<span id="multiPublished" class="published icon-ok"></span>
+								</span>
+								<span id="multiFileDelete" class="icon-cancel fileDelete"></span>
+								<div id="multiFileDeleteWarn" class="fileDeleteWarn">delete</div>
+							</div>
+						</div>
+						<div id="parentPage">
+							<div id="parentPageName"></div>
+							<div id="browserAdd" class="icon icon-plus"></div>
+						</div>
 					</div>
-				</div>
-				<div id="parentPage">
-					<div id="parentPageName"></div>
-					<div id="browserAdd" class="icon icon-plus"></div>
+					<div id="assets">
+						<div id="assetList">
+							<div class="assetListEl"><span class="assetListType icon icon-folder-empty"></span><span class="pageName">hahah</span></div>
+						</div>
+					</div>
 				</div>
 				<div id="browserHead">
 					<div id="browserLoad" class="icon icon-spin2"></div>
@@ -228,7 +238,7 @@
 						<span id="browserPathLabel"></span>
 					</div>
 					<div id="browserMode">
-						<div id="pageMode"><u>pages</u></div><div id="assetMode">assets</div>
+						<div id="pageMode">pages</div><div id="assetMode">assets</div>
 					</div>
 				</div>
 				<div id="browserListDrag"></div>

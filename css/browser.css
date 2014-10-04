@@ -54,10 +54,14 @@
 		font-size:13px;
 	}
 	#pageMode{
+		cursor:pointer;
 		border-right:1px solid #777777;
+		color:#777777;
+		text-decoration:underline;
 	}
 	#assetMode{
-		color:#777777;
+		cursor:pointer;
+		color:#272727;
 	}
 #parentPage{
 	top:25px;
@@ -83,37 +87,49 @@
 		color:#272727;
 		padding:5px;
 	}
-#browserList{
+#browserList, #assetList{
 	top:50px;
 	left:0;
 	right:0;
 	bottom:0px;
 	overflow-y:scroll;
 }
-	.browserListEl{
+#assetList{
+	top:25px;
+}
+	.browserListEl, .assetListEl{
 		position:relative;
 		width:337px;
 		margin-left:13px;
 		height:25px;
 		font-size:13px;
 		border-bottom:1px solid #575757;
-		padding:4px 4px;
+		padding:5px 4px;
 		overflow:hidden;
 	}
-	.newPageInput{	
-		margin-top:4px;
-		margin-left:4px;
-	}
-	.browserListEnd{
-		top:0;
-		right:0;
-		bottom:0;
-		width:25px;
-		font-size:19px;
-		color:white;
-		text-align:center;
-		cursor:pointer;
-	}
+		.pageName, .assetListType{
+			top:0;
+			bottom:0;
+			left:0;
+			display:inline-block;
+		}
+		.assetListType{
+			margin-right:8px;
+		}
+		.newPageInput{	
+			margin-top:4px;
+			margin-left:4px;
+		}
+		.browserListEnd{
+			top:0;
+			right:0;
+			bottom:0;
+			width:25px;
+			font-size:19px;
+			color:white;
+			text-align:center;
+			cursor:pointer;
+		}
 #browserListDrag{
 	display:none;
 	top:50px;
@@ -182,4 +198,22 @@
 		letter-spacing:normal;
 		color:red;
 		background:#373737;
+	}
+#browserSlider{
+	width:700px;
+	top:0;
+	left:0;
+	bottom:0;
+}
+	#pages, #assets{
+		position:relative;
+		float:left;
+		height:100%;
+		width:350px;
+	}
+	#pages{	
+		border-right:1px solid #777777;
+	}
+	#assets{
+		background:#999999;
 	}
