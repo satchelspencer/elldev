@@ -219,6 +219,7 @@ function addPage(){
 	var pages = $("#browserList").childs();
 	newPageEl.event("keyup", function(e){
 		newPageEl.valid = input.innerHTML.match(/^[a-z0-9\-\_\.]{2,32}$/i);
+		if(input.innerHTML == "as") valid = false;
 		if(pages) for(var i=0;i<pages.length;i++) if(pages[i].firstChild.innerHTML == input.innerHTML) newPageEl.valid = false;
 		newPageEl.css("color", newPageEl.valid?"white":"red");
 	});

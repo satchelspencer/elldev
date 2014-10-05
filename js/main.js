@@ -9,28 +9,32 @@ window.onresize = function(){
 var browserState = "pages";
 function browserInit(){
 	pagesInit();
+	assetInit();
 	$("#pageMode").event("click", function(){
+		if(browserState == "pages") return false;
 		browserState = "pages";
-		$("#pageMode").css("color", "#777777");
-		$("#pageMode").css("textDecoration", "underline");
-		$("#assetMode").css("color", "#272727");
-		$("#assetMode").css("textDecoration", "none");
+		$("#pageMode").css("color", "#171717");
+		$("#assetMode").css("color", "#777777");
 		ani(350, 0, 5, function(l){
 			$("#browserSlider").css("left", "-"+l+"px");
 		});
-		$("#browserPathLabel").innerHTML = getCurrentDir(pageDir);
-		
+		$("#browserLoad").css("display", "block");
+		$("#assetLoad").css("display", "none");
+		$("#browserPathLabel").css("display", "inline");
+		$("#assetPathLabel").css("display", "none");
 	});
 	$("#assetMode").event("click", function(){
+		if(browserState == "assets") return false;
 		browserState = "assets";
-		$("#assetMode").css("color", "#777777");
-		$("#assetMode").css("textDecoration", "underline");
-		$("#pageMode").css("color", "#272727");
-		$("#pageMode").css("textDecoration", "none");
+		$("#assetMode").css("color", "#171717");
+		$("#pageMode").css("color", "#777777");
 		ani(0, 350, 5, function(l){
 			$("#browserSlider").css("left", "-"+l+"px");
 		});
-		$("#browserPathLabel").innerHTML = "/<span style='color:#cccccc;'>as</span>"+getCurrentDir(assetDir);
+		$("#browserLoad").css("display", "none");
+		$("#assetLoad").css("display", "block");
+		$("#browserPathLabel").css("display", "none");
+		$("#assetPathLabel").css("display", "inline");
 	});
 }
 function getCurrentDir(dirArr){

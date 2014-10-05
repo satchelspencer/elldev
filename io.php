@@ -4,6 +4,8 @@
 	$cwd = getcwd();
 	if(isset($_POST['opendir'])){
 		echo json_encode(getDir($_POST['opendir']));
+	}else if(isset($_POST['openassetdir'])){
+		echo json_encode(getAssetDir($_POST['openassetdir']));
 	}else if(isset($_POST['newpage'])){
 		$pageArr = explode("/", $_POST['newpage']);
 		$name = array_pop($pageArr);
@@ -55,9 +57,8 @@
 		file_put_contents($file, $head."\n".$str);
 	}
 	function getDir($path){
-		$cwd = getcwd();
 		$reserved = array("a", "as");
-		$dirPath = $cwd.$path;
+		$dirPath = getcwd().$path;
 		if(!is_dir($dirPath)) error("no such directory");
 		$dirs = array_filter(glob($dirPath."*"), 'is_dir');
 		$children = array();
@@ -70,6 +71,18 @@
 		$output["parent"] = json_decode(getHead("$dirPath/data"));
 		$output["children"] = $children;
 		return $output;
+	}
+	function getAssetDir($path){
+		$dirPath = getcwd()."/as".$path;
+		if(!is_dir($dirPath)) error("no such directory");
+		$filesdirs = array_diff(scandir($dirPath), array('..', '.'));
+		$out = array();
+		foreach($filesdirs as $filedir){
+			$data["type"] = is_dir($dirPath.$filedir)?"dir":"file";
+			$data["name"] = $filedir;
+			array_push($out, $data);
+		}
+		return $out;
 	}
 	function removeDir($dir){
 		$children = scandir($dir);

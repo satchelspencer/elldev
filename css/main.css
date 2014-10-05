@@ -122,7 +122,6 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 		color:white;
 	}
 	.stopRetry{
-		text-decoration:underline;
 		cursor:pointer;
 	}
 	.stopRetry:active{
