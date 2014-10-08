@@ -358,7 +358,7 @@ function pageListItem(data){
 							});
 						}
 					});
-				}else cancelDrop(pages)
+				}else cancelDrop(pages);
 				$("#browserListDrag").css("display", "none");
 			}
 			$("body").rmEvent("mousemove");

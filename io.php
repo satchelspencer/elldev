@@ -29,6 +29,14 @@
 			writeHead($cwd.$ft[1]."/data", json_encode($header));
 		}
 		echo json_encode($data->to);
+	}else if(isset($_POST['moveassets'])){
+		$data = json_decode($_POST['moveassets']);
+		foreach($data->from as $toMove){
+			$to = $data->to.array_pop(explode("/", $toMove));
+			if(file_exists($cwd.$to)) error($to);
+			rename($cwd."/as".$toMove, $cwd."/as".$to);
+		}
+		echo json_encode($data->to);
 	}else if(isset($_POST['delete'])){
 		$data = json_decode($_POST['delete']);
 		foreach($data as $torm) removeDir($cwd.$torm);

@@ -19,6 +19,8 @@ function browserInit(){
 			$("#browserSlider").css("left", "-"+l+"px");
 		});
 		$("#browserLoad").css("display", "block");
+		$("#browserBack").css("display", "block");
+		$("#assetBack").css("display", "none");
 		$("#assetLoad").css("display", "none");
 		$("#browserPathLabel").css("display", "inline");
 		$("#assetPathLabel").css("display", "none");
@@ -32,6 +34,8 @@ function browserInit(){
 			$("#browserSlider").css("left", "-"+l+"px");
 		});
 		$("#browserLoad").css("display", "none");
+		$("#browserBack").css("display", "none");
+		$("#assetBack").css("display", "block");
 		$("#assetLoad").css("display", "block");
 		$("#browserPathLabel").css("display", "none");
 		$("#assetPathLabel").css("display", "inline");
