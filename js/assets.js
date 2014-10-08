@@ -1,5 +1,6 @@
 var assetDir = [];
 var sendingAssetData = false;
+var assetDragging = false;
 var extTable = {
 	"file-audio" : /^.*\.(aif|iff|aiff|m3u|mp3|wav|flac|wma|mid|m4a|mpa)$/i, 
 	"file-video" : /^.*\.(mov|mp4|3g2|3gp|asf|asx|avi|flv|m4v|mpg|rm|srt|swf|vob|wmv)$/i,
@@ -10,6 +11,9 @@ var extTable = {
 };
 function assetInit(){
 	listAssetDir([]);
+	$("#assetList").event("click", function(e){
+		if(e.el.id == "assetList" && !assetDragging) deselectAllAssets();
+	});
 }
 var assetLoadAng = 0;
 var assetLoadAni;
@@ -51,6 +55,48 @@ function dispAssetDirData(data, dirname){
 		$("#assetList").appendChild(el);
 	}
 }
+function getSelectedAssets(){
+	var r = [];
+	var assets = $("#assetList").childs();
+	if(assets) for(var c=0;c<assets.length;c++) if(assets[c].selected) r.push(assets[c]);
+	return r;
+}
+function inspectAssets(){
+	var sel = getSelectedAssets();
+	if(!sel.length) hideAssetInspector();
+	else{
+		showAssetInspector();
+		log(sel);
+	}
+}
+function deselectAllAssets(){
+	var assets = $("#assetList").childs();
+	if(assets){
+		for(var c=0;c<assets.length;c++){
+			assets[c].css("background", "none");
+			assets[c].selected = false;
+		}
+	}
+	inspectAssets();
+}
+var assetInspectorOpen = false;
+function showAssetInspector(){
+	if(assetInspectorOpen) return false;
+	assetInspectorOpen = true;
+	ani(25, 0, 4, function(b){
+		$("#assetInspector").css("bottom", "-"+b+"px");
+		$("#assetList").css("bottom", (25-b)+"px");
+	});
+}
+function hideAssetInspector(){
+	if(!assetInspectorOpen) return false;
+	assetInspectorOpen = false;
+	var b = 0;
+	ani(0, 25, 4, function(b){
+		$("#assetInspector").css("bottom", "-"+b+"px");
+		$("#assetList").css("bottom", (25-b)+"px");
+	});
+}
 function assetListFile(name){
 	var el = element("false", "div", "assetListEl");
 	el.selected = false;
@@ -69,10 +115,13 @@ function assetListFile(name){
 	var n = element(false, "span", "assetName");
 	n.innerHTML = name;
 	el.appendChild(n);
+	el.event("sclick", function(e){
+		assetClick(e, el);
+	});
 	return el;
 }
 function assetListDir(name){
-	var el = element("false", "div", "assetListEl");
+	var el = element(false, "div", "assetListEl");
 	el.selected = false;
 	el.dragging = false;
 	var t = element(false, "span", "assetListType icon icon-folder-empty");
@@ -83,4 +132,42 @@ function assetListDir(name){
 	el.appendChild(n);
 	return el;
 
+}
+function assetClick(e, el){
+	var assets = $("#assetList").childs();
+	if(e.e.shiftKey && !el.selected){
+		el.selected = true;
+		el.css("background", "#808080");
+		var clickIndex = assets.indexOf(el);
+		var selectBeforeIndex = clickIndex;
+		for(var i=clickIndex-1;i>=0;i--){
+			if(assets[i].selected){
+				selectBeforeIndex = i;
+				break;
+			}
+		}
+		var selectAfterIndex = clickIndex;
+		for(var i=clickIndex+1;i<assets.length;i++){
+			if(assets[i].selected){
+				selectAfterIndex = i;
+				break;
+			}
+		}
+		for(var j=selectBeforeIndex+1;j<selectAfterIndex;j++){
+			assets[j].selected = true;
+			assets[j].css("background", "#808080");
+		}
+	}else if(e.e.metaKey){
+		log("met");
+		el.selected = !el.selected;
+		el.css("background", el.selected?"#808080":"none");
+	}else{
+		if(assets) for(var c=0;c<assets.length;c++){
+			assets[c].css("background", "none");
+			assets[c].selected = false;
+		}
+		el.selected = true;
+		el.css("background", "#808080");
+	}
+	inspectAssets();
 }

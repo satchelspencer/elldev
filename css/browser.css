@@ -113,7 +113,7 @@
 		overflow:hidden;
 	}
 	.assetListEl{
-		border-bottom:1px solid #777777;
+		border-bottom:1px solid #909090;
 	}
 		.pageName, .assetListType, .assetName{
 			top:0;
@@ -126,7 +126,7 @@
 		}
 		.assetListType{
 			margin-right:8px;
-			color:#373737;
+			color:#474747;
 		}
 		.newPageInput{	
 			margin-top:4px;
@@ -155,7 +155,7 @@
 	pointer-events:none;
 	cursor:ns-resize;
 }
-#browserInspector{
+#browserInspector, #assetInspector{
 	right:0;
 	bottom:-25px;
 	left:0;
@@ -167,10 +167,16 @@
 	padding-left:10px;
 	color:#777777;
 }
+#assetInspector{
+	bottom:-25px;
+	background:#808080;
+	box-shadow:2px 0px 4px rgba(0,0,0,0.5);
+	color:#373737;
+}
 #browserInspectorLen{
 	color:white;
 }
-	#browserInspectorOptions, .browserListOptions{
+	#browserInspectorOptions, .browserListOptions, #assetOptions{
 		right:5px;
 		top:0px;
 		bottom:0px;
@@ -182,6 +188,9 @@
 		color:#777777;
 		right:-3px;
 		padding-right:3px;
+	}
+	#assetOptions{
+		color:#373737;
 	}
 	#browserInspectorOptions span:active, .browserListOptions span:active{
 		color:white;
@@ -223,19 +232,14 @@
 		height:100%;
 		width:350px;
 	}
-	#pages{	
-		border-right:1px solid #777777;
-	}
 	#assets{
 		background:#999999;
 	}
-
 #assetAdd{
 	bottom:0;
-	left:0;
+	right:0;
 	width:25px;
 	height:25px;
 	font-size:19px;
-	color:#272727;
 	padding:5px;
 }

@@ -98,6 +98,7 @@ ext.event = function(ev, f){
 				clicks = 0;
 			}
 			var mu = function(e){
+				e = extEv(e);
 				t = setTimeout(function(){
 					if(clicks == 1) scf(e);
 					clicks = 0;

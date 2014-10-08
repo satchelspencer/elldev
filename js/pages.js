@@ -258,7 +258,7 @@ function pageListItem(data){
 			el.dragging = false;
 		}else{
 			var pages = $("#browserList").childs();
-			if(e.shiftKey && !el.selected){
+			if(e.e.shiftKey && !el.selected){
 				el.selected = true;
 				el.css("background", "#373737");
 				var clickIndex = pages.indexOf(el);
@@ -280,7 +280,7 @@ function pageListItem(data){
 					pages[j].selected = true;
 					pages[j].css("background", "#373737");
 				}
-			}else if(e.metaKey){
+			}else if(e.e.metaKey){
 				el.selected = !el.selected;
 				el.css("background", el.selected?"#373737":"none");
 			}else{
