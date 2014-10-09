@@ -16,6 +16,13 @@ function assetInit(){
 		if(e.el.id == "assetList" && !assetDragging) deselectAllAssets();
 	});
 	$("#assetBack").event("click", gotoAssetParent);
+	$("#parentFolderName").event("click", gotoAssetParent);
+	$("#parentFolderName").event("clickstart", function(){
+		$("#parentFolder").css("background", "#909090");
+	});
+	$("#parentFolder").event("mouseover", function(e){
+		if(assetDragging) $("#parentFolder").css("background", "#808080");
+	});
 }
 var assetLoadAng = 0;
 var assetLoadAni;
@@ -54,6 +61,9 @@ function listAssetDir(dir, callback){
 		assetDir = dir;
 		$("#assetBack").css("color", assetDir.length>0?"white":"#676767");
 		dispAssetDirData(JSON.parse(d), dirname);
+		if(assetDir.length){
+			showParentFolder(dir[dir.length-1]);
+		}else hideParentFolder();
 		if(callback) callback();
 	});
 }
@@ -100,11 +110,31 @@ function showAssetInspector(){
 function hideAssetInspector(){
 	if(!assetInspectorOpen) return false;
 	assetInspectorOpen = false;
-	var b = 0;
 	ani(0, 25, 4, function(b){
 		$("#assetInspector").css("bottom", "-"+b+"px");
 		$("#assetList").css("bottom", (25-b)+"px");
 	});
+}
+var parentFolderOpen = false;
+function hideParentFolder(){
+	if(parentFolderOpen){
+		parentFolderOpen = false;
+		ani(25, 0, 4, function(t){
+			$("#parentFolder").css("height", t+"px");
+			$("#assetList").css("top", (25+t)+"px");
+		});
+	}
+}
+function showParentFolder(name){
+	if(!parentFolderOpen){
+		$("#parentFolderName").innerHTML = name;
+		$("#parentFolderName").dire = "true";
+		parentFolderOpen = true;
+		ani(0, 25, 4, function(t){
+			$("#parentFolder").css("height", t+"px");
+			$("#assetList").css("top", (25+t)+"px");
+		});
+	}
 }
 function assetListFile(name){
 	var el = element("false", "div", "assetListEl");
@@ -211,8 +241,8 @@ function assetClickStart(e, el){
 			if(e.el.dire == "true" && !sendingAssetData && !addingAssetFolder){
 				var toMove = [];
 				for(var p in draggedAssets) toMove.push(getCurrentDir(assetDir)+draggedAssets[p].name);
-				var moveTo = getCurrentDir()+e.el.name+"/";
-				var newDir =  assetDir.concat(e.el.name);
+				var moveTo = e.el.name?getCurrentDir()+e.el.name+"/":getCurrentDir(assetDir.slice(0, assetDir.length-1));
+				var newDir =  e.el.name?assetDir.concat(e.el.name):assetDir.slice(0, assetDir.length-1);
 				sendAssetData({"moveassets" : JSON.stringify({"from" : toMove, "to" : moveTo})}, function(d){
 					log(d);
 					var data = JSON.parse(d);
@@ -233,6 +263,7 @@ function assetClickStart(e, el){
 					}
 				});
 			}else cancelAssetDrop(draggedAssets);
+			$("#parentFolder").css("background", "none");
 			$("#browserListDrag").css("display", "none");
 		}
 		$("body").rmEvent("mousemove");
