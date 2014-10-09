@@ -23,6 +23,9 @@ function assetInit(){
 	$("#parentFolder").event("mouseover", function(e){
 		if(assetDragging) $("#parentFolder").css("background", "#808080");
 	});
+	$("#parentFolder").event("mouseout", function(e){
+		if(assetDragging) $("#parentFolder").css("background", "none");
+	});
 }
 var assetLoadAng = 0;
 var assetLoadAni;
@@ -61,9 +64,9 @@ function listAssetDir(dir, callback){
 		assetDir = dir;
 		$("#assetBack").css("color", assetDir.length>0?"white":"#676767");
 		dispAssetDirData(JSON.parse(d), dirname);
-		if(assetDir.length){
-			showParentFolder(dir[dir.length-1]);
-		}else hideParentFolder();
+		$("#parentFolderName").innerHTML = dir.length?dir[dir.length-1]:"assets";
+		$("#parentFolderName").dire = dir.length?"true":"false";
+		$("#parentFolder").css("background", "none");
 		if(callback) callback();
 	});
 }
@@ -86,6 +89,7 @@ function inspectAssets(){
 	if(!sel.length) hideAssetInspector();
 	else{
 		showAssetInspector();
+		$("#assetInspectorLabel").innerHTML = sel.length+" item"+(sel.length>1?"s":"");
 	}
 }
 function deselectAllAssets(){
@@ -114,27 +118,6 @@ function hideAssetInspector(){
 		$("#assetInspector").css("bottom", "-"+b+"px");
 		$("#assetList").css("bottom", (25-b)+"px");
 	});
-}
-var parentFolderOpen = false;
-function hideParentFolder(){
-	if(parentFolderOpen){
-		parentFolderOpen = false;
-		ani(25, 0, 4, function(t){
-			$("#parentFolder").css("height", t+"px");
-			$("#assetList").css("top", (25+t)+"px");
-		});
-	}
-}
-function showParentFolder(name){
-	if(!parentFolderOpen){
-		$("#parentFolderName").innerHTML = name;
-		$("#parentFolderName").dire = "true";
-		parentFolderOpen = true;
-		ani(0, 25, 4, function(t){
-			$("#parentFolder").css("height", t+"px");
-			$("#assetList").css("top", (25+t)+"px");
-		});
-	}
 }
 function assetListFile(name){
 	var el = element("false", "div", "assetListEl");
@@ -244,7 +227,6 @@ function assetClickStart(e, el){
 				var moveTo = e.el.name?getCurrentDir()+e.el.name+"/":getCurrentDir(assetDir.slice(0, assetDir.length-1));
 				var newDir =  e.el.name?assetDir.concat(e.el.name):assetDir.slice(0, assetDir.length-1);
 				sendAssetData({"moveassets" : JSON.stringify({"from" : toMove, "to" : moveTo})}, function(d){
-					log(d);
 					var data = JSON.parse(d);
 					if(data.error){
 						cancelAssetDrop(draggedAssets);

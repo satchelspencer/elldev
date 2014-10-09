@@ -84,9 +84,6 @@
 	font-size:13px;
 	padding:7px;
 }
-#parentFolder{
-	height:0px;
-}
 	#parentPageName, #parentFolderName{
 		top:0;
 		left:0;
@@ -116,9 +113,6 @@
 	right:0;
 	bottom:0px;
 	overflow-y:scroll;
-}
-#assetList{
-	top:25px;
 }
 	.browserListEl, .assetListEl{
 		position:relative;
