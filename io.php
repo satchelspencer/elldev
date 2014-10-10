@@ -14,6 +14,12 @@
 		$data = "{\"title\":\"".$name."\", \"desc\":\" - \", \"published\":\"true\", \"path\": \"".$_POST['newpage']."\"}\n{}";
 		file_put_contents($cwd.$_POST['newpage']."/data", $data);
 		echo json_encode(getDir($parent));
+	}else if(isset($_POST['newfolder'])){
+		$dirArr = explode("/", $_POST['newfolder']);
+		array_pop($dirArr);
+		$parent = implode("/", $dirArr)."/";
+		mkdir($cwd."/as".$_POST['newfolder']);
+		echo json_encode(getAssetDir($parent));
 	}else if(isset($_POST['movepages'])){
 		$data = json_decode($_POST['movepages']);
 		$fromto = array();
@@ -40,6 +46,12 @@
 	}else if(isset($_POST['delete'])){
 		$data = json_decode($_POST['delete']);
 		foreach($data as $torm) removeDir($cwd.$torm);
+	}else if(isset($_POST['deleteasset'])){
+		$data = json_decode($_POST['deleteasset']);
+		foreach($data as $torm){
+			$item = $cwd."/as".$torm;
+			is_dir($item)?removeDir($item):unlink($item);
+		}
 	}
 	function error($message){
 		echo "{\"error\":\"$message\"}";

@@ -15,8 +15,8 @@ function assetInit(){
 	$("#assetList").event("click", function(e){
 		if(e.el.id == "assetList" && !assetDragging) deselectAllAssets();
 	});
-	$("#assetBack").event("click", gotoAssetParent);
-	$("#parentFolderName").event("click", gotoAssetParent);
+	$("#assetBack").event("sclick", gotoAssetParent);
+	$("#parentFolderName").event("sclick", gotoAssetParent);
 	$("#parentFolderName").event("clickstart", function(){
 		$("#parentFolder").css("background", "#909090");
 	});
@@ -26,6 +26,8 @@ function assetInit(){
 	$("#parentFolder").event("mouseout", function(e){
 		if(assetDragging) $("#parentFolder").css("background", "none");
 	});
+	$("#folderAdd").event("click", addFolder);
+	$("#assetDelete").event("click", assetDelete);
 }
 var assetLoadAng = 0;
 var assetLoadAni;
@@ -70,13 +72,106 @@ function listAssetDir(dir, callback){
 		if(callback) callback();
 	});
 }
-function dispAssetDirData(data, dirname){
+function assetDelete(e){
+	var s = getSelectedAssets();
+	var toDelete = [];
+	for(var i in s) toDelete.push(getCurrentDir(assetDir)+s[i].name);
+	var w = e.el.next();
+	var el = e.el;
+	ani(41, 0, 7, function(r){
+		w.css("marginRight", "-"+r+"px");
+		el.css("marginRight", "-"+((41-r)*(18/41))+"px");
+		el.css("transform", "rotate(-"+(2*(41-r))+"deg)");
+	}, function(){
+		$("body").event("click", function(e){
+			$("body").rmEvent("click");
+			if(e.el.className == "assetDeleteWarn"){
+				for(var i in s) s[i].clEvents();
+				ani(1, 0.5, 5, function(o){
+					for(var i in s) s[i].css("opacity", o);
+				});
+				sendPageData({"deleteasset" : JSON.stringify(toDelete)}, function(d){
+					log(d);
+					ani(25, 0, 4, function(h){
+						for(var i in s) s[i].css("height", h+"px");
+					}, function(){
+						for(var i in s) s[i].remove();
+						deselectAllAssets();
+					});
+				});
+			}
+			ani(0, 41, 7, function(r){
+				w.css("marginRight", "-"+r+"px");
+				el.css("marginRight", "-"+((41-r)*(18/41))+"px");
+				el.css("transform", "rotate(-"+(2*(41-r))+"deg)");
+			});
+		});
+	});
+}
+function addFolder(){
+	if(addingAssetFolder || sendingAssetData) return false;
+	addingAssetFolder = true;
+	deselectAllAssets();
+	var newFolderEl = element(false, "div", "assetListEl");
+	var input = element(false, "span", "newPageInput");
+	newFolderEl.appendChild(input);
+	var cancel = element(false, "div", "icon browserListEnd");
+	cancel.innerHTML = "&times;";
+	newFolderEl.cancel = function(){
+		ani(25, 0, 4, function(h){
+			newFolderEl.css("height", h+"px");
+		}, function(){
+			newFolderEl.remove();
+		});
+		addingAssetFolder = false;
+	};
+	input.event("blur", newFolderEl.cancel);
+	cancel.event("click", newFolderEl.cancel);
+	newFolderEl.appendChild(cancel);
+	newFolderEl.submitting = false;
+	newFolderEl.valid = false;
+	newFolderEl.event("click", function(){
+		input.focus();
+	});
+	var assets = $("#assetList").childs();
+	newFolderEl.event("keyup", function(e){
+		newFolderEl.valid = input.innerHTML.match(/^[a-z0-9\-\_\.]{2,32}$/i);
+		if(input.innerHTML == "as") valid = false;
+		if(assets) for(var i=0;i<assets.length;i++) if(assets[i].childs()[1].innerHTML == input.innerHTML) newFolderEl.valid = false; //*
+		newFolderEl.css("color", newFolderEl.valid?"white":"red");
+	});
+	newFolderEl.event("keydown", function(e){
+		if(e.code === 13){
+			if(newFolderEl.valid){
+				newFolderEl.submitting = true;
+				newFolderEl.attr("contenteditable", "false");
+				sendPageData({"newfolder" : getCurrentDir(assetDir)+input.innerHTML}, function(d){
+					dispAssetDirData(JSON.parse(d), getCurrentDir(assetDir), function(){
+						assets = $("#assetList").childs();
+						for(var i=0;i<assets.length;i++) if(assets[i].childs()[1].innerHTML == input.innerHTML) assets[i].select();
+						inspectAssets();
+					});
+					addingAssetFolder = false;
+				});
+			}
+			e.e.preventDefault();
+			return false;
+		}
+	});
+	input.attr("contenteditable", "true");
+	if($("#assetList").childs()) $("#assetList").insertBefore(newFolderEl, $("#assetList").firstChild);
+	else $("#assetList").appendChild(newFolderEl);
+	newFolderEl.css("background", "#575757");
+	input.focus();
+}
+function dispAssetDirData(data, dirname, callback){
 	$("#assetPathLabel").innerHTML = "/<span style='color:#ffffff;margin-right:1px;'>as</span>"+dirname;
 	$("#assetList").clear();
 	for(var i in data){
 		var el = data[i].type == "file"?assetListFile(data[i].name):assetListDir(data[i].name);
 		$("#assetList").appendChild(el);
 	}
+	if(callback) callback();
 }
 function getSelectedAssets(){
 	var r = [];
