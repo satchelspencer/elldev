@@ -2,6 +2,9 @@ var assetDir = [];
 var sendingAssetData = false;
 var assetDragging = false;
 var addingAssetFolder = false;
+var assetLoadAng = 0;
+var assetLoadAni;
+var uploadingFiles = [];
 var extTable = {
 	"file-audio" : /^.*\.(aif|iff|aiff|m3u|mp3|wav|flac|wma|mid|m4a|mpa)$/i, 
 	"file-video" : /^.*\.(mov|mp4|3g2|3gp|asf|asx|avi|flv|m4v|mpg|rm|srt|swf|vob|wmv)$/i,
@@ -28,9 +31,87 @@ function assetInit(){
 	});
 	$("#folderAdd").event("click", addFolder);
 	$("#assetDelete").event("click", assetDelete);
+	$("body").event("dragenter", stopEvent);
+	$("body").event("dragexit", stopEvent);
+	$("body").event("dragover", stopEvent);
+	$("body").event("drop", stopEvent);
+	$("#assetList").event("drop", listFileDrop);
 }
-var assetLoadAng = 0;
-var assetLoadAni;
+function listFileDrop(e){
+	e.stop();
+	var fs = e.e.dataTransfer.files;
+	for(i=0;i<fs.length;i++){
+		ajax("io.php", {"uploadquery" : getCurrentDir(assetDir)+fs[i].name, "size" : fs[i].size}, false, function(d){
+			log(d);
+		});
+		var u = uploadHandler(uploadingFiles.length);
+		u.send(fs[i]);
+		var el = assetListUpload(fs[i].name);
+		u.dispEl = el;
+		$("#assetList").insertBefore(el, $("#assetList").firstChild);
+		uploadingFiles.push(u);
+	}
+}
+function uploadHandler(index){
+		var r = {};
+		r.prog = 0;
+		r.name = "";
+		r.dir = [];
+		r.index = index;
+		r.send = function(file){
+			var fd = new FormData();
+			fd.append("file", file);
+			r.name = file.name;
+			r.dir = getCurrentDir(assetDir);
+			fd.append("path", r.dir);
+			var xhr = new XMLHttpRequest();
+			xhr.onload = function(e){
+				log(this.responseText);
+				uploadingFiles.splice(r.index, 1);
+				if(r.dispEl){
+					r.dispEl.removeChild(r.dispEl.firstChild);
+					r.dispEl.rmClass("uploadEl");
+				}
+			};
+			xhr.upload.onprogress = function(e){
+				r.prog = e.loaded/e.total;
+				if(r.dispEl) r.dispEl.dispProg(r.prog);
+			}
+			xhr.open("POST", "io.php");
+			xhr.send(fd);
+		};
+		r.dispEl = false;
+		return r;	
+}
+function assetListUpload(name){
+	var el = assetListFile(name);
+	el.class("uploadEl");
+	var prog = element("false", "div", "uploadProg");
+	el.insertBefore(prog, el.firstChild);
+	el.dispProg = function(frac){
+		prog.css("width", (frac*100)+"%");
+	}
+	return el;
+}
+function dispAssetDirData(data, dirname, callback){
+	$("#assetPathLabel").innerHTML = "/<span style='color:#ffffff;margin-right:1px;'>as</span>"+dirname;
+	$("#assetList").clear();
+	for(var i in data){
+		var el = data[i].type == "file"?assetListFile(data[i].name):assetListDir(data[i].name);
+		$("#assetList").appendChild(el);
+	}
+	for(var j in uploadingFiles){
+		if(uploadingFiles[j].dir == dirname){
+			if(!uploadingFiles[j].dispEl){
+				var d = assetListUpload(uploadingFiles[j].name);
+				d.dispProg(uploadingFiles[j].prog);
+				$("#assetList").insertBefore(d, $("#assetList").firstChild);
+				uploadingFiles[j].dispEl = d;
+			}
+		}else uploadingFiles[j].dispEl = false;
+	}
+	if(callback) callback();
+}
 function setAssetLoadBright(c){
 	c = Math.round(c);
 	$("#assetLoad").css("color", "rgb("+c+","+c+","+c+")");
@@ -54,7 +135,7 @@ function sendAssetData(data, callback){
 	});
 }
 function gotoAssetParent(){
-	if(sendingAssetData) return false;
+	if(sendingAssetData || !assetDir.length) return false;
 	var d = assetDir;
 	var prev = d.pop();
 	deselectAllAssets();
@@ -90,8 +171,7 @@ function assetDelete(e){
 				ani(1, 0.5, 5, function(o){
 					for(var i in s) s[i].css("opacity", o);
 				});
-				sendPageData({"deleteasset" : JSON.stringify(toDelete)}, function(d){
-					log(d);
+				sendAssetData({"deleteasset" : JSON.stringify(toDelete)}, function(d){
 					ani(25, 0, 4, function(h){
 						for(var i in s) s[i].css("height", h+"px");
 					}, function(){
@@ -137,7 +217,7 @@ function addFolder(){
 	newFolderEl.event("keyup", function(e){
 		newFolderEl.valid = input.innerHTML.match(/^[a-z0-9\-\_\.]{2,32}$/i);
 		if(input.innerHTML == "as") valid = false;
-		if(assets) for(var i=0;i<assets.length;i++) if(assets[i].childs()[1].innerHTML == input.innerHTML) newFolderEl.valid = false; //*
+		if(assets) for(var i=0;i<assets.length;i++) if(assets[i].childs()[1].innerHTML == input.innerHTML) newFolderEl.valid = false;
 		newFolderEl.css("color", newFolderEl.valid?"white":"red");
 	});
 	newFolderEl.event("keydown", function(e){
@@ -145,7 +225,8 @@ function addFolder(){
 			if(newFolderEl.valid){
 				newFolderEl.submitting = true;
 				newFolderEl.attr("contenteditable", "false");
-				sendPageData({"newfolder" : getCurrentDir(assetDir)+input.innerHTML}, function(d){
+				sendAssetData({"newfolder" : getCurrentDir(assetDir)+input.innerHTML}, function(d){
+					log(d);
 					dispAssetDirData(JSON.parse(d), getCurrentDir(assetDir), function(){
 						assets = $("#assetList").childs();
 						for(var i=0;i<assets.length;i++) if(assets[i].childs()[1].innerHTML == input.innerHTML) assets[i].select();
@@ -163,15 +244,6 @@ function addFolder(){
 	else $("#assetList").appendChild(newFolderEl);
 	newFolderEl.css("background", "#575757");
 	input.focus();
-}
-function dispAssetDirData(data, dirname, callback){
-	$("#assetPathLabel").innerHTML = "/<span style='color:#ffffff;margin-right:1px;'>as</span>"+dirname;
-	$("#assetList").clear();
-	for(var i in data){
-		var el = data[i].type == "file"?assetListFile(data[i].name):assetListDir(data[i].name);
-		$("#assetList").appendChild(el);
-	}
-	if(callback) callback();
 }
 function getSelectedAssets(){
 	var r = [];
@@ -191,8 +263,10 @@ function deselectAllAssets(){
 	var assets = $("#assetList").childs();
 	if(assets){
 		for(var c=0;c<assets.length;c++){
-			assets[c].css("background", "none");
-			assets[c].selected = false;
+			if(!assets[c].hasClass("uploadEl")){
+				assets[c].css("background", "none");
+				assets[c].selected = false;
+			}
 		}
 	}
 	inspectAssets();
@@ -220,14 +294,14 @@ function assetListFile(name){
 	el.dragging = false;
 	el.name = name;
 	var ext = name.match(/\..+$/i);
-	extIcon = "";
+	extIcon = false;
 	if(ext) for(var e in extTable){
 		if(name.match(extTable[e])){
 			extIcon = e;
 			break;
 		}
 	}
-	else extIcon = "doc";
+	if(!extIcon) extIcon = "doc";
 	var t = element(false, "span", "assetListType icon icon-"+extIcon);
 	el.appendChild(t);
 	var n = element(false, "span", "assetName");
@@ -277,7 +351,6 @@ function assetListDir(name){
 		this.css("background", "#808080");
 	}
 	return el;
-
 }
 var draggedAssets;
 function assetClickStart(e, el){
@@ -379,8 +452,10 @@ function assetClick(e, el){
 			el.css("background", el.selected?"#808080":"none");
 		}else{
 			if(assets) for(var c=0;c<assets.length;c++){
-				assets[c].css("background", "none");
-				assets[c].selected = false;
+				if(!assets[c].hasClass("uploadEl")){
+					assets[c].css("background", "none");
+					assets[c].selected = false;
+				}
 			}
 			el.selected = true;
 			el.css("background", "#808080");

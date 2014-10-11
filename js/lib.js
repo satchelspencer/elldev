@@ -62,6 +62,10 @@ function extEv(e){
 	r.char = String.fromCharCode(r.code);
 	e.which ? r.rclick = (e.which == 3) : r.rclick = (e.button == 2);
 	r.x = 0, r.y = 0;
+	r.stop = function(){
+		this.e.stopPropagation();
+		this.e.preventDefault();
+	};
 	if(e.pageX || e.pageY){
 		r.x = e.pageX;
 		r.y = e.pageY;

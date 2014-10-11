@@ -6,6 +6,9 @@ window.onresize = function(){
 	if($("body").viewHeight < 700 || $("body").viewWidth < 800) halt("window too small");
 	else unhalt();
 };
+function stopEvent(e){
+	e.stop();
+}
 var browserState = "pages";
 function browserInit(){
 	pagesInit();

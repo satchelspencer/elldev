@@ -52,6 +52,12 @@
 			$item = $cwd."/as".$torm;
 			is_dir($item)?removeDir($item):unlink($item);
 		}
+	}else if(isset($_FILES['file'])){
+		$to = $cwd."/as".$_POST['path'].basename($_FILES['file']['name']);
+		if(file_exists($to)) error($to);
+		move_uploaded_file($_FILES['file']['tmp_name'], $to);
+	}else if(isset($_POST['uploadquery'])){
+		echo $_POST['uploadquery'];
 	}
 	function error($message){
 		echo "{\"error\":\"$message\"}";
