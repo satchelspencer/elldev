@@ -42,14 +42,17 @@ function listFileDrop(e){
 	var fs = e.e.dataTransfer.files;
 	for(i=0;i<fs.length;i++){
 		ajax("io.php", {"uploadquery" : getCurrentDir(assetDir)+fs[i].name, "size" : fs[i].size}, false, function(d){
-			log(d);
+			var data = d==""?false:JSON.parse(d);
+			if(data.error) warn(data.error);
+			else{
+				var u = uploadHandler(uploadingFiles.length);
+				u.send(fs[i]);
+				var el = assetListUpload(fs[i].name);
+				u.dispEl = el;
+				$("#assetList").insertBefore(el, $("#assetList").firstChild);
+				uploadingFiles.push(u);
+			}
 		});
-		var u = uploadHandler(uploadingFiles.length);
-		u.send(fs[i]);
-		var el = assetListUpload(fs[i].name);
-		u.dispEl = el;
-		$("#assetList").insertBefore(el, $("#assetList").firstChild);
-		uploadingFiles.push(u);
 	}
 }
 function uploadHandler(index){

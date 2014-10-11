@@ -57,7 +57,9 @@
 		if(file_exists($to)) error($to);
 		move_uploaded_file($_FILES['file']['tmp_name'], $to);
 	}else if(isset($_POST['uploadquery'])){
-		echo $_POST['uploadquery'];
+		if(file_exists($cwd."/as".$_POST['uploadquery'])) error($_POST['uploadquery']." already exists");
+		$max = min(return_bytes(ini_get('post_max_size')), return_bytes(ini_get('upload_max_filesize')));
+		if($_POST['size'] >= $max) error(basename($_POST['uploadquery'])." is too large");
 	}
 	function error($message){
 		echo "{\"error\":\"$message\"}";
@@ -123,4 +125,15 @@
   		$factor = floor((strlen($bytes)-1)/3);
  		return sprintf("%.{$decimals}f",$bytes/pow(1024, $factor))." ".@$sz[$factor];
 	}
+	function return_bytes($val) {
+	    $val = trim($val);
+	    $last = strtolower($val[strlen($val)-1]);
+	    switch($last) {
+	        case 'g': $val *= 1024;
+	        case 'm': $val *= 1024;
+	        case 'k': $val *= 1024;
+	    }
+	    return $val;
+	}
+
 ?>
