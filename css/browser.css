@@ -136,6 +136,13 @@
 		opacity:.3;
 		background:#808080;
 	}
+	.uploadIcon{
+		position:absolute;
+		color:white;
+		left:11px;
+		top:3px;
+		font-size:10px;
+	}
 	.assetListEl{
 		border-bottom:1px solid #909090;
 	}

@@ -19,6 +19,7 @@ function assetInit(){
 		if(e.el.id == "assetList" && !assetDragging) deselectAllAssets();
 	});
 	$("#assetBack").event("sclick", gotoAssetParent);
+	$("#assetBack").event("dclick", gotoAssetParent);
 	$("#parentFolderName").event("sclick", gotoAssetParent);
 	$("#parentFolderName").event("clickstart", function(){
 		$("#parentFolder").css("background", "#909090");
@@ -69,7 +70,7 @@ function uploadHandler(index){
 		r.name = "";
 		r.dir = "";
 		r.index = index;
-		r.timeout = setTimeout(r.fail, (10*1000));
+		r.timeout = setTimeout(r.fail, (60*1000));
 		r.send = function(file){
 			var fd = new FormData();
 			fd.append("file", file);
@@ -81,15 +82,26 @@ function uploadHandler(index){
 				clearTimeout(r.timeout);
 				uploadingFiles.splice(r.index, 1);
 				if(r.dispEl){
-					r.dispEl.removeChild(r.dispEl.firstChild);
 					r.dispEl.rmClass("uploadEl");
+					if(r.dispEl.ani) clearInterval(r.dispEl.ani);
+					ani(r.dispEl.firstChild.cssn("width"), 337, 5, function(w){
+						r.dispEl.firstChild.css("width", w+"px");
+					}, function(){
+						r.dispEl.removeChild(r.dispEl.firstChild);
+						ani(0, -13, 10, function(t){
+							r.dispEl.childs()[0].css("top", (3+t)+"px");
+							r.dispEl.childs()[0].css("opacity", (13+t)/13);	
+						}, function(){
+							r.dispEl.removeChild(r.dispEl.firstChild);
+						});
+					});
 				}
 			};
 			xhr.upload.onprogress = function(e){
 				r.prog = e.loaded/e.total;
 				if(r.dispEl) r.dispEl.dispProg(r.prog);
 				clearTimeout(r.timeout);
-				r.timeout = setTimeout(r.fail, (10*1000));
+				r.timeout = setTimeout(r.fail, (60*1000));
 			};
 			xhr.open("POST", "io.php");
 			xhr.send(fd);
@@ -105,17 +117,35 @@ function uploadHandler(index){
 function assetListUpload(name){
 	var el = assetListFile(name);
 	el.class("uploadEl");
-	var prog = element("false", "div", "uploadProg");
+	var up = element(false, "div", "icon uploadIcon icon-up");
+	el.insertBefore(up, el.firstChild);
+	var prog = element(false, "div", "uploadProg");
 	el.insertBefore(prog, el.firstChild);
+	el.ani = false;
 	el.dispProg = function(frac){
-		prog.css("width", (frac*100)+"%");
-	}
+		if(!el.ani){
+			el.ani = true;
+			ani(prog.cssn("width"), frac*337, 20, function(w){
+				prog.css("width", w+"px");
+			}, function(){
+				el.ani = false;
+			});
+		}
+	};
+	el.snapProg = function(frac){
+		prog.css("width", (frac*337)+"px");
+	};
 	return el;
 }
 function dispAssetDirData(data, dirname, callback){
 	$("#assetPathLabel").innerHTML = "/<span style='color:#ffffff;margin-right:1px;'>as</span>"+dirname;
 	var assets = $("#assetList").childs();
-	if(assets) for(var k=0;k<assets.length;k++) if(!assets[k].hasClass("uploadEl")) assets[k].remove();
+	if(assets){
+		for(var k=0;k<assets.length;k++){
+			log(assets[k]);
+			if(!assets[k].hasClass("uploadEl")) assets[k].remove();
+		}
+	}
 	for(var i in data){
 		var el = data[i].type == "file"?assetListFile(data[i].name):assetListDir(data[i].name);
 		$("#assetList").appendChild(el);
@@ -124,11 +154,11 @@ function dispAssetDirData(data, dirname, callback){
 		if(uploadingFiles[j].dir == dirname){
 			if(!uploadingFiles[j].dispEl){
 				var d = assetListUpload(uploadingFiles[j].name);
-				d.dispProg(uploadingFiles[j].prog);
+				d.snapProg(uploadingFiles[j].prog);
 				$("#assetList").insertBefore(d, $("#assetList").firstChild);
 				uploadingFiles[j].dispEl = d;
 			}
-		}else{
+		}else if(uploadingFiles[j].dispEl){
 			uploadingFiles[j].dispEl.remove();
 			uploadingFiles[j].dispEl = false;
 		}
@@ -165,6 +195,7 @@ function gotoAssetParent(){
 	listAssetDir(d);
 }
 function listAssetDir(dir, callback){
+	if(sendingAssetData) return false;
 	var dirname = getCurrentDir(dir);
 	sendAssetData({"openassetdir" : dirname}, function(d){
 		assetDir = dir;
@@ -311,7 +342,7 @@ function hideAssetInspector(){
 	});
 }
 function assetListFile(name){
-	var el = element("false", "div", "assetListEl");
+	var el = element(false, "div", "assetListEl");
 	el.selected = false;
 	el.dragging = false;
 	el.name = name;
@@ -417,6 +448,7 @@ function assetClickStart(e, el){
 				var moveTo = e.el.name?getCurrentDir()+e.el.name+"/":getCurrentDir(assetDir.slice(0, assetDir.length-1));
 				var newDir =  e.el.name?assetDir.concat(e.el.name):assetDir.slice(0, assetDir.length-1);
 				sendAssetData({"moveassets" : JSON.stringify({"from" : toMove, "to" : moveTo})}, function(d){
+					log(d);
 					var data = JSON.parse(d);
 					if(data.error){
 						cancelAssetDrop(draggedAssets);
