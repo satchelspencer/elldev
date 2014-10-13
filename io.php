@@ -60,6 +60,17 @@
 		if(file_exists($cwd."/as".$_POST['uploadquery'])) error($_POST['uploadquery']." already exists");
 		$max = min(return_bytes(ini_get('post_max_size')), return_bytes(ini_get('upload_max_filesize')));
 		if($_POST['size'] >= $max) error(basename($_POST['uploadquery'])." is too large");
+	}else if(isset($_GET['dl'])){
+		$file = $cwd."/as".$_GET['dl'];
+		header('Content-Description: File Transfer');
+	    header('Content-Type: application/octet-stream');
+	    header('Content-Disposition: attachment; filename='.basename($file));
+	    header('Expires: 0');
+	    header('Cache-Control: must-revalidate');
+	    header('Pragma: public');
+	    header('Content-Length: ' . filesize($file));
+	    readfile($file);
+	    exit;
 	}
 	function error($message){
 		echo "{\"error\":\"$message\"}";

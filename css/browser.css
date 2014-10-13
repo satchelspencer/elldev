@@ -146,7 +146,7 @@
 	.assetListEl{
 		border-bottom:1px solid #909090;
 	}
-		.pageName, .assetListType, .assetName{
+		.pageName, .assetName{
 			top:0;
 			bottom:0;
 			left:0;
@@ -154,9 +154,16 @@
 		}
 		.assetName{
 			color:#373737;
+			margin-left:18px;
+			width:270px;
+			overflow:hidden;
+			white-space:nowrap;
+			text-overflow:ellipsis;
 		}
 		.assetListType{
-			margin-right:8px;
+			position:absolute;
+			top:6px;
+			left:5px;
 			color:#474747;
 		}
 		.newPageInput{	
@@ -187,6 +194,9 @@
 	padding:4px 16px;
 	background:rgba(0, 0, 0, 0.4);
 	pointer-events:none;
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
 	cursor:ns-resize;
 }
 #browserInspector, #assetInspector{

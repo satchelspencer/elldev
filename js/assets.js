@@ -37,6 +37,10 @@ function assetInit(){
 	$("body").event("dragover", stopEvent);
 	$("body").event("drop", stopEvent);
 	$("#assetList").event("drop", listFileDrop);
+	$("#assetDownload").event("click", function(){
+		var s = getSelectedAssets()[0];
+		window.location = "io.php?dl="+getCurrentDir(assetDir)+s.name;
+	});
 }
 function listFileDrop(e){
 	e.stop();
@@ -53,7 +57,7 @@ function listFileDrop(e){
 				}
 				if(data.error) warn(data.error);
 				else{
-					var u = uploadHandler(uploadingFiles.length);
+					var u = uploadHandler();
 					u.send(file);
 					var el = assetListUpload(file.name);
 					u.dispEl = el;
@@ -64,25 +68,24 @@ function listFileDrop(e){
 		})(fs[i]);
 	}
 }
-function uploadHandler(index){
+function uploadHandler(){
 		var r = {};
 		r.prog = 0;
 		r.name = "";
 		r.dir = "";
-		r.index = index;
-		r.timeout = setTimeout(r.fail, (60*1000));
+		r.xhr;
 		r.send = function(file){
 			var fd = new FormData();
 			fd.append("file", file);
 			r.name = file.name;
 			r.dir = getCurrentDir(assetDir);
 			fd.append("path", r.dir);
-			var xhr = new XMLHttpRequest();
-			xhr.onload = function(e){
-				clearTimeout(r.timeout);
-				uploadingFiles.splice(r.index, 1);
+			r.xhr = new XMLHttpRequest();
+			r.xhr.onload = function(e){
+				uploadingFiles.splice(uploadingFiles.indexOf(r), 1);
 				if(r.dispEl){
 					r.dispEl.rmClass("uploadEl");
+					r.dispEl.removeChild(r.dispEl.lastChild);
 					if(r.dispEl.ani) clearInterval(r.dispEl.ani);
 					ani(r.dispEl.firstChild.cssn("width"), 337, 5, function(w){
 						r.dispEl.firstChild.css("width", w+"px");
@@ -97,14 +100,13 @@ function uploadHandler(index){
 					});
 				}
 			};
-			xhr.upload.onprogress = function(e){
+			r.xhr.upload.onprogress = function(e){
 				r.prog = e.loaded/e.total;
 				if(r.dispEl) r.dispEl.dispProg(r.prog);
 				clearTimeout(r.timeout);
-				r.timeout = setTimeout(r.fail, (60*1000));
 			};
-			xhr.open("POST", "io.php");
-			xhr.send(fd);
+			r.xhr.open("POST", "io.php");
+			r.xhr.send(fd);
 		};
 		r.fail = function(){
 			if(r.dispEl) r.dispEl.remove();
@@ -135,6 +137,25 @@ function assetListUpload(name){
 	el.snapProg = function(frac){
 		prog.css("width", (frac*337)+"px");
 	};
+	var cancel = element(false, "div", "icon browserListEnd");
+	cancel.innerHTML = "&times;";
+	cancel.css("pointerEvents", "all");
+	cancel.event("click", function(e){
+		log("cancel");
+		for(var x in uploadingFiles){
+			if(uploadingFiles[x].dispEl == el){
+				uploadingFiles[x].xhr.abort();
+				uploadingFiles.splice(x, 1);
+				break;
+			}
+		}
+		ani(25, 0, 5, function(h){
+			el.css("height", h+"px");
+		}, function(){
+			el.remove();
+		})
+	});
+	el.appendChild(cancel);
 	return el;
 }
 function dispAssetDirData(data, dirname, callback){
@@ -142,7 +163,6 @@ function dispAssetDirData(data, dirname, callback){
 	var assets = $("#assetList").childs();
 	if(assets){
 		for(var k=0;k<assets.length;k++){
-			log(assets[k]);
 			if(!assets[k].hasClass("uploadEl")) assets[k].remove();
 		}
 	}
@@ -309,6 +329,7 @@ function inspectAssets(){
 	if(!sel.length) hideAssetInspector();
 	else{
 		showAssetInspector();
+		$("#assetDownload").css("display", (sel.length<2 && sel[0].dire!="true")?"inline":"none");
 		$("#assetInspectorLabel").innerHTML = sel.length+" item"+(sel.length>1?"s":"");
 	}
 }
@@ -361,10 +382,10 @@ function assetListFile(name){
 	n.innerHTML = name;
 	el.appendChild(n);
 	el.event("sclick", function(e){
-		assetClick(e, el);
+		if(!el.hasClass("uploadEl")) assetClick(e, el);
 	});
 	el.event("clickstart", function(e){
-		assetClickStart(e, el);
+		if(!el.hasClass("uploadEl")) assetClickStart(e, el);
 	});
 	el.select = function(){
 		this.selected = true;
@@ -448,7 +469,6 @@ function assetClickStart(e, el){
 				var moveTo = e.el.name?getCurrentDir()+e.el.name+"/":getCurrentDir(assetDir.slice(0, assetDir.length-1));
 				var newDir =  e.el.name?assetDir.concat(e.el.name):assetDir.slice(0, assetDir.length-1);
 				sendAssetData({"moveassets" : JSON.stringify({"from" : toMove, "to" : moveTo})}, function(d){
-					log(d);
 					var data = JSON.parse(d);
 					if(data.error){
 						cancelAssetDrop(draggedAssets);
