@@ -39,7 +39,7 @@
 		$data = json_decode($_POST['moveassets']);
 		foreach($data->from as $toMove){
 			$to = $data->to.array_pop(explode("/", $toMove));
-			if(file_exists($cwd.$to)) error($to);
+			if(file_exists($cwd."/as".$to)) error($to);
 			rename($cwd."/as".$toMove, $cwd."/as".$to);
 		}
 		echo json_encode($data->to);

@@ -173,6 +173,34 @@ function unwarn(callback){
 		if(callback) callback();
 	});
 }
+var notified = true;
+var ntimeout;
+function notify(message, icon, timeout, callback){
+	clearTimeout(ntimeout);
+	notified = true;
+	$("#notifyTitle").innerHTML = message;
+	if(icon){
+		$("#notifyIcon").className = "icon icon-"+icon;
+		$("#notifyIcon").css("display", "block");
+	}else $("#notifyIcon").css("display", "none");
+	ani(30, 0, 4, function(t){
+		$("#notify").css("top", "-"+t+"px");
+	}, function(){
+		$("#notify").event("click", function(){unnotify(callback)});
+		if(timeout) ntimeout = setTimeout(function(){unnotify()}, timeout*1000);
+	});
+}
+function unnotify(callback){
+	notified = false;
+	clearTimeout(ntimeout);
+	ani(0, 30, 4, function(t){
+		$("#notify").css("top", "-"+t+"px");
+	}, function(){
+		$("#notify").css("top", "-40px");
+		$("#notify").rmEvent("click");
+		if(callback) callback();
+	});
+}
 function sendData(data, callback){
 	var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
     xmlhttp.open("POST","io.php",true);

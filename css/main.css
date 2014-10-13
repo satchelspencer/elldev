@@ -75,7 +75,7 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 	background:#777777;
 	box-shadow:-2px 0px 4px rgba(0, 0, 0, 0.5);
 }
-#warn{
+#warn, #notify{
 	top:-40px;
 	right:0;
 	text-align:right;
@@ -86,14 +86,17 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 	color:#f0f0f0;
 	box-shadow:-1px -1px 3px rgba(0, 0, 0, 0.3);
 }
-	#warnIcon{
+	#notify{
+		background:rgba(180, 180, 180, 0.7);
+	}
+	#warnIcon, #notifyIcon{
 		position:relative;
 		float:left;
 		height:100%;
 		padding:7px 7px;
 		font-size:25px;
 	}	
-	#warnTitle{
+	#warnTitle, #notifyTitle{
 		position:relative;
 		float:right;
 		height:100%;

@@ -41,6 +41,20 @@ function assetInit(){
 		var s = getSelectedAssets()[0];
 		window.location = "io.php?dl="+getCurrentDir(assetDir)+s.name;
 	});
+	$("#assetOpen").event("click", function(){
+		var s = getSelectedAssets();
+		window.open("../as"+getCurrentDir(assetDir)+(s.length>1?"":s[0].name));
+	});
+}
+function insertAssetAlpha(asset){
+	var a = $("#assetList").childs();
+	if(!a) $("#assetList").appendChild(asset);
+	else{
+		var names = [asset.name];
+		for(var i=0;i<a.length;i++) names.push(a[i].name);
+		names.sort();
+		$("#assetList").insertBefore(asset, a[names.indexOf(asset.name)]);
+	}
 }
 function listFileDrop(e){
 	e.stop();
@@ -57,22 +71,23 @@ function listFileDrop(e){
 				}
 				if(data.error) warn(data.error);
 				else{
-					var u = uploadHandler();
+					var u = uploadHandler(assetDir);
 					u.send(file);
 					var el = assetListUpload(file.name);
 					u.dispEl = el;
-					$("#assetList").insertBefore(el, $("#assetList").firstChild);
+					insertAssetAlpha(el);
 					uploadingFiles.push(u);
 				}
 			});
 		})(fs[i]);
 	}
 }
-function uploadHandler(){
+function uploadHandler(dir){
 		var r = {};
 		r.prog = 0;
 		r.name = "";
 		r.dir = "";
+		r.dirar = dir;
 		r.xhr;
 		r.send = function(file){
 			var fd = new FormData();
@@ -98,7 +113,13 @@ function uploadHandler(){
 							r.dispEl.removeChild(r.dispEl.firstChild);
 						});
 					});
-				}
+				}else notify("<span style='color:#272727;'>"+r.name+"</span> finished uploading", "ok", 6, function(){
+					listAssetDir(r.dirar, function(){
+						assets = $("#assetList").childs();
+						for(var i=0;i<assets.length;i++) if(assets[i].childs()[1].innerHTML == r.name) assets[i].select();
+						inspectAssets();
+					});
+				});
 			};
 			r.xhr.upload.onprogress = function(e){
 				r.prog = e.loaded/e.total;
@@ -141,7 +162,6 @@ function assetListUpload(name){
 	cancel.innerHTML = "&times;";
 	cancel.css("pointerEvents", "all");
 	cancel.event("click", function(e){
-		log("cancel");
 		for(var x in uploadingFiles){
 			if(uploadingFiles[x].dispEl == el){
 				uploadingFiles[x].xhr.abort();
@@ -160,12 +180,8 @@ function assetListUpload(name){
 }
 function dispAssetDirData(data, dirname, callback){
 	$("#assetPathLabel").innerHTML = "/<span style='color:#ffffff;margin-right:1px;'>as</span>"+dirname;
-	var assets = $("#assetList").childs();
-	if(assets){
-		for(var k=0;k<assets.length;k++){
-			if(!assets[k].hasClass("uploadEl")) assets[k].remove();
-		}
-	}
+	$("#assetList").clear();
+	for(var j in uploadingFiles) uploadingFiles[j].dispEl = false;
 	for(var i in data){
 		var el = data[i].type == "file"?assetListFile(data[i].name):assetListDir(data[i].name);
 		$("#assetList").appendChild(el);
@@ -175,7 +191,7 @@ function dispAssetDirData(data, dirname, callback){
 			if(!uploadingFiles[j].dispEl){
 				var d = assetListUpload(uploadingFiles[j].name);
 				d.snapProg(uploadingFiles[j].prog);
-				$("#assetList").insertBefore(d, $("#assetList").firstChild);
+				insertAssetAlpha(d);
 				uploadingFiles[j].dispEl = d;
 			}
 		}else if(uploadingFiles[j].dispEl){
