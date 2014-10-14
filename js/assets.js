@@ -5,6 +5,7 @@ var addingAssetFolder = false;
 var assetLoadAng = 0;
 var assetLoadAni;
 var uploadingFiles = [];
+var renamingAsset = false;
 var extTable = {
 	"file-audio" : /^.*\.(aif|iff|aiff|m3u|mp3|wav|flac|wma|mid|m4a|mpa)$/i, 
 	"file-video" : /^.*\.(mov|mp4|3g2|3gp|asf|asx|avi|flv|m4v|mpg|rm|srt|swf|vob|wmv)$/i,
@@ -46,6 +47,51 @@ function assetInit(){
 		var s = getSelectedAssets();
 		window.open("../as"+getCurrentDir(assetDir)+(s.length>1?"":s[0].name));
 	});
+	$("#assets").kevent(assetsKeyUp);
+}
+function assetsKeyUp(e){
+	if(e.code == 13 && !addingAssetFolder){
+		if(!renamingAsset && getSelectedAssets().length == 1) renameAsset();
+	} 
+}
+function renameAsset(){
+	renamingAsset = true;
+	var s = getSelectedAssets()[0];
+	s.childs()[1].attr("contenteditable", "true");
+	s.childs()[1].focus();
+	s.childs()[1].event("blur", cancelRenameAsset);
+	s.childs()[1].event("keyup", function(e){
+		s.valid = isValidAssetName(s.childs()[1].innerHTML);
+		s.childs()[1].css("color", s.valid?"#373737":"red");
+	});
+	s.childs()[1].event("keydown", function(e){
+		if(e.code == 13){
+			if(s.valid) sendAssetData({"renameasset" : getCurrentDir(assetDir)+s.name, "to" : getCurrentDir(assetDir)+s.childs()[1].innerHTML}, function(d){
+				s.childs()[1].attr("contenteditable", "false");
+				s.childs()[1].rmEvent("blur");
+				s.childs()[1].blur();
+				dispAssetDirData(JSON.parse(d), getCurrentDir(assetDir), function(){
+					var assets = $("#assetList").childs();
+					for(var i=0;i<assets.length;i++){
+						if(assets[i].name == s.childs()[1].innerHTML) assets[i].select();
+					}
+					inspectAssets();
+					renamingAsset = false;
+				});
+			});
+			e.e.preventDefault();
+			return false;
+		}
+	});
+	document.execCommand('selectAll',false,null);
+}
+function cancelRenameAsset(){
+	renamingAsset = false;
+	var s = getSelectedAssets()[0];
+	s.childs()[1].attr("contenteditable", "false");
+	s.childs()[1].innerHTML = s.name;
+	s.childs()[1].rmEvent("blur");
+	s.childs()[1].css("color", "#373737");
 }
 function insertAssetAlpha(asset){
 	var a = $("#assetList").childs();
@@ -279,6 +325,15 @@ function assetDelete(e){
 		});
 	});
 }
+function isValidAssetName(name){
+	var assets = $("#assetList").childs();
+	var valid = name.match(/^[a-z0-9\-\_\.]{2,32}$/i);
+	if(name == "as") valid = false;
+	var c = 0;
+	if(assets) for(var i=0;i<pages.length;i++) if(pages[i].childs()[1].innerHTML == name) c++;
+	if(c > 1) valid = false;
+	return valid;
+}
 function addFolder(){
 	if(addingAssetFolder || sendingAssetData) return false;
 	addingAssetFolder = true;
@@ -306,9 +361,7 @@ function addFolder(){
 	});
 	var assets = $("#assetList").childs();
 	newFolderEl.event("keyup", function(e){
-		newFolderEl.valid = input.innerHTML.match(/^[a-z0-9\-\_\.]{2,32}$/i);
-		if(input.innerHTML == "as") valid = false;
-		if(assets) for(var i=0;i<assets.length;i++) if(assets[i].childs()[1].innerHTML == input.innerHTML) newFolderEl.valid = false;
+		newFolderEl.valid = isValidAssetName(input.innerHTML);
 		newFolderEl.css("color", newFolderEl.valid?"white":"red");
 	});
 	newFolderEl.event("keydown", function(e){

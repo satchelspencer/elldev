@@ -46,6 +46,14 @@
 		array_pop($dirArr);
 		$parent = implode("/", $dirArr)."/";
 		echo json_encode(getDir($parent));
+	}else if(isset($_POST['renameasset'])){
+		if(file_exists($cwd."/as".$_POST['to'])) error($_POST['to']);
+		$suffix = is_dir($cwd."/as".$_POST['renameasset'])?"/":"";
+		rename($cwd."/as".$_POST['renameasset'].$suffix, $cwd."/as".$_POST['to'].$suffix);
+		$dirArr = explode("/", $_POST['to']);
+		array_pop($dirArr);
+		$parent = implode("/", $dirArr)."/";
+		echo json_encode(getAssetDir($parent));
 	}else if(isset($_POST['moveassets'])){
 		$data = json_decode($_POST['moveassets']);
 		foreach($data->from as $toMove){

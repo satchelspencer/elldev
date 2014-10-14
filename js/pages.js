@@ -44,6 +44,7 @@ function renamePage(){
 			if(s.valid) sendPageData({"renamepage" : getCurrentDir()+s.data.title, "to" : getCurrentDir()+s.first().innerHTML}, function(d){
 				s.first().attr("contenteditable", "false");
 				s.first().rmEvent("blur");
+				s.first().blur();
 				dispDirData(JSON.parse(d), getCurrentDir(), function(){
 					var pages = $("#browserList").childs();
 					for(var i=0;i<pages.length;i++) if(pages[i].firstChild.innerHTML == s.first().innerHTML) pages[i].select();
