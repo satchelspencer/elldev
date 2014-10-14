@@ -13,7 +13,7 @@ function stopEvent(e){
 var focus;
 var focusEvents = {};
 function focusInit(){
-	$("body").event("keydown", function(e){
+	$("body").event("keyup", function(e){
 		if(focusEvents[focus.id]) focusEvents[focus.id](e);
 	});
 	$("#wrapper").event("click", function(e){

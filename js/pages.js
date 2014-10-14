@@ -21,6 +21,49 @@ function pagesInit(){
 		if(e.el.id == "browserList" && !browserDragging) deselectAllPages();
 	});
 	$("#multiFileDelete").event("click", filesDelete);
+	$("#pages").kevent(pageKeyUp);
+}
+function pageKeyUp(e){
+	if(e.code == 13 && !addingPage){
+		if(!renamingPage && getSelectedPages().length == 1) renamePage();
+	} 
+}
+var renamingPage = false;
+function renamePage(){
+	renamingPage = true;
+	var s = getSelectedPages()[0];
+	s.first().attr("contenteditable", "true");
+	s.first().focus();
+	s.first().event("blur", cancelRenamePage);
+	s.first().event("keyup", function(e){
+		s.valid = isValidPageName(s.first().innerHTML);
+		s.first().css("color", s.valid?"white":"red");
+	});
+	s.first().event("keydown", function(e){
+		if(e.code == 13){
+			if(s.valid) sendPageData({"renamepage" : getCurrentDir()+s.data.title, "to" : getCurrentDir()+s.first().innerHTML}, function(d){
+				s.first().attr("contenteditable", "false");
+				s.first().rmEvent("blur");
+				dispDirData(JSON.parse(d), getCurrentDir(), function(){
+					var pages = $("#browserList").childs();
+					for(var i=0;i<pages.length;i++) if(pages[i].firstChild.innerHTML == s.first().innerHTML) pages[i].select();
+					inspect();
+					renamingPage = false;
+				});
+			});
+			e.e.preventDefault();
+			return false;
+		}
+	});
+	document.execCommand('selectAll',false,null);
+}
+function cancelRenamePage(){
+	renamingPage = false;
+	var s = getSelectedPages()[0];
+	s.first().attr("contenteditable", "false");
+	s.first().innerHTML = s.data.title;
+	s.first().rmEvent("blur");
+	s.first().css("color", "white");
 }
 var loadAng = 0;
 var loadAni;
@@ -190,6 +233,15 @@ function deselectAllPages(){
 	}
 	inspect();
 }
+function isValidPageName(name){
+	var pages = $("#browserList").childs();
+	var valid = name.match(/^[a-z0-9\-\_\.]{2,32}$/i);
+	if(name == "as") valid = false;
+	var c = 0;
+	if(pages) for(var i=0;i<pages.length;i++) if(pages[i].firstChild.innerHTML == name) c++;
+	if(c > 1) valid = false;
+	return valid;
+}
 var addingPage = false;
 function addPage(){
 	if(addingPage || sendingPageData) return false;
@@ -218,9 +270,7 @@ function addPage(){
 	});
 	var pages = $("#browserList").childs();
 	newPageEl.event("keyup", function(e){
-		newPageEl.valid = input.innerHTML.match(/^[a-z0-9\-\_\.]{2,32}$/i);
-		if(input.innerHTML == "as") valid = false;
-		if(pages) for(var i=0;i<pages.length;i++) if(pages[i].firstChild.innerHTML == input.innerHTML) newPageEl.valid = false;
+		newPageEl.valid = isValidPageName(input.innerHTML, pages);
 		newPageEl.css("color", newPageEl.valid?"white":"red");
 	});
 	newPageEl.event("keydown", function(e){

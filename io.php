@@ -35,6 +35,17 @@
 			writeHead($cwd.$ft[1]."/data", json_encode($header));
 		}
 		echo json_encode($data->to);
+	}else if(isset($_POST['renamepage'])){
+		if(file_exists($cwd.$_POST['to'])) error($_POST['to']);
+		rename($cwd.$_POST['renamepage']."/", $cwd.$_POST['to']."/");
+		$header = json_decode(getHead($cwd.$_POST['to']."/data"));
+		$header->path = $_POST['to'];
+		$header->title = basename($_POST['to']);
+		writeHead($cwd.$_POST['to']."/data", json_encode($header));
+		$dirArr = explode("/", $_POST['to']);
+		array_pop($dirArr);
+		$parent = implode("/", $dirArr)."/";
+		echo json_encode(getDir($parent));
 	}else if(isset($_POST['moveassets'])){
 		$data = json_decode($_POST['moveassets']);
 		foreach($data->from as $toMove){
