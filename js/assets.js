@@ -21,6 +21,7 @@ function assetInit(){
 	$("#assetBack").event("sclick", gotoAssetParent);
 	$("#assetBack").event("dclick", gotoAssetParent);
 	$("#parentFolderName").event("sclick", gotoAssetParent);
+	$("#parentFolderName").event("dclick", gotoAssetParent);
 	$("#parentFolderName").event("clickstart", function(){
 		$("#parentFolder").css("background", "#909090");
 	});
@@ -479,12 +480,15 @@ function assetClickStart(e, el){
 		if(el.dragging){
 			$("body").rmClass("unselectable");
 			$("body").css("cursor", "default");
-			if(e.el.dire == "true" && !sendingAssetData && !addingAssetFolder){
+			log(e.el);
+			if((e.el.dire == "true" || e.el.parentNode.dire == "true") && !sendingAssetData && !addingAssetFolder){
+				e.el = e.el.dire == "true"?e.el:e.el.parentNode;
 				var toMove = [];
 				for(var p in draggedAssets) toMove.push(getCurrentDir(assetDir)+draggedAssets[p].name);
-				var moveTo = e.el.name?getCurrentDir()+e.el.name+"/":getCurrentDir(assetDir.slice(0, assetDir.length-1));
+				var moveTo = e.el.name?getCurrentDir(assetDir)+e.el.name+"/":getCurrentDir(assetDir.slice(0, assetDir.length-1));
 				var newDir =  e.el.name?assetDir.concat(e.el.name):assetDir.slice(0, assetDir.length-1);
 				sendAssetData({"moveassets" : JSON.stringify({"from" : toMove, "to" : moveTo})}, function(d){
+					log(d);
 					var data = JSON.parse(d);
 					if(data.error){
 						cancelAssetDrop(draggedAssets);

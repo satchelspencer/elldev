@@ -55,7 +55,7 @@ function extEv(e){
 	if(!e) return false;
 	var r = {};
 	r.e = e;
-	e.target ? r.el = e.target : r.el = e.srcElement;
+	e.target ? r.el = extEl(e.target) : r.el = extEl(e.srcElement);
 	if(r.el.nodeType == 3) r.el = e.el.parentNode;
 	r.type = e.type;
 	e.keyCode ? r.code = e.keyCode : r.code = e.which;
@@ -161,6 +161,7 @@ ext.rmClass = function(c){
 	return true;
 }
 ext.hasClass = function(c){
+	if(!this.className) return false;
 	var cs = c.split(" ");
 	for(var i in cs) if(this.className.split(" ").indexOf(cs[i]) == -1) return false;
 	return true;
@@ -169,7 +170,7 @@ ext.clClass = function(){
 	this.className = "";
 }
 ext.parent = function(){
-	return extEl(this.parentNode);
+	return this.parentNode?extEl(this.parentNode):false;
 }
 ext.childs = function(){
 	if(this.firstChild){

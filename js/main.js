@@ -1,6 +1,7 @@
 window.onload = function(){
 	browserInit();
 	separatorInit();
+	focusInit();
 };
 window.onresize = function(){
 	if($("body").viewHeight < 700 || $("body").viewWidth < 800) halt("window too small");
@@ -9,6 +10,24 @@ window.onresize = function(){
 function stopEvent(e){
 	e.stop();
 }
+var focus;
+var focusEvents = {};
+function focusInit(){
+	$("body").event("keydown", function(e){
+		if(focusEvents[focus.id]) focusEvents[focus.id](e);
+	});
+	$("#wrapper").event("click", function(e){
+		var el = e.el;
+		while(el && !el.hasClass("focus")) el = el.parent();
+		focus = el||focus;
+	});
+}
+ext.kevent = function(fu){
+	focusEvents[this.id] = fu;
+};
+ext.rmKevent = function(){
+	delete focusEvents[this.id];
+};
 var browserState = "pages";
 function browserInit(){
 	pagesInit();
