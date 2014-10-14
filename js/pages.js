@@ -357,6 +357,7 @@ function pageListItem(data){
 		$("body").event("mousemove", function(e){
 			if(Math.abs(starty-e.y) > 5 && !el.dragging){
 				browserDragging = true;
+				if(renamingPage) cancelRenamePage();
 				$("body").class("unselectable");
 				$("body").css("cursor", "ns-resize");
 				el.dragging = true;

@@ -504,6 +504,7 @@ function assetClickStart(e, el){
 	$("body").event("mousemove", function(e){
 		if(Math.abs(starty-e.y) > 5 && !el.dragging){
 			assetDragging = true;
+			if(renamingAsset) cancelRenameAsset();
 			$("body").class("unselectable");
 			$("body").css("cursor", "ns-resize");
 			el.dragging = true;
