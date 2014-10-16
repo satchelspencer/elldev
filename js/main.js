@@ -2,6 +2,7 @@ window.onload = function(){
 	browserInit();
 	separatorInit();
 	focusInit();
+	editInit();
 };
 window.onresize = function(){
 	if($("body").viewHeight < 700 || $("body").viewWidth < 800) halt("window too small");

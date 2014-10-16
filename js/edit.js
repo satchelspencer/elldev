@@ -1,9 +1,16 @@
 var openPage = "";
 var openData = [];
 var sendingEditData = false;
+function editInit(){
+	editPage("/");
+}
 function editPage(e){
-	var g = e.el.parent().parent();
-	var path = g.data?g.data.path:"/";
+	var path;
+	if(!e.e) path = e;
+	else{
+		var g = e.el.parent().parent();
+		path = g.data?g.data.path:"/";
+	}
 	if(path != openPage) sendEditData({"getpage" : path}, function(d){
 		openPage = path;
 		$("#uriPath").innerHTML = path;
