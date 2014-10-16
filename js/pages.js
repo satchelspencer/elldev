@@ -22,6 +22,7 @@ function pagesInit(){
 	});
 	$("#multiFileDelete").event("click", filesDelete);
 	$("#pages").kevent(pageKeyUp);
+	$("#inspectorEdit").event("click", editPage);
 }
 function pageKeyUp(e){
 	if(e.code == 13 && !addingPage){
@@ -431,7 +432,7 @@ function pageListItem(data){
 	n.innerHTML = data.title;
 	el.appendChild(n);
 	var opt = $("#browserListOptions").clone();
-	opt.childs()[0].event("click", function(){});
+	opt.childs()[0].event("click", editPage);
 	opt.childs()[1].event("click", function(){});
 	opt.childs()[2].event("click", filesDelete);
 	el.appendChild(opt);

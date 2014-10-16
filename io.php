@@ -11,7 +11,7 @@
 		$name = array_pop($pageArr);
 		$parent = implode("/", $pageArr)."/";
 		mkdir($cwd.$_POST['newpage']);
-		$data = "{\"title\":\"".$name."\", \"desc\":\" - \", \"published\":\"true\", \"path\": \"".$_POST['newpage']."\"}\n{}";
+		$data = "{\"title\":\"".$name."\", \"desc\":\" - \", \"published\":\"true\", \"path\": \"".$_POST['newpage']."\"}\n[]";
 		file_put_contents($cwd.$_POST['newpage']."/data", $data);
 		echo json_encode(getDir($parent));
 	}else if(isset($_POST['newfolder'])){
@@ -90,6 +90,8 @@
 	    header('Content-Length: ' . filesize($file));
 	    readfile($file);
 	    exit;
+	}else if(isset($_POST['getpage'])){
+		echo getBody($cwd.$_POST['getpage']."/data");
 	}
 	function error($message){
 		echo "{\"error\":\"$message\"}";
