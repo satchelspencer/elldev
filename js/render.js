@@ -4,26 +4,40 @@ function render(data, to, addr){
 	for(var i in data.childs){
 		var child = data.childs[i];
 		var childEl = newEl(child, data.type, addr.concat(i));
-		for(var p in child) childEl.setCss(p, child[p]);
+		for(var p in child) childEl.disp(p, child[p]);
 		if(child.childs) render(child, childEl, childEl.addr);
 		to.appendChild(childEl);
 	}
 }
 function newEl(data, parentType, addr){
 	var el = element(false, "div", data.type);
+	var type = data.type;
 	el.addr = addr;
 	el.set = function(prop, val){
 		jsonByAddr(this.addr)[prop] = val;
-		this.setCss(prop, val);
+		this.disp(prop, val);
 	};
-	el.setCss = function(prop, val){
+	el.disp = function(prop, val){
 		if(this[prop]) this[prop].call(this, val);
 	};
 	el.position = function(data){
-		if(parentType == "canvas") for(var d in data) this.css(d, data[d]+"px");
-		else if(parentType == "sequence"){
-			
+		if(parentType == "canvas"){
+			log(data);
+			for(var d in data) this.css(d, data[d]+"px");
+			if(!data.hasOwnProperty("top") && !data.hasOwnProperty("bottom")){
+				this.css("top", "50%");
+				this.css("marginTop", "-"+(data.height/2)+"px")
+			}
+			if(!data.hasOwnProperty("left") && !data.hasOwnProperty("right")){
+				this.css("left", "50%");
+				this.css("marginLeft", "-"+(data.width/2)+"px")
+			}
+		}else if(parentType == "sequence"){
+			this.css("position", "static");
+			var seqPos = {"top" : "marginTop", "left" : "marginLeft", "bottom" : "marginBottom", "right" : "marginRight", "size" : "height"};
+			for(var d in data) this.css(seqPos[d], data[d]+"px");
 		}
+		if(type == "sequence") this.css("overflowY", "scroll");
 	};
 	el.background = function(data){
 		if(data.color) this.css("backgroundColor", "rgba("+data.color+")");
@@ -52,11 +66,14 @@ function newEl(data, parentType, addr){
 			for(var e in data.edges) this.css("border"+dirs[e]+"Style", data.edges[e] == "1"?data.style:"none");
 		}
 	};
-	el.event("click", log);
+	el.event("click", function(e){
+		e.e.stopPropagation();
+		log(getData(e.el.addr));
+	});
 	return el;
 }
-function jsonByAddr(addr){
+function getData(addr){
 	var r = openData;
-	for(var i in addr) r = r.children[addr[i]];
+	for(var i in addr) r = r.childs[addr[i]];
 	return r; 
 }

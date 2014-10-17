@@ -72,6 +72,7 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 	left:350px;
 	right:0;
 	bottom:35px;
+	overflow:scroll;
 }
 #bar{
 	left:350px;
