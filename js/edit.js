@@ -1,8 +1,12 @@
 var openPage = "";
 var openData = [];
+var gui = true;
 var sendingEditData = false;
 function editInit(){
 	editPage("/");
+	$("#workspace").kevent(function(e){
+		if(e.code == 72) gui?hideGui():showGui();
+	});
 }
 function editPage(e){
 	var path;
@@ -28,5 +32,25 @@ function sendEditData(data, callback){
 	sendData(data, function(d){
 		sendingAssetData = false;
 		callback(d);
+	});
+}
+function hideGui(){
+	if(!gui) return false;
+	gui = false;
+	ani(0, -350, 5, function(w){
+		$("#gui").css("marginLeft", w+"px");
+		$("#workspace").css("left", (350+w)+"px");
+	}, function(){
+		gui = false;
+	});
+}
+function showGui(){
+	if(gui) return false;
+	gui = true;
+	ani(-350, 0, 5, function(w){
+		$("#gui").css("marginLeft", w+"px");
+		$("#workspace").css("left", (350+w)+"px");
+	}, function(){
+		gui = true;
 	});
 }

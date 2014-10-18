@@ -30,3 +30,6 @@
 .icon-file-archive:before { content: '\e81c'; } /* '' */
 .icon-download-cloud:before { content: '\e81d'; } /* '' */
 .icon-up:before { content: '\e81e'; } /* '' */
+.icon-right:before { content: '\e81f'; } /* '' */
+.icon-left:before { content: '\e820'; } /* '' */
+.icon-down:before { content: '\e821'; } /* '' */

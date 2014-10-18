@@ -5,7 +5,7 @@ window.onload = function(){
 	editInit();
 };
 window.onresize = function(){
-	if($("body").viewHeight < 700 || $("body").viewWidth < 800) halt("window too small");
+	if(($("body").viewHeight < 700 || $("body").viewWidth < 800) && gui) halt("window too small");
 	else unhalt();
 };
 function stopEvent(e){

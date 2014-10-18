@@ -21,23 +21,27 @@
 	</head>
 	<body>
 		<div id="wrapper">
-			<div id="bar">
-				<div id="tools">
-					<div id="select" class="tool icon icon-direction"></div>
-					<div id="move" class="tool icon icon-move"></div>
-					<div id="add">
-						<div id="addIcon" class="tool icon icon-plus"></div>
-						<div id="addOptions">
-							<div id="addContent" class="addOption">content</div>
-							<div id="addCanvas" class="addOption">canvas</div>
-							<div id="addSequence" class="addOption">sequence</div>
+			<div id="workspace" class="focus">
+				<div id="bar">
+					<div id="tools">
+						<div id="select" class="tool icon icon-direction"></div>
+						<div id="move" class="tool icon icon-move"></div>
+						<div id="add">
+							<div id="addIcon" class="tool icon icon-plus"></div>
+							<div id="addOptions">
+								<div id="addContent" class="addOption">content</div>
+								<div id="addCanvas" class="addOption">canvas</div>
+								<div id="addSequence" class="addOption">sequence</div>
+							</div>
 						</div>
 					</div>
+					<div id="uriBar">
+						<span id="uriBase">elldev.co</span><span id="uriPath"></span>
+						<div id="showUri" class="icon icon-link-ext"></div>
+					</div>
 				</div>
-				<div id="uriBar">
-					<span id="uriBase">elldev.co</span><span id="uriPath"></span>
-					<div id="showUri" class="icon icon-link-ext"></div>
-				</div>
+				<div id="canvas"></div>
+				<div id="selector"><div></div></div>
 			</div>
 			<div id="gui" class="unselectable">
 				<div id="properties">
@@ -49,7 +53,15 @@
 						<div id="position" class="property">
 							<div class="propertyHead">Position</div>
 							<div class="propertyBody">
-								<div id="rotation">
+								<div id="sequenceProps">
+									<div id="sequenceOverflow">
+										<div id="sequenceOverflowRight">&rsaquo;</div>
+										<div id="sequenceOverflowLeft">&lsaquo;</div>
+									</div>
+									<div id="sequencePropsContent"></div>
+									<div id="sequenceDirection" class="icon icon-right"></div>
+								</div>
+								<div id="rotation" style="display:none;">
 									<div id="rotationCircle"></div>
 									<div id="rotationLabel">56<span class="rotationDeg">&deg;</span></div>
 									<div id="ticks">
@@ -262,7 +274,6 @@
 					<div id="browserListDrag"></div>
 				</div>
 			</div>
-			<div id="canvas" class="focus"></div>
 			<div id="warn">
 				<div id="warnIcon" class="icon icon-attention"></div>
 				<div id="warnTitle"></div>

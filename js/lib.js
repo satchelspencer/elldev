@@ -199,21 +199,22 @@ ext.prev = function(){
 	while(r && r.nodeType != 1) r = r.previousSibling;
 	return r?extEl(r):false;
 }
-ext.pos = function(){
+ext.pos = function(stop){
 	var x = 0, y = 0;
 	var el = this;
 	while(el){
 		x += el.offsetLeft - el.scrollLeft;
 		y += el.offsetTop - el.scrollTop;
+		if(el == stop) break;
 		el = el.offsetParent;
 	}
 	return {x : x, y : y};
 }
-ext.x = function(){
-	return this.pos().x;
+ext.x = function(stop){
+	return this.pos(stop).x;
 }
-ext.y = function(){
-	return this.pos().y;
+ext.y = function(stop){
+	return this.pos(stop).y;
 }
 ext.attr = function(attr, val){
 	return val ? this.setAttribute(attr, val) : this.getAttribute(attr);

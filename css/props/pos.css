@@ -89,12 +89,55 @@
 	#boxLeft{
 		left:0;
 	}
+#sequenceProps{
+	border:1px solid #777777;
+	width:80px;
+	height:80px;
+	left:40px;
+	top:40px;
+}
+	#sequencePropsContent{
+		top:5px;
+		bottom:5px;
+		left:0;
+		right:0;
+		background:#575757;
+		transform:rotate(90deg);
+	}
+	#sequenceDirection{
+		color:#777777;
+		font-size:20px;
+		top:50%;
+		left:50%;
+		margin-top:-10px;
+		margin-left:-7px;
+		transform:rotate(90deg);
+	}
+	#sequenceOverflow{
+		top:5px;
+		bottom:5px;
+		left:-20px;
+		right:-20px;
+		border:1px dashed white;
+		transform:rotate(90deg);
+	}
+		#sequenceOverflowRight{
+			right:5px;
+			top:20px;
+			font-size:20px;
+		}
+		#sequenceOverflowLeft{
+			left:5px;
+			top:20px;
+			font-size:20px;
+		}
 #rotation{
 	top:3px;
 	left:0;
 	width:150px;
 	height:150px;
 }
+	
 	#rotationCircle{
 		top:50%;
 		left:50%;
