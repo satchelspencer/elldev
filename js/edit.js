@@ -72,7 +72,6 @@ function showGui(){
 	});
 }
 function elClick(e){
-	log(e.el.offsetLeft);
 	if(tool == "select"){
 		$("#selector").css("display", "block");
 		$("#selector").css("top", e.el.y($("#canvas"))+"px");

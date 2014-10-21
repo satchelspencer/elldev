@@ -4,17 +4,17 @@ function render(data, to, addr){
 	var addr = addr||[];
 	for(var i in data.childs){
 		var child = data.childs[i];
-		var childEl = newEl(child, data.type, addr.concat(i));
-		for(var p in child) childEl.disp(p, child[p]);
-		if(child.childs) render(child, childEl, childEl.addr);
+		var childEl = newEl(child, data, addr.concat(i));
 		to.appendChild(childEl);
+		if(child.childs) render(child, childEl, childEl.addr);
+		for(var p in child) childEl.disp(p, child[p]);
 	}
 }
-function newEl(data, parentType, addr){
+function newEl(data, parent, addr){
 	var el = element(false, "div", data.type);
 	var type = data.type;
 	el.addr = addr;
-	el.set = function(prop, val){
+	el.set = function(prop, subprop, val){
 		jsonByAddr(this.addr)[prop] = val;
 		this.disp(prop, val);
 	};
@@ -22,7 +22,7 @@ function newEl(data, parentType, addr){
 		if(this[prop]) this[prop].call(this, val);
 	};
 	el.position = function(data){
-		if(parentType == "canvas"){
+		if(parent.type == "canvas"){
 			for(var d in data) this.css(d, sstr(data[d]));
 			if(!data.hasOwnProperty("top") && !data.hasOwnProperty("bottom")){
 				this.css("top", "50%");
@@ -33,14 +33,19 @@ function newEl(data, parentType, addr){
 				this.css("marginLeft", "-"+sstr(data.width/2))
 			}
 			if(data.rotation) this.css("transform", "rotate("+data.rotation+"deg)");
-		}else if(parentType == "sequence"){
+			if(parent.position && parent.position.overflow == "fit"){
+				parent.position.width = el.offsetLeft+el.cssn("width")+"px";
+				el.parent().disp("position", parent.position);
+					
+			}
+		}else if(parent.type == "sequence"){
 			this.css("position", "relative");
 			this.css("display", "table");
 			this.css("width", "100%");
 			var seqPos = {"top" : "marginTop", "left" : "marginLeft", "bottom" : "marginBottom", "right" : "marginRight", "size" : "height"};
 			for(var d in data) if(seqPos[d] && data[d]) this.css(seqPos[d], sstr(data[d]));
 		}
-		this.css("overflow", data.overflow||"hidden");
+		this.css("overflow", data.overflow=="fit"?"hidden":data.overflow);
 	};
 	el.background = function(data){
 		if(data.color) this.css("backgroundColor", "rgba("+data.color+")");
