@@ -22,6 +22,8 @@
 	<body>
 		<div id="wrapper">
 			<div id="workspace" class="focus">
+				<div id="canvas"></div>
+				<div id="selector"><div></div></div>
 				<div id="bar">
 					<div id="tools">
 						<div id="select" class="tool icon icon-direction"></div>
@@ -40,8 +42,6 @@
 						<div id="showUri" class="icon icon-link-ext"></div>
 					</div>
 				</div>
-				<div id="canvas"></div>
-				<div id="selector"><div></div></div>
 			</div>
 			<div id="gui" class="unselectable">
 				<div id="properties">
@@ -113,10 +113,9 @@
 									</div>
 								</div>
 								<div class="backgroundSplit">
-									<div id="backgroundSize">
-										<div id="backgroundSizeNormal"></div>
-										<div id="backgroundSizeFit"></div>
-										<div id="backgroundSizeCover"></div>
+									<div id="backgroundClip">
+										<div id="backgroundClipBg"></div>
+										<div id="backgroundClipInner"></div>
 									</div>
 								</div>
 								<div class="backgroundSplit">
@@ -124,6 +123,11 @@
 										<div id="backgroundImageIcon" class="icon icon-file-image"></div>
 										<div id="backgroundImageClear">&times;</div>
 									</div>
+								</div>
+								<div id="bgSize" class="slider">
+									<div class="sliderLabel">Size</div>
+									<div class="sliderValue">33px</div>
+									<div class="sliderArea"><div></div></div>
 								</div>
 							</div>
 						</div>

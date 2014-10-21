@@ -12,10 +12,14 @@
 		color:#272727;
 		font-size:20px;
 	}
+	#select, #move, #add{
+		cursor:pointer;
+	}
 	#select{
 		left:0;		
 		padding-left:9px;
 		border-right:1px solid #f0f0f0;
+		color:#a0a0a0;
 	}
 	#move{
 		left:35px;
@@ -45,12 +49,14 @@
 			float:left;
 			padding:1px 7px;
 			font-size:13px;
-			font-color:#f0f0f0;
+			color:#f0f0f0;
 		}
 		#addContent, #addCanvas{
 			border-right:1px solid #474747;
 		}
-		
+		#addContent{
+			text-decoration:underline;
+		}
 #uriBar{
 	top:4px;
 	right:4px;

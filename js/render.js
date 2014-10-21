@@ -23,22 +23,24 @@ function newEl(data, parentType, addr){
 	};
 	el.position = function(data){
 		if(parentType == "canvas"){
-			for(var d in data) this.css(d, data[d]+"px");
+			for(var d in data) this.css(d, sstr(data[d]));
 			if(!data.hasOwnProperty("top") && !data.hasOwnProperty("bottom")){
 				this.css("top", "50%");
-				this.css("marginTop", "-"+(data.height/2)+"px")
+				this.css("marginTop", "-"+sstr(data.height/2))
 			}
 			if(!data.hasOwnProperty("left") && !data.hasOwnProperty("right")){
 				this.css("left", "50%");
-				this.css("marginLeft", "-"+(data.width/2)+"px")
+				this.css("marginLeft", "-"+sstr(data.width/2))
 			}
-			if(data.rotation) this.css("transform", "rotate("+data.rotation+"deg)")
+			if(data.rotation) this.css("transform", "rotate("+data.rotation+"deg)");
 		}else if(parentType == "sequence"){
-			this.css("position", "static");
+			this.css("position", "relative");
+			this.css("display", "table");
+			this.css("width", "100%");
 			var seqPos = {"top" : "marginTop", "left" : "marginLeft", "bottom" : "marginBottom", "right" : "marginRight", "size" : "height"};
-			for(var d in data) this.css(seqPos[d], data[d]+"px");
+			for(var d in data) if(seqPos[d] && data[d]) this.css(seqPos[d], sstr(data[d]));
 		}
-		if(type == "sequence") this.css("overflowY", "scroll");
+		this.css("overflow", data.overflow||"hidden");
 	};
 	el.background = function(data){
 		if(data.color) this.css("backgroundColor", "rgba("+data.color+")");
@@ -56,13 +58,13 @@ function newEl(data, parentType, addr){
 		if(data.bold) this.css("fontWeight", data.bold=="1"?"bold":"normal");
 		if(data.underline) this.css("textDecoration", data.underline=="1"?"underline":"none");
 		if(data.italic) this.css("fontStyle", data.italic=="1"?"italic":"normal");
-		if(data.padding) for(var p in data.padding) this.css("padding"+dirs[p], data.padding[p]+"px");
+		if(data.padding) for(var p in data.padding) this.css("padding"+dirs[p], sstr(data.padding[p]));
 	};
 	el.border = function(data){
 		var borderStyle = "";
-		if(data.width) this.css("borderWidth", data.width+"px");
+		if(data.width) this.css("borderWidth", sstr(data.width));
 		if(data.color) this.css("borderColor", "rgba("+data.color+")");
-		if(data.radius) this.css("borderRadius", data.radius+"px");
+		if(data.radius) this.css("borderRadius", sstr(data.radius));
 		if(data.style && data.edges){
 			for(var e in data.edges) this.css("border"+dirs[e]+"Style", data.edges[e]?data.style:"none");
 		}
@@ -70,17 +72,9 @@ function newEl(data, parentType, addr){
 	el.content = function(content){
 		this.innerHTML = content;
 	}
-	el.event("click", function(z){
-		$("#selector").css("display", "block");
-		$("#selector").css("top", z.el.y($("#canvas"))+"px");
-		$("#selector").css("left", z.el.x($("#canvas"))+"px");
-		$("#selector").css("width", z.el.cssn("width")+"px");
-		$("#selector").css("height", z.el.cssn("height")+"px");
-	});
+	el.event("click", elClick);
 	return el;
 }
-function getData(addr){
-	var r = openData;
-	for(var i in addr) r = r.childs[addr[i]];
-	return r; 
+function sstr(str){
+	return str+(str.match(/\D$/i)?"":"px");
 }

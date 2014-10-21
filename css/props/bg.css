@@ -1,5 +1,5 @@
 #background{
-	height:113px;
+	height:133px;
 }
 	#background > .propertyBody{
 		left:0;
@@ -15,33 +15,26 @@
 		left:50%;
 		margin-left:-35px;
 	}
-	#backgroundSize{
+	#backgroundClip{
+		left:50%;
+		margin-left:-35px;
 		width:70px;
 		height:70px;
-		background:#474747;
+		border:1px solid #777777;
 	}
-		#backgroundSizeNormal{
-			top:50%;
+		#backgroundClipInner, #backgroundClipBg{
 			left:50%;
-			margin-top:-12px;
-			margin-left:-15px;
-			width:30px;
-			height:24px;
+			top:50%;
+			margin-left:-25px;
+			margin-top:-25px;
+			width:50px;
+			height:50px;
+		}
+		#backgroundClipInner{
 			border:1px dashed #777777;
 		}
-		#backgroundSizeFit{
-			top:7px;
-			bottom:7px;
-			left:0;
-			right:0;
-			border:1px solid white;
-		}
-		#backgroundSizeCover{
-			top:0;
-			bottom:0;
-			left:-7px;
-			right:-7px;
-			border:1px dashed #777777;
+		#backgroundClipBg{
+			background:#474747;
 		}
 	#backgroundImage{
 		width:70px;
@@ -137,3 +130,12 @@
 				height:100%;
 				border-right:1px solid #777777;
 			}
+	#bgSize{
+		top:75px;
+		left:10px;
+		right:10px;
+		width:auto;
+	}
+		#bgSize > .sliderLabel{width:30px;}
+		#bgSize > .sliderArea{left:35px;right:40px;}
+		#bgSize > .sliderValue{width:30px;}
