@@ -42,6 +42,8 @@ function setTool(e){
 	var tEl = e.el;
 	while(tEl.parent().id != "tools") tEl = tEl.parent();
 	tool = tEl.id;
+	var cursors = {"select" : "default", "move" : "move", "add" : "crosshair"};
+	$("#canvas").css("cursor", cursors[tool]);
 	for(var i=0;i<tools.length;i++){
 		var d = tools[i].id=="add"? tools[i].childs()[0]:tools[i];
 		d.css("color", tools[i].id == tool?"#a0a0a0":"#272727")
@@ -72,6 +74,8 @@ function showGui(){
 	});
 }
 function elClick(e){
+	e.stop();
+	clickFocus(e);
 	if(tool == "select"){
 		$("#selector").css("display", "block");
 		$("#selector").css("top", e.el.y($("#canvas"))+"px");
@@ -81,8 +85,10 @@ function elClick(e){
 		selectEL(e.el.addr);
 	}
 }
+var selectedAddr = false;
 function selectEL(addr){
-	log(getData(addr));
+	selectedAddr = addr;
+	//log(getData(addr));
 }
 function getData(addr){
 	var r = openData;

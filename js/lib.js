@@ -142,7 +142,8 @@ ext.css = function(p, v){
 	}else return this.currentStyle ? this.currentStyle[p] : document.defaultView.getComputedStyle(this,null).getPropertyValue(p);
 }
 ext.cssn = function(p){
-	return parseFloat((this.currentStyle ? this.currentStyle[p] : document.defaultView.getComputedStyle(this,null).getPropertyValue(p)).replace("px", ""));
+	var s = this.currentStyle ? this.currentStyle[p] : document.defaultView.getComputedStyle(this,null).getPropertyValue(p);
+	return s?parseFloat(s.replace(/(-?\d+)\D*/i, '$1')):0;
 }
 ext.class = function(c){
 	var cs = this.className.split(" ");

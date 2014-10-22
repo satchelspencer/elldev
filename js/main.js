@@ -17,11 +17,12 @@ function focusInit(){
 	$("body").event("keyup", function(e){
 		if(focusEvents[focus.id]) focusEvents[focus.id](e);
 	});
-	$("#wrapper").event("click", function(e){
-		var el = e.el;
-		while(el && !el.hasClass("focus")) el = el.parent();
-		focus = el||focus;
-	});
+	$("#wrapper").event("click", clickFocus);
+}
+function clickFocus(e){
+	var el = e.el;
+	while(el && !el.hasClass("focus")) el = el.parent();
+	focus = el||focus;
 }
 ext.kevent = function(fu){
 	focusEvents[this.id] = fu;
