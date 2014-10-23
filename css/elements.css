@@ -3,31 +3,12 @@
 	height:100%;
 	left:-350px;
 }
-	#elementsL, #elementsC, #elementsR{
-		width:350px;
-		height:100%;
-	}
-	#elementsC{
-		left:350px;
-	}
-	#elementsR{
-		left:700px;
-	}
-.elementLcol{
-	top:0;
-	left:0px;
-	bottom:0;
+.elementCol{
+	position:relative;
+	float:right;
+	height:100%;
 	width:175px;
-	background:#303030;
 	box-shadow:2px 0px 4px rgba(0,0,0,0.5);
-	overflow-y:scroll;
-}
-.elementRcol{
-	top:0;
-	right:0;
-	bottom:0;
-	width:175px;
-	background:#272727;
 	overflow-y:scroll;
 }
 .element{	
@@ -51,6 +32,6 @@
 		position:relative;
 		float:left;
 		height:21px;
-		margin-top:2px;
+		margin-top:1px;
 		color:#a7a7a7;
 	}

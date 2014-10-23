@@ -28,12 +28,7 @@ function editPage(e){
 			return false;
 		}
 		render(openData, $("#canvas"));
-		for(var k in openData.childs){
-			$("#elementsC").childs(1).appendChild(elementEl(openData.childs[k], k));
-		}
-		for(var k in openData.childs[0].childs){
-			$("#elementsC").childs(0).appendChild(elementEl(openData.childs[0].childs[k], k));
-		}
+		selectEl(["0", "0"]);
 	});
 }
 function sendEditData(data, callback){
@@ -83,28 +78,102 @@ function elClick(e){
 	e.stop();
 	clickFocus(e);
 	if(tool == "select"){
-		selectEL(e.el.addr);
+		selectEl(e.el.addr);
 	}
 }
-var selectedAddr = ["0"];
-function selectEL(addr){
-	selectedAddr = addr;
+var selectedAddr = false;
+function selectEl(addr){
+	if(addr === selectedAddr) return false;
 	var el = getEl(addr);
+	var data = getData(addr);
+	var sibs = el.siblings();
+	var cols = $("#elementsSlider").childs();
+	if(!selectedAddr){//still need to account for selecting another child of same parent
+		if(addr.length == 1 || el.childs()){
+			insertEls(sibs, cols[3], addr[addr.length-1]);
+			if(el.childs()) insertEls(el.childs(), cols[2]);
+		}else{
+			insertEls(el.parent().siblings(), cols[3]);
+			insertEls(sibs, cols[2], addr[addr.length-1]);
+		}
+		setSlider(-350);
+	}else if(selectedAddr.length < addr.length){
+		var depth = addr.length-selectedAddr.length;
+		if(depth > 1){
+			if(el.childs()){
+				insertEls(el.siblings(), cols[1]);
+				insertEls(el.childs(), cols[0]);
+			}else{
+				insertEls(el.parent().siblings(), cols[1]);
+				insertEls(el.siblings(), cols[0]);
+			}
+			ani(-350, -700, 12, function(l){
+				setSlider(l);
+			}, function(){
+				setSlider(-350);
+				cols[3].innerHTML = cols[1].innerHTML;
+				cols[2].innerHTML = cols[0].innerHTML;
+				cols[1].clear();
+				cols[0].clear();
+			});
+		}else if(el.childs()){
+			insertEls(el.childs(), cols[1]);
+			ani(-350, -525, 6, function(l){
+				setSlider(l);
+			}, function(){
+				setSlider(-350);
+				cols[3].innerHTML = cols[2].innerHTML;
+				cols[2].innerHTML = cols[1].innerHTML;
+				cols[1].clear();
+			});
+		}
+	}else if(selectedAddr.length > addr.length){
+		log("out");
+	}else{
+		log("sam");
+	}
+	selectedAddr = addr;
+}
+function setSlider(l){
+	$("#elementsSlider").css("left", l+"px");
+	var cols = $("#elementsSlider").childs();
+	var z = Math.abs(l/700)%1;
+	for(var i=0;i<cols.length;i++){
+		var offset = cols[i].x($("#elements"));
+		var v = Math.round(60-(offset/15));
+		log(v);
+		cols[i].css("background", "rgb("+v+", "+v+", "+v+")");
+	}
+}
+function showSelectOn(el){
 	$("#selector").css("display", "block");
 	$("#selector").css("top", el.y($("#canvas"))+"px");
 	$("#selector").css("left", el.x($("#canvas"))+"px");
 	$("#selector").css("width", el.cssn("width")+"px");
 	$("#selector").css("height", el.cssn("height")+"px");
-	
 }
-function elementEl(data, index){
+function insertEls(els, into, sel){
+	into.clear();
+	for(var i=0;i<els.length;i++) into.appendChild(elementEl(getData(els[i].addr), els[i].addr, sel?sel==i:false));
+}
+function elementEl(data, addr, sel){
 	var el = element(false, "div", "element");
+	el.selected = false;
 	var or = element(false, "div", "elementOrder");
-	or.innerHTML = index;
+	or.innerHTML = addr[addr.length-1];
 	var na = element(false, "div", "elementName");
 	na.innerHTML = data.name;
 	el.appendChild(or);
 	el.appendChild(na);
+	el.select = function(){
+		this.selected = true;
+		this.css("background", "#373737");
+	};
+	el.deselect = function(){
+		this.selected = false;
+		this.css("background", "");
+	};
+	if(sel) el.select();
 	return el;
 }
 function getData(addr){

@@ -185,6 +185,9 @@ ext.childs = function(index){
 		return extLi(r);
 	}else return undefined;
 }
+ext.siblings = function(){
+	return this.parent().childs();
+}
 ext.first = function(){
 	return extEl(this.children[0]);
 }

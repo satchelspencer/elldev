@@ -144,13 +144,29 @@
 		left:-1px;
 		width:75px;
 		height:75px;
-		background:#575757;
+		background:#272727;
+		border:1px solid #676767;
 	}
 	#overflowYarrow{
-		bottom:2px;
-		left:50%;
-		color:#777777;
+		bottom:1px;
+		left:32px;
+		color:#676767;
 		font-size:20px;
+	}
+	#overflowXarrow{
+		right:8px;
+		top:25px;
+		color:#676767;
+		font-size:20px;
+	}
+	#overflowDiag{
+		width:34px;
+		height:1px;
+		top:74px;
+		left:75px;
+		border-top:1px dashed #474747;
+		transform-origin:0 0;
+		transform:rotate(45deg);
 	}
 .vlabel,.hlabel{
 	text-align:center;
