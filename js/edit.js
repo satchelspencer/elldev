@@ -28,7 +28,13 @@ function editPage(e){
 			return false;
 		}
 		render(openData, $("#canvas"));
-		});
+		for(var k in openData.childs){
+			$("#elementsC").childs(1).appendChild(elementEl(openData.childs[k], k));
+		}
+		for(var k in openData.childs[0].childs){
+			$("#elementsC").childs(0).appendChild(elementEl(openData.childs[0].childs[k], k));
+		}
+	});
 }
 function sendEditData(data, callback){
 	sendingEditData = true;
@@ -45,11 +51,11 @@ function setTool(e){
 	var cursors = {"select" : "default", "move" : "move", "add" : "crosshair"};
 	$("#canvas").css("cursor", cursors[tool]);
 	for(var i=0;i<tools.length;i++){
-		var d = tools[i].id=="add"? tools[i].childs()[0]:tools[i];
+		var d = tools[i].id=="add"? tools[i].childs(0):tools[i];
 		d.css("color", tools[i].id == tool?"#a0a0a0":"#272727")
 	}
 	if(e.el.parent().id == "addOptions"){
-		var o = tEl.childs()[1].childs();
+		var o = tEl.childs(1).childs();
 		for(var j=0;j<o.length;j++) o[j].css("textDecoration", o[j]==e.el?"underline":"none");
 	}
 }
@@ -77,21 +83,37 @@ function elClick(e){
 	e.stop();
 	clickFocus(e);
 	if(tool == "select"){
-		$("#selector").css("display", "block");
-		$("#selector").css("top", e.el.y($("#canvas"))+"px");
-		$("#selector").css("left", e.el.x($("#canvas"))+"px");
-		$("#selector").css("width", e.el.cssn("width")+"px");
-		$("#selector").css("height", e.el.cssn("height")+"px");
 		selectEL(e.el.addr);
 	}
 }
-var selectedAddr = false;
+var selectedAddr = ["0"];
 function selectEL(addr){
 	selectedAddr = addr;
-	//log(getData(addr));
+	var el = getEl(addr);
+	$("#selector").css("display", "block");
+	$("#selector").css("top", el.y($("#canvas"))+"px");
+	$("#selector").css("left", el.x($("#canvas"))+"px");
+	$("#selector").css("width", el.cssn("width")+"px");
+	$("#selector").css("height", el.cssn("height")+"px");
+	
+}
+function elementEl(data, index){
+	var el = element(false, "div", "element");
+	var or = element(false, "div", "elementOrder");
+	or.innerHTML = index;
+	var na = element(false, "div", "elementName");
+	na.innerHTML = data.name;
+	el.appendChild(or);
+	el.appendChild(na);
+	return el;
 }
 function getData(addr){
 	var r = openData;
 	for(var i in addr) r = r.childs[addr[i]];
 	return r; 
+}
+function getEl(addr){
+	var r = $("#canvas");
+	for(var i in addr) r = r.childs(addr[i]);
+	return r;
 }

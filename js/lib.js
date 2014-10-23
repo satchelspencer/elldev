@@ -173,8 +173,9 @@ ext.clClass = function(){
 ext.parent = function(){
 	return this.parentNode?extEl(this.parentNode):false;
 }
-ext.childs = function(){
-	if(this.firstChild){
+ext.childs = function(index){
+	if(index !== undefined) return this.children?extEl(this.children[index]):undefined;
+	else if(this.firstChild){
 		var r = [];
 		var c = this.firstChild;
 		while(c){
@@ -185,10 +186,10 @@ ext.childs = function(){
 	}else return undefined;
 }
 ext.first = function(){
-	return extEl(this.firstChild);
+	return extEl(this.children[0]);
 }
 ext.last = function(){
-	return extEl(this.lastChild);
+	return extEl(this.children[(this.children.length-1)]);
 }
 ext.next = function(){
 	var r = this.nextSibling;

@@ -1,4 +1,19 @@
-#elementL{
+#elementsSlider{
+	width:1050px;
+	height:100%;
+	left:-350px;
+}
+	#elementsL, #elementsC, #elementsR{
+		width:350px;
+		height:100%;
+	}
+	#elementsC{
+		left:350px;
+	}
+	#elementsR{
+		left:700px;
+	}
+.elementLcol{
 	top:0;
 	left:0px;
 	bottom:0;
@@ -7,7 +22,7 @@
 	box-shadow:2px 0px 4px rgba(0,0,0,0.5);
 	overflow-y:scroll;
 }
-#elementR{
+.elementRcol{
 	top:0;
 	right:0;
 	bottom:0;

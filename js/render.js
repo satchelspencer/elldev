@@ -1,5 +1,5 @@
 var dirs = ["Top", "Left", "Bottom", "Right"];
-function render(data, to, addr){
+function render(data, to, addr, callback){
 	to.clear();
 	var addr = addr||[];
 	for(var i in data.childs){
@@ -7,8 +7,9 @@ function render(data, to, addr){
 		var childEl = newEl(child, data, addr.concat(i));
 		to.appendChild(childEl);
 		if(child.childs) render(child, childEl, childEl.addr);
-		for(var p in child) childEl.disp(p, child[p]);
+		for(var p in child) if(p != "childs") childEl.disp(p, child[p]);
 	}
+	if(callback) callback();
 }
 function newEl(data, parent, addr){
 	var el = element(false, "div", data.type);
@@ -49,7 +50,7 @@ function newEl(data, parent, addr){
 						if(sizeOffset > 0 && !bound) el.parent().set("position."+(wh), (val2int(parent.position[wh])+sizeOffset)+valunit(parent.position[wh]));
 					}
 				}
-			},1000);
+			},0);
 		}else if(parent.type == "sequence"){
 			this.css("position", "relative");
 			this.css("width", "100%");
