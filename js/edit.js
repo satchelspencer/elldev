@@ -28,7 +28,7 @@ function editPage(e){
 			return false;
 		}
 		render(openData, $("#canvas"));
-		selectEl(["0", "0"]);
+		selectEl(["0"], true);
 	});
 }
 function sendEditData(data, callback){
@@ -57,7 +57,7 @@ function setTool(e){
 function hideGui(){
 	if(!gui) return false;
 	gui = false;
-	ani(0, -350, 4, function(w){
+	ani(0, -350, 3, function(w){
 		$("#gui").css("marginLeft", w+"px");
 		$("#workspace").css("left", (350+w)+"px");
 	}, function(){
@@ -67,7 +67,7 @@ function hideGui(){
 function showGui(){
 	if(gui) return false;
 	gui = true;
-	ani(-350, 0, 4, function(w){
+	ani(-350, 0, 3, function(w){
 		$("#gui").css("marginLeft", w+"px");
 		$("#workspace").css("left", (350+w)+"px");
 	}, function(){
@@ -82,67 +82,93 @@ function elClick(e){
 	}
 }
 var selectedAddr = false;
-function selectEl(addr){
+var rootAddr = false;
+function selectEl(addr, nani){
 	if(addr === selectedAddr) return false;
 	var el = getEl(addr);
 	var data = getData(addr);
-	var sibs = el.siblings();
 	var cols = $("#elementsSlider").childs();
-	if(!selectedAddr){//still need to account for selecting another child of same parent
-		if(addr.length == 1 || el.childs()){
-			insertEls(sibs, cols[3], addr[addr.length-1]);
-			if(el.childs()) insertEls(el.childs(), cols[2]);
-		}else{
-			insertEls(el.parent().siblings(), cols[3]);
-			insertEls(sibs, cols[2], addr[addr.length-1]);
-		}
-		setSlider(-350);
-	}else if(selectedAddr.length < addr.length){
-		var depth = addr.length-selectedAddr.length;
-		if(depth > 1){
-			if(el.childs()){
-				insertEls(el.siblings(), cols[1]);
-				insertEls(el.childs(), cols[0]);
-			}else{
-				insertEls(el.parent().siblings(), cols[1]);
-				insertEls(el.siblings(), cols[0]);
-			}
-			ani(-350, -700, 12, function(l){
-				setSlider(l);
-			}, function(){
-				setSlider(-350);
-				cols[3].innerHTML = cols[1].innerHTML;
-				cols[2].innerHTML = cols[0].innerHTML;
-				cols[1].clear();
-				cols[0].clear();
-			});
-		}else if(el.childs()){
-			insertEls(el.childs(), cols[1]);
-			ani(-350, -525, 6, function(l){
-				setSlider(l);
-			}, function(){
-				setSlider(-350);
-				cols[3].innerHTML = cols[2].innerHTML;
-				cols[2].innerHTML = cols[1].innerHTML;
-				cols[1].clear();
-			});
-		}
-	}else if(selectedAddr.length > addr.length){
-		log("out");
+	insertEls(el.siblings(), cols[1], false, addr);
+	var root = addr.length == 1;
+	if(root){
+		cols[2].clear();
+		if(!rootAddr && !nani) ani(195, 315, 4, function(w){
+			cols[1].css("width", w+"px");
+		});
+		if(nani) cols[1].css("width", "315px");
 	}else{
-		log("sam");
+		insertEls(el.parent().siblings(), cols[2], true);
+		if(rootAddr  && !nani) ani(315, 195, 4, function(w){
+			cols[1].css("width", w+"px");
+		});
+		if(nani) cols[1].css("width", "195px");
 	}
+	rootAddr = root;
+	showSelectOn(getEl(addr));
 	selectedAddr = addr;
 }
-function setSlider(l){
-	$("#elementsSlider").css("left", l+"px");
+function gotoChild(addr){
+	var childAddr = addr.concat("0");
 	var cols = $("#elementsSlider").childs();
-	var z = Math.abs(l/700)%1;
-	for(var i=0;i<cols.length;i++){
-		var offset = cols[i].x($("#elements"));
-		var v = Math.round(60-(offset/15));
-		log(v);
-		cols[i].css("background", "rgb("+v+", "+v+", "+v+")");
+	var wi = cols[1].cssn("width");
+	var c1cs = cols[1].childs();
+	insertEls(getEl(addr).childs(), cols[0], false, childAddr);
+	ani(-155, -350, 4, function(l){
+		var frac = Math.abs(l+155)/195;
+		$("#elementsSlider").css("left", l+"px");
+		cols[1].css("width", (wi-(frac*(wi-155)))+"px");
+		var gsv = (frac*10)+50;
+		cols[1].css("background", "rgb("+gsv+","+gsv+","+gsv+")");
+		for(var i=0;i<c1cs.length;i++) c1cs[i].first().css("opacity", (1-frac));
+	}, function(){
+		selectEl(childAddr, true);
+		$("#elementsSlider").css("left", "-155px");
+		cols[1].css("width", "195px");
+		cols[1].css("background", "rgb(50,50,50)");
+	});
+}
+function gotoParent(addr){
+	var cols = $("#elementsSlider").childs();
+	var wi = cols[2].cssn("width");
+	var c2cs = cols[2].childs();
+	for(var i=0;i<c2cs.length;i++){
+		c2cs[i].first().css("display", "block");
+		c2cs[i].first().css("opacity", "0");
+	}
+	c2cs[addr[addr.length-1]].select();
+	if(addr.length > 1){
+		insertEls(getEl(addr).childs(), cols[3], true, addr);
+		ani(-155, 0, 4, function(l){
+			var frac = Math.abs(l+155)/155;
+			$("#elementsSlider").css("left", l+"px");
+			cols[2].css("width", (wi+(frac*(195-wi)))+"px");
+			$("#elementsSlider").css("width", (700+(frac*(195-wi)))+"px");
+			var gsv = 60-(frac*10);
+			cols[2].css("background", "rgb("+gsv+","+gsv+","+gsv+")");
+			for(var i=0;i<c2cs.length;i++) c2cs[i].first().css("opacity", (frac));
+		}, function(){
+			selectEl(addr, true);
+			$("#elementsSlider").css("left", "-155px");
+			$("#elementsSlider").css("width", "700px");
+			cols[2].css("width", "155px");
+			cols[2].css("background", "rgb(60,60,60)");
+		});
+	}else{
+		ani(0, 160, 4, function(w){
+			var frac = w/160;
+			$("#elementsSlider").css("left", (-155+(frac*35))+"px");
+			$("#elementsSlider").css("width", (700+w)+"px");
+			cols[2].css("width", (155+w)+"px");
+			var gsv = 60-(frac*10);
+			cols[2].css("background", "rgb("+gsv+","+gsv+","+gsv+")");
+			for(var i=0;i<c2cs.length;i++) c2cs[i].first().css("opacity", (frac));
+		}, function(){
+			selectEl(addr, true);
+			$("#elementsSlider").css("left", "-155px");
+			$("#elementsSlider").css("width", "700px");
+			cols[2].css("width", "155px");
+			cols[2].css("background", "rgb(60,60,60)");
+		});
 	}
 }
 function showSelectOn(el){
@@ -152,27 +178,44 @@ function showSelectOn(el){
 	$("#selector").css("width", el.cssn("width")+"px");
 	$("#selector").css("height", el.cssn("height")+"px");
 }
-function insertEls(els, into, sel){
+function insertEls(els, into, parent, selAddr){
 	into.clear();
-	for(var i=0;i<els.length;i++) into.appendChild(elementEl(getData(els[i].addr), els[i].addr, sel?sel==i:false));
+	for(var i=0;i<els.length;i++){
+		var sel = selAddr?els[i].addr[els[i].addr.length-1]==selAddr[selAddr.length-1]:false;
+		into.appendChild(elementEl(getData(els[i].addr), els[i].addr, parent, sel));
+	}
 }
-function elementEl(data, addr, sel){
+function elementEl(data, addr, parent, sel){
 	var el = element(false, "div", "element");
-	el.selected = false;
 	var or = element(false, "div", "elementOrder");
 	or.innerHTML = addr[addr.length-1];
 	var na = element(false, "div", "elementName");
 	na.innerHTML = data.name;
+	if(data.childs){
+		var ar = element(false, "div", "elementEnter icon icon-right-open");
+		if(parent) ar.css("display", "none");
+		el.appendChild(ar);
+	}
 	el.appendChild(or);
 	el.appendChild(na);
 	el.select = function(){
-		this.selected = true;
-		this.css("background", "#373737");
+		this.css("background", "#474747");
 	};
 	el.deselect = function(){
-		this.selected = false;
 		this.css("background", "");
 	};
+	el.event("click", function(e){
+		if(e.el.hasClass("elementEnter")) gotoChild(addr);
+		else{
+			var p = e.el.parent();
+			var child = false;
+			while(p && p.id != "elementsSlider"){
+				if(p.hasClass("elementCCol")) child = true;
+				p = p.parent();
+			}
+			!child?gotoParent(addr):selectEl(addr);
+		}
+	});
 	if(sel) el.select();
 	return el;
 }

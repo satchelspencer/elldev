@@ -173,6 +173,14 @@ ext.clClass = function(){
 ext.parent = function(){
 	return this.parentNode?extEl(this.parentNode):false;
 }
+ext.hasAncestor = function(el){
+	var p = el.parent();
+	while(p){
+		if(p == el) return true;
+		p = p.parent();
+	}
+	return false;
+}
 ext.childs = function(index){
 	if(index !== undefined) return this.children?extEl(this.children[index]):undefined;
 	else if(this.firstChild){

@@ -1,15 +1,22 @@
 #elementsSlider{
-	width:1050px;
+	width:700px;
 	height:100%;
-	left:-350px;
+	left:-155px;
 }
-.elementCol{
+.elementPCol, .elementCCol{
 	position:relative;
 	float:right;
 	height:100%;
-	width:175px;
 	box-shadow:2px 0px 4px rgba(0,0,0,0.5);
 	overflow-y:scroll;
+}
+.elementPCol{
+	width:155px;
+	background:rgb(60,60,60);
+}
+.elementCCol{
+	width:195px;
+	background:rgb(50,50,50);
 }
 .element{	
 	position:relative;
@@ -34,4 +41,13 @@
 		height:21px;
 		margin-top:1px;
 		color:#a7a7a7;
+	}
+	.elementEnter{
+		top:0;
+		right:2px;
+		text-align:right;
+		bottom:0;
+		width:25px;
+		color:#a7a7a7;
+		font-size:17px;
 	}
