@@ -39,7 +39,7 @@ function browserInit(){
 		browserState = "pages";
 		$("#pageMode").css("color", "#171717");
 		$("#assetMode").css("color", "#777777");
-		ani(350, 0, 5, function(l){
+		ani(350, 0, 6, function(l){
 			$("#browserSlider").css("left", "-"+l+"px");
 		});
 		$("#browserLoad").css("display", "block");
@@ -54,7 +54,7 @@ function browserInit(){
 		browserState = "assets";
 		$("#assetMode").css("color", "#171717");
 		$("#pageMode").css("color", "#777777");
-		ani(0, 350, 5, function(l){
+		ani(0, 350, 6, function(l){
 			$("#browserSlider").css("left", "-"+l+"px");
 		});
 		$("#browserLoad").css("display", "none");

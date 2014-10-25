@@ -113,11 +113,11 @@ function gotoChild(addr){
 	var wi = cols[1].cssn("width");
 	var c1cs = cols[1].childs();
 	insertEls(getEl(addr).childs(), cols[0], false, childAddr);
-	ani(-155, -350, 4, function(l){
+	ani(-155, -350, 44, function(l){
 		var frac = Math.abs(l+155)/195;
 		$("#elementsSlider").css("left", l+"px");
 		cols[1].css("width", (wi-(frac*(wi-155)))+"px");
-		var gsv = (frac*10)+50;
+		var gsv = Math.round((frac*10)+50);
 		cols[1].css("background", "rgb("+gsv+","+gsv+","+gsv+")");
 		for(var i=0;i<c1cs.length;i++) c1cs[i].first().css("opacity", (1-frac));
 	}, function(){
@@ -137,13 +137,13 @@ function gotoParent(addr){
 	}
 	c2cs[addr[addr.length-1]].select();
 	if(addr.length > 1){
-		insertEls(getEl(addr).childs(), cols[3], true, addr);
-		ani(-155, 0, 4, function(l){
+		insertEls(getEl(addr).parent().siblings(), cols[3], true, addr);
+		ani(-155, 0, 44, function(l){
 			var frac = Math.abs(l+155)/155;
 			$("#elementsSlider").css("left", l+"px");
 			cols[2].css("width", (wi+(frac*(195-wi)))+"px");
 			$("#elementsSlider").css("width", (700+(frac*(195-wi)))+"px");
-			var gsv = 60-(frac*10);
+			var gsv = Math.round(60-(frac*10));
 			cols[2].css("background", "rgb("+gsv+","+gsv+","+gsv+")");
 			for(var i=0;i<c2cs.length;i++) c2cs[i].first().css("opacity", (frac));
 		}, function(){
@@ -154,12 +154,12 @@ function gotoParent(addr){
 			cols[2].css("background", "rgb(60,60,60)");
 		});
 	}else{
-		ani(0, 160, 4, function(w){
+		ani(0, 160, 44, function(w){
 			var frac = w/160;
 			$("#elementsSlider").css("left", (-155+(frac*35))+"px");
 			$("#elementsSlider").css("width", (700+w)+"px");
 			cols[2].css("width", (155+w)+"px");
-			var gsv = 60-(frac*10);
+			var gsv = Math.round(60-(frac*10));
 			cols[2].css("background", "rgb("+gsv+","+gsv+","+gsv+")");
 			for(var i=0;i<c2cs.length;i++) c2cs[i].first().css("opacity", (frac));
 		}, function(){
@@ -199,7 +199,7 @@ function elementEl(data, addr, parent, sel){
 	el.appendChild(or);
 	el.appendChild(na);
 	el.select = function(){
-		this.css("background", "#474747");
+		this.css("background", "rgb(60,60,60)");
 	};
 	el.deselect = function(){
 		this.css("background", "");
