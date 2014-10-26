@@ -18,17 +18,14 @@
 	width:195px;
 	background:rgb(50,50,50);
 }
-.element, .ielement{	
+.element, .ielement, .dielement{	
 	position:relative;
 	width:100%;
 	height:25px;
 	font-size:13px;
 	cursor:default;
 }
-.ielement{
-	background:red;
-}
-	.element > div{
+	.dragElement > div, .element > div{
 		padding:4px 6px;
 	}
 	.elementOrder{
@@ -59,11 +56,7 @@
 	top:0;
 	height:25px;
 	font-size:13px;
-	padding:4px 16px;
-	background:rgba(0, 0, 0, 0.4);
+	background:rgba(60, 60, 60, 0.4);
 	pointer-events:none;
-	overflow:hidden;
-	white-space:nowrap;
-	text-overflow:ellipsis;
 	cursor:ns-resize;
 }

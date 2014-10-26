@@ -119,7 +119,7 @@ function gotoChild(addr){
 		cols[1].css("width", (wi-(frac*(wi-155)))+"px");
 		var gsv = Math.round((frac*10)+50);
 		cols[1].css("background", "rgb("+gsv+","+gsv+","+gsv+")");
-		for(var i=0;i<c1cs.length;i++) c1cs[i].first().css("opacity", (1-frac));
+		for(var i=0;i<c1cs.length;i++) c1cs[i].last().css("opacity", (1-frac));
 	}, function(){
 		selectEl(childAddr, true);
 		$("#elementsSlider").css("left", "-155px");
@@ -132,8 +132,8 @@ function gotoParent(addr){
 	var wi = cols[2].cssn("width");
 	var c2cs = cols[2].childs();
 	for(var i=0;i<c2cs.length;i++){
-		c2cs[i].first().css("display", "block");
-		c2cs[i].first().css("opacity", "0");
+		c2cs[i].last().css("display", "block");
+		c2cs[i].last().css("opacity", "0");
 	}
 	c2cs[addr[addr.length-1]].select();
 	if(addr.length > 1){
@@ -145,7 +145,7 @@ function gotoParent(addr){
 			$("#elementsSlider").css("width", (700+(frac*(195-wi)))+"px");
 			var gsv = Math.round(60-(frac*10));
 			cols[2].css("background", "rgb("+gsv+","+gsv+","+gsv+")");
-			for(var i=0;i<c2cs.length;i++) c2cs[i].first().css("opacity", (frac));
+			for(var i=0;i<c2cs.length;i++) c2cs[i].last().css("opacity", (frac));
 		}, function(){
 			selectEl(addr, true);
 			$("#elementsSlider").css("left", "-155px");
@@ -161,7 +161,7 @@ function gotoParent(addr){
 			cols[2].css("width", (155+w)+"px");
 			var gsv = Math.round(60-(frac*10));
 			cols[2].css("background", "rgb("+gsv+","+gsv+","+gsv+")");
-			for(var i=0;i<c2cs.length;i++) c2cs[i].first().css("opacity", (frac));
+			for(var i=0;i<c2cs.length;i++) c2cs[i].last().css("opacity", (frac));
 		}, function(){
 			selectEl(addr, true);
 			$("#elementsSlider").css("left", "-155px");
@@ -187,17 +187,18 @@ function insertEls(els, into, parent, selAddr){
 }
 function elementEl(data, addr, parent, sel){
 	var el = element(false, "div", "element");
+	el.addr = addr;
 	var or = element(false, "div", "elementOrder");
 	or.innerHTML = addr[addr.length-1];
 	var na = element(false, "div", "elementName");
 	na.innerHTML = data.name;
+	el.appendChild(or);
+	el.appendChild(na);
 	if(data.childs){
 		var ar = element(false, "div", "elementEnter icon icon-right-open");
 		if(parent) ar.css("display", "none");
 		el.appendChild(ar);
 	}
-	el.appendChild(or);
-	el.appendChild(na);
 	el.select = function(){
 		this.css("background", "rgb(60,60,60)");
 	};
@@ -210,13 +211,15 @@ function elementEl(data, addr, parent, sel){
 		while(pel && !pel.hasClass("element")) pel = pel.parent();
 		var col = pel.parent();
 		var offset = el.y()-e.y;
-		var del = element(false, "div", "dragElement");
+		var del = element("dragEl", "div", "dragElement");
+		var oldindex = parseInt(pel.addr[pel.addr.length-1]);
 		col.dragging = false;
 		$("body").event("mousemove", function(me){
 			if(Math.abs(me.y-inity) > 5 && !col.dragging){
 				del.css("top", pel.offsetTop+"px");
 				del.css("left", col.offsetLeft+"px");
 				del.css("width", col.cssn("width")+"px");
+				del.innerHTML = pel.innerHTML;
 				$("#elementsSlider").appendChild(del);
 				var i = element(false, "div", "ielement");
 				pel.addBefore(i);
@@ -231,7 +234,24 @@ function elementEl(data, addr, parent, sel){
 			$("body").rmEvent("mouseup");
 			if(col.dragging){
 				col.dragging = false;
-				log("drop");
+				$("#dragEl").remove();
+				var paddr = col.first().addr||col.childs(1).addr;
+				paddr.pop();
+				var cel = getEl(paddr);
+				if(col.nindex){
+					var data = getData(paddr);
+					data.childs.splice(col.nindex, 0, data.childs.splice(oldindex, 1)[0]);
+					var oldel = cel.childs(oldindex).clone();
+					oldel.addr = cel.childs(oldindex).addr;
+					cel.childs(oldindex).remove();
+					if(col.nindex !== 0) cel.childs(col.nindex-(oldindex<col.nindex?1:0)).addAfter(oldel);
+					else cel.first().addBefore(oldEl);
+					var cs = cel.childs();
+					for(var k=0;k<cs.length;k++){
+						cs[k].addr = paddr.concat(String(k));
+					}
+				}
+				insertEls(cel.childs(), col, col.hasClass("elementPCol"));
 			}
 		});
 	});
@@ -255,13 +275,27 @@ function elementEl(data, addr, parent, sel){
 			var n = p;
 			while(n && !n.hasClass("ielement")) n = n.next();
 			while(p && !p.hasClass("ielement")) p = p.prev();
+			var index = false;
 			if(p){
 				p.next().addAfter(i);
 				p.remove();
+				index = i.siblings().indexOf(i);
 			}else if(n){
 				n.prev().addBefore(i);
 				n.remove();
+				index = i.siblings().indexOf(i);
 			}
+			if(index !== false){
+				el.parent().nindex = index;
+				$("#dragEl").first().innerHTML = index;
+				var pel = e.el;
+				while(pel && !pel.hasClass("element")) pel = pel.parent();
+				var s = pel.siblings();
+				for(var l=0;l<s.length;l++){
+					if(s[l].childs()) s[l].first().innerHTML = l;
+				}
+			}
+			
 		}
 	});
 	if(sel) el.select();

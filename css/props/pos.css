@@ -144,19 +144,19 @@
 		left:-1px;
 		width:75px;
 		height:75px;
-		background:#272727;
+		background:#777;
 		border:1px solid #676767;
 	}
 	#overflowYarrow{
 		bottom:1px;
 		left:32px;
-		color:#676767;
+		color:white;
 		font-size:20px;
 	}
 	#overflowXarrow{
 		right:8px;
 		top:25px;
-		color:#676767;
+		color:white;
 		font-size:20px;
 	}
 	#overflowDiag{
