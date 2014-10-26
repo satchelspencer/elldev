@@ -113,7 +113,7 @@ function gotoChild(addr){
 	var wi = cols[1].cssn("width");
 	var c1cs = cols[1].childs();
 	insertEls(getEl(addr).childs(), cols[0], false, childAddr);
-	ani(-155, -350, 44, function(l){
+	ani(-155, -350, 6, function(l){
 		var frac = Math.abs(l+155)/195;
 		$("#elementsSlider").css("left", l+"px");
 		cols[1].css("width", (wi-(frac*(wi-155)))+"px");
@@ -138,7 +138,7 @@ function gotoParent(addr){
 	c2cs[addr[addr.length-1]].select();
 	if(addr.length > 1){
 		insertEls(getEl(addr).parent().siblings(), cols[3], true, addr);
-		ani(-155, 0, 44, function(l){
+		ani(-155, 0, 6, function(l){
 			var frac = Math.abs(l+155)/155;
 			$("#elementsSlider").css("left", l+"px");
 			cols[2].css("width", (wi+(frac*(195-wi)))+"px");
@@ -154,7 +154,7 @@ function gotoParent(addr){
 			cols[2].css("background", "rgb(60,60,60)");
 		});
 	}else{
-		ani(0, 160, 44, function(w){
+		ani(0, 160, 6, function(w){
 			var frac = w/160;
 			$("#elementsSlider").css("left", (-155+(frac*35))+"px");
 			$("#elementsSlider").css("width", (700+w)+"px");
@@ -204,6 +204,37 @@ function elementEl(data, addr, parent, sel){
 	el.deselect = function(){
 		this.css("background", "");
 	};
+	el.event("clickstart", function(e){
+		var inity = e.y;
+		var pel = e.el;
+		while(pel && !pel.hasClass("element")) pel = pel.parent();
+		var col = pel.parent();
+		var offset = el.y()-e.y;
+		var del = element(false, "div", "dragElement");
+		col.dragging = false;
+		$("body").event("mousemove", function(me){
+			if(Math.abs(me.y-inity) > 5 && !col.dragging){
+				del.css("top", pel.offsetTop+"px");
+				del.css("left", col.offsetLeft+"px");
+				del.css("width", col.cssn("width")+"px");
+				$("#elementsSlider").appendChild(del);
+				var i = element(false, "div", "ielement");
+				pel.addBefore(i);
+				pel.remove();
+				col.dragging = true;
+			}else if(col.dragging){
+				del.css("top", (me.y-$("#elementsSlider").y()+offset)+"px");
+			}
+		});
+		$("body").event("mouseup", function(fe){
+			$("body").rmEvent("mousemove");
+			$("body").rmEvent("mouseup");
+			if(col.dragging){
+				col.dragging = false;
+				log("drop");
+			}
+		});
+	});
 	el.event("click", function(e){
 		if(e.el.hasClass("elementEnter")) gotoChild(addr);
 		else{
@@ -214,6 +245,23 @@ function elementEl(data, addr, parent, sel){
 				p = p.parent();
 			}
 			!child?gotoParent(addr):selectEl(addr);
+		}
+	});
+	el.event("mouseover", function(e){
+		if(el.parent().dragging){
+			var i = element(false, "div", "ielement");
+			var p = e.el;
+			while(!p.hasClass("element")) p = p.parent();
+			var n = p;
+			while(n && !n.hasClass("ielement")) n = n.next();
+			while(p && !p.hasClass("ielement")) p = p.prev();
+			if(p){
+				p.next().addAfter(i);
+				p.remove();
+			}else if(n){
+				n.prev().addBefore(i);
+				n.remove();
+			}
 		}
 	});
 	if(sel) el.select();

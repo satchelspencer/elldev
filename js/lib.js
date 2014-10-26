@@ -212,6 +212,12 @@ ext.prev = function(){
 	while(r && r.nodeType != 1) r = r.previousSibling;
 	return r?extEl(r):false;
 }
+ext.addBefore = function(el){
+	this.parentNode.insertBefore(el, this);
+}
+ext.addAfter = function(el){
+	this.next()?this.parentNode.insertBefore(el, this.next()):this.parentNode.appendChild(el);
+}
 ext.pos = function(stop){
 	var x = 0, y = 0;
 	var el = this;
