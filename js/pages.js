@@ -380,8 +380,9 @@ function pageListItem(data){
 				$("#browserListDrag").innerHTML = pages.length>1?pages.length+" pages":pages[0].data.title;
 			}
 			if(el.dragging){
-				var top = e.y-$("#browser").y()+offset;
-				$("#browserListDrag").css("top", top+"px");
+				var containerh = $("#browser").cssn("height")-25;
+				var val = e.y-$("#browser").y()+offset;
+				$("#browserListDrag").css("top", (val<25?25:val>containerh?containerh:val)+"px");
 			}
 		});
 		$("body").event("mouseup", function(e){

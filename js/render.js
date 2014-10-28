@@ -4,14 +4,14 @@ function render(data, to, addr, callback){
 	var addr = addr||[];
 	for(var i in data.childs){
 		var child = data.childs[i];
-		var childEl = newEl(child, data, addr.concat(i));
+		var childEl = newEl(child, addr.concat(i));
 		to.appendChild(childEl);
 		if(child.childs) render(child, childEl, childEl.addr);
 		for(var p in child) if(p != "childs") childEl.disp(p, child[p]);
 	}
 	if(callback) callback();
 }
-function newEl(data, parent, addr){
+function newEl(data, addr){
 	var el = element(false, "div", data.type);
 	el.addr = addr;
 	el.event("click", elClick);
@@ -36,6 +36,24 @@ elex.data = function(){
 };
 elex.parent = function(){
 	return extcEl(this.parentNode);
+}
+elex.childs = function(index){
+	if(index !== undefined) return this.children?extEl(this.children[index]):undefined;
+	else if(this.firstChild){
+		var r = [];
+		var c = this.firstChild;
+		while(c){
+			if(c.nodeType == 1) r.push(extcEl(extEl(c)));
+			c = c.nextSibling;
+		}
+		return extLi(r);
+	}else return undefined;
+}
+elex.dclone = function(){
+	var nel = extcEl(this.clone());
+	nel.addr = this.addr;
+	nel.event("click", elClick);
+	return nel;
 }
 elex.setAddr = function(addr){
 	this.addr = addr;

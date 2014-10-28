@@ -526,15 +526,15 @@ function assetClickStart(e, el){
 			$("#browserListDrag").innerHTML = draggedAssets.length>1?draggedAssets.length+" items":draggedAssets[0].name;
 		}
 		if(el.dragging){
-			var top = e.y-$("#browser").y()+offset;
-			$("#browserListDrag").css("top", top+"px");
+			var containerh = $("#browser").cssn("height")-25;
+			var val = e.y-$("#browser").y()+offset;
+			$("#browserListDrag").css("top", (val<25?25:val>containerh?containerh:val)+"px");
 		}
 	});
 	$("body").event("mouseup", function(e){
 		if(el.dragging){
 			$("body").rmClass("unselectable");
 			$("body").css("cursor", "default");
-			log(e.el);
 			if((e.el.dire == "true" || e.el.parentNode.dire == "true") && !sendingAssetData && !addingAssetFolder){
 				e.el = e.el.dire == "true"?e.el:e.el.parentNode;
 				var toMove = [];
@@ -542,7 +542,6 @@ function assetClickStart(e, el){
 				var moveTo = e.el.name?getCurrentDir(assetDir)+e.el.name+"/":getCurrentDir(assetDir.slice(0, assetDir.length-1));
 				var newDir =  e.el.name?assetDir.concat(e.el.name):assetDir.slice(0, assetDir.length-1);
 				sendAssetData({"moveassets" : JSON.stringify({"from" : toMove, "to" : moveTo})}, function(d){
-					log(d);
 					var data = JSON.parse(d);
 					if(data.error){
 						cancelAssetDrop(draggedAssets);

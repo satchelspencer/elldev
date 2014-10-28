@@ -86,7 +86,8 @@ var rootAddr = false;
 function selectEl(addr, nani){
 	if(addr === selectedAddr) return false;
 	var el = getEl(addr);
-	var data = getData(addr);
+	var data = el.data();
+	log(data);
 	var cols = $("#elementsSlider").childs();
 	insertEls(el.siblings(), cols[1], false, addr);
 	var root = addr.length == 1;
@@ -104,7 +105,7 @@ function selectEl(addr, nani){
 		if(nani) cols[1].css("width", "195px");
 	}
 	rootAddr = root;
-	showSelectOn(getEl(addr));
+	showSelectOn(el);
 	selectedAddr = addr;
 }
 function gotoChild(addr){
@@ -113,7 +114,7 @@ function gotoChild(addr){
 	var wi = cols[1].cssn("width");
 	var c1cs = cols[1].childs();
 	insertEls(getEl(addr).childs(), cols[0], false, childAddr);
-	ani(-155, -350, 44, function(l){
+	ani(-155, -350, 6, function(l){
 		var frac = Math.abs(l+155)/195;
 		$("#elementsSlider").css("left", l+"px");
 		cols[1].css("width", (wi-(frac*(wi-155)))+"px");
@@ -138,7 +139,7 @@ function gotoParent(addr){
 	c2cs[addr[addr.length-1]].select();
 	if(addr.length > 1){
 		insertEls(getEl(addr).parent().siblings(), cols[3], true, addr);
-		ani(-155, 0, 44, function(l){
+		ani(-155, 0, 6, function(l){
 			var frac = Math.abs(l+155)/155;
 			$("#elementsSlider").css("left", l+"px");
 			cols[2].css("width", (wi+(frac*(195-wi)))+"px");
@@ -154,7 +155,7 @@ function gotoParent(addr){
 			cols[2].css("background", "rgb(60,60,60)");
 		});
 	}else{
-		ani(0, 160, 44, function(w){
+		ani(0, 160, 6, function(w){
 			var frac = w/160;
 			$("#elementsSlider").css("left", (-155+(frac*35))+"px");
 			$("#elementsSlider").css("width", (700+w)+"px");
@@ -226,7 +227,9 @@ function elementEl(data, addr, parent, sel){
 				pel.remove();
 				col.dragging = true;
 			}else if(col.dragging){
-				del.css("top", (me.y-$("#elementsSlider").y()+offset)+"px");
+				var containerh = $("#elementsSlider").cssn("height")-25;
+				var val = me.y-$("#elementsSlider").y()+offset;
+				del.css("top", (val<0?0:val>containerh?containerh:val)+"px");
 			}
 		});
 		$("body").event("mouseup", function(fe){
@@ -239,7 +242,7 @@ function elementEl(data, addr, parent, sel){
 				paddr.pop();
 				var cel = getEl(paddr);
 				if(col.hasOwnProperty("nindex")){
-					var data = getData(paddr);
+					var data = cel.data();
 					data.childs.splice(col.nindex, 0, data.childs.splice(oldindex, 1)[0]);
 					var oldel = cel.childs(oldindex).dclone();
 					oldel.addr = cel.childs(oldindex).addr;
