@@ -113,7 +113,7 @@ function gotoChild(addr){
 	var wi = cols[1].cssn("width");
 	var c1cs = cols[1].childs();
 	insertEls(getEl(addr).childs(), cols[0], false, childAddr);
-	ani(-155, -350, 6, function(l){
+	ani(-155, -350, 44, function(l){
 		var frac = Math.abs(l+155)/195;
 		$("#elementsSlider").css("left", l+"px");
 		cols[1].css("width", (wi-(frac*(wi-155)))+"px");
@@ -138,7 +138,7 @@ function gotoParent(addr){
 	c2cs[addr[addr.length-1]].select();
 	if(addr.length > 1){
 		insertEls(getEl(addr).parent().siblings(), cols[3], true, addr);
-		ani(-155, 0, 6, function(l){
+		ani(-155, 0, 44, function(l){
 			var frac = Math.abs(l+155)/155;
 			$("#elementsSlider").css("left", l+"px");
 			cols[2].css("width", (wi+(frac*(195-wi)))+"px");
@@ -154,7 +154,7 @@ function gotoParent(addr){
 			cols[2].css("background", "rgb(60,60,60)");
 		});
 	}else{
-		ani(0, 160, 6, function(w){
+		ani(0, 160, 44, function(w){
 			var frac = w/160;
 			$("#elementsSlider").css("left", (-155+(frac*35))+"px");
 			$("#elementsSlider").css("width", (700+w)+"px");
@@ -238,17 +238,17 @@ function elementEl(data, addr, parent, sel){
 				var paddr = col.first().addr||col.childs(1).addr;
 				paddr.pop();
 				var cel = getEl(paddr);
-				if(col.nindex){
+				if(col.hasOwnProperty("nindex")){
 					var data = getData(paddr);
 					data.childs.splice(col.nindex, 0, data.childs.splice(oldindex, 1)[0]);
-					var oldel = cel.childs(oldindex).clone();
+					var oldel = cel.childs(oldindex).dclone();
 					oldel.addr = cel.childs(oldindex).addr;
 					cel.childs(oldindex).remove();
 					if(col.nindex !== 0) cel.childs(col.nindex-(oldindex<col.nindex?1:0)).addAfter(oldel);
-					else cel.first().addBefore(oldEl);
+					else cel.first().addBefore(oldel);
 					var cs = cel.childs();
 					for(var k=0;k<cs.length;k++){
-						cs[k].addr = paddr.concat(String(k));
+						cs[k].setAddr(paddr.concat(String(k)));
 					}
 				}
 				insertEls(cel.childs(), col, col.hasClass("elementPCol"));
@@ -309,5 +309,5 @@ function getData(addr){
 function getEl(addr){
 	var r = $("#canvas");
 	for(var i in addr) r = r.childs(addr[i]);
-	return r;
+	return extcEl(extEl(r));
 }

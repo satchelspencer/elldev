@@ -239,9 +239,8 @@ ext.attr = function(attr, val){
 	return val ? this.setAttribute(attr, val) : this.getAttribute(attr);
 }
 ext.clone = function(){
-	var el = extEl(this.cloneNode(false));
+	var el = extEl(this.cloneNode(true));
 	el.id = "";
-	el.innerHTML = this.innerHTML;
 	return el;
 }
 ext.remove = function(){
