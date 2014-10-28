@@ -216,7 +216,7 @@ function elementEl(data, addr, parent, sel){
 		var oldindex = parseInt(pel.addr[pel.addr.length-1]);
 		col.dragging = false;
 		$("body").event("mousemove", function(me){
-			if(Math.abs(me.y-inity) > 5 && !col.dragging){
+			if(Math.abs(me.y-inity) > 5 && !col.dragging && col.childs().length > 1){
 				del.css("top", pel.offsetTop+"px");
 				del.css("left", col.offsetLeft+"px");
 				del.css("width", col.cssn("width")+"px");
@@ -239,7 +239,7 @@ function elementEl(data, addr, parent, sel){
 				col.dragging = false;
 				$("#dragEl").remove();
 				var paddr = col.first().addr||col.childs(1).addr;
-				paddr.pop();
+				paddr = paddr.slice(0, -1);
 				var cel = getEl(paddr);
 				if(col.hasOwnProperty("nindex")){
 					var data = cel.data();
@@ -247,8 +247,9 @@ function elementEl(data, addr, parent, sel){
 					var oldel = cel.childs(oldindex).dclone();
 					oldel.addr = cel.childs(oldindex).addr;
 					cel.childs(oldindex).remove();
-					if(col.nindex !== 0) cel.childs(col.nindex-(oldindex<col.nindex?1:0)).addAfter(oldel);
-					else cel.first().addBefore(oldel);
+					if(col.nindex == 0) cel.first().addBefore(oldel);
+					else if(col.nindex == cel.childs().length) cel.appendChild(oldel);
+					else cel.childs(col.nindex-(oldindex<col.nindex?1:0)).addAfter(oldel);
 					var cs = cel.childs();
 					for(var k=0;k<cs.length;k++){
 						cs[k].setAddr(paddr.concat(String(k)));
