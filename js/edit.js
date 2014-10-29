@@ -105,8 +105,8 @@ function selectEl(addr, nani){
 	}
 	rootAddr = root;
 	showSelectOn(el);
-	displayProps(addr);
 	selectedAddr = addr;
+	displayProps(addr);
 }
 function gotoChild(addr){
 	var childAddr = addr.concat("0");

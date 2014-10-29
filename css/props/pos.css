@@ -65,28 +65,34 @@
 	.positionDisabled > [class="vspan"] > div{
 		border:1px dashed #777777;
 	}
-	#boxTop, #boxBottom{
+	.positionDisabled > [class="hlabel"]{
+		display:none;
+	}
+	.positionDisabled > [class="hspan"] > div{
+		border:1px dashed #777777;
+	}
+	#boxtop, #boxbottom{
 		left:50%;
 		margin-left:-40px;
 		width:80px;
 		height:35px;
 	}
-	#boxTop{
+	#boxtop{
 		top:0;
 	}
-	#boxBottom{
+	#boxbottom{
 		bottom:0;
 	}
-	#boxLeft, #boxRight{
+	#boxleft, #boxright{
 		top:50%;
 		margin-top:-40px;
 		height:80px;
 		width:35px;
 	}
-	#boxRight{
+	#boxright{
 		right:0;
 	}
-	#boxLeft{
+	#boxleft{
 		left:0;
 	}
 #sequenceProps{
@@ -139,25 +145,39 @@
 	left:30px;
 	top:28px;
 }
+	.overArrow{
+		color:white;
+		font-size:20px;
+	}
 	#overflowContainer{
-		top:-1px;
-		left:-1px;
-		width:75px;
-		height:75px;
+		top:50%;
+		left:50%;
+		margin-top:-37px;
+		margin-left:-37px;
+		width:74px;
+		height:74px;
 		background:#777;
-		border:1px solid #676767;
+		border:1px solid white;
 	}
-	#overflowYarrow{
-		bottom:1px;
-		left:32px;
-		color:white;
-		font-size:20px;
+	#overflowDarrow{
+		bottom:-3px;
+		left:50%;
+		margin-left:-5px;
 	}
-	#overflowXarrow{
-		right:8px;
-		top:25px;
-		color:white;
-		font-size:20px;
+	#overflowUarrow{
+		top:-3px;
+		left:50%;
+		margin-left:-5px;
+	}
+	#overflowRarrow{
+		right:5px;
+		top:50%;
+		margin-top:-11px;
+	}
+	#overflowLarrow{
+		left:5px;
+		top:50%;
+		margin-top:-11px;
 	}
 	#overflowDiag{
 		width:34px;
