@@ -254,7 +254,7 @@ function elementEl(data, addr, parent, sel){
 					for(var k=0;k<cs.length;k++){
 						cs[k].setAddr(paddr.concat(String(k)));
 					}
-					selectEl(paddr.concat(String(col.nindex)), true);
+					if(col.hasClass("elementCCol")) selectEl(paddr.concat(String(col.nindex)), true);
 				}
 				insertEls(cel.childs(), col, col.hasClass("elementPCol"), selectedAddr);
 			}
