@@ -87,7 +87,6 @@ function selectEl(addr, nani){
 	if(addr === selectedAddr) return false;
 	var el = getEl(addr);
 	var data = el.data();
-	log(data);
 	var cols = $("#elementsSlider").childs();
 	insertEls(el.siblings(), cols[1], false, addr);
 	var root = addr.length == 1;
@@ -106,6 +105,7 @@ function selectEl(addr, nani){
 	}
 	rootAddr = root;
 	showSelectOn(el);
+	displayProps(addr);
 	selectedAddr = addr;
 }
 function gotoChild(addr){
@@ -245,17 +245,18 @@ function elementEl(data, addr, parent, sel){
 					var data = cel.data();
 					data.childs.splice(col.nindex, 0, data.childs.splice(oldindex, 1)[0]);
 					var oldel = cel.childs(oldindex).dclone();
-					oldel.addr = cel.childs(oldindex).addr;
 					cel.childs(oldindex).remove();
+					log(col.nindex);
 					if(col.nindex == 0) cel.first().addBefore(oldel);
 					else if(col.nindex == cel.childs().length) cel.appendChild(oldel);
-					else cel.childs(col.nindex-(oldindex<col.nindex?1:0)).addAfter(oldel);
+					else cel.childs(col.nindex).addBefore(oldel);
 					var cs = cel.childs();
 					for(var k=0;k<cs.length;k++){
 						cs[k].setAddr(paddr.concat(String(k)));
 					}
+					selectEl(paddr.concat(String(col.nindex)), true);
 				}
-				insertEls(cel.childs(), col, col.hasClass("elementPCol"));
+				insertEls(cel.childs(), col, col.hasClass("elementPCol"), selectedAddr);
 			}
 		});
 	});

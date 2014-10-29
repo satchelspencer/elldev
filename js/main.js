@@ -3,6 +3,7 @@ window.onload = function(){
 	separatorInit();
 	focusInit();
 	editInit();
+	propsInit();
 };
 window.onresize = function(){
 	if(($("body").viewHeight < 700 || $("body").viewWidth < 800) && gui) halt("window too small");
