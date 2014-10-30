@@ -87,15 +87,16 @@ elex.position = function(dat){
 			this.css("marginLeft", "-"+(val2int(dat.width)/2)+valunit(dat.width));
 		}
 		if(dat.rotation) this.css("transform", "rotate("+dat.rotation+"deg)");
+		var el = this;
 		setTimeout(function(){
 			for(var z in parent.overflow){
 				var wh = z=="X"?"width":"height";
 				if(parent.overflow[z] == "expand"){
-					var offsetlt = (z=="X"?this.offsetLeft:this.offsetTop);
-					var offsetrb = offsetlt+this.cssn(wh)-this.parent().cssn(wh);
+					var offsetlt = (z=="X"?el.offsetLeft:el.offsetTop);
+					var offsetrb = offsetlt+el.cssn(wh)-el.parent().cssn(wh);
 					sizeOffset = (offsetlt<0?Math.abs(offsetlt):0)+offsetrb;
 					var bound = parent.position.hasOwnProperty(z=="X"?"left":"top") && parent.position.hasOwnProperty(z=="X"?"right":"bottom");
-					if(sizeOffset > 0 && !bound) this.parent().set("position."+(wh), (val2int(parent.position[wh])+sizeOffset)+valunit(parent.position[wh]));
+					if(sizeOffset > 0 && !bound) el.parent().set("position."+(wh), (val2int(parent.position[wh])+sizeOffset)+valunit(parent.position[wh]));
 				}
 			}
 		},0);

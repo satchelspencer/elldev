@@ -37,16 +37,22 @@ props.overflow = {
 	"disp" : function(adata){
 		var data = adata.overflow;
 		if(adata.type == "canvas"){
-			$("#overflow").css("display", "block");
-			$("#sequenceProps").css("display", "none");
-			for(d in data){	
-				var horiz = d=="X";
-				$("#overflowContainer").css(horiz?"height":"width", data[d]=="expand"?"100px":"75px");
-				var adisp = !(data[d]=="hidden")?"block":"none";
-				$("#overflow"+(!horiz?"U":"L")+"arrow").css("display", adisp);
-				$("#overflow"+(!horiz?"D":"R")+"arrow").css("display", adisp);
+			var dirs = ["X", "Y"];
+			for(d in dirs){	
+				var val = data.hasOwnProperty(dirs[d])?data[dirs[d]]:"hidden";
+				log(val);
+				var horiz = dirs[d]=="X";
+				$("#overflowContent").css(!horiz?"top":"left", val=="expand"?"-20px":"0");
+				$("#overflowContent").css(!horiz?"bottom":"right", val=="expand"?"-20px":"0");
+				var adisp = !(val=="hidden")?"block":"none";
+				$("#overflow"+dirs[d]).childs().css("display", adisp);
+				$("#overflow"+dirs[d]).childs().css("display", adisp);
 			}
 		}
+	},
+	"default" : {
+		"X" : "hidden",
+		"Y" : "hidden"
 	}
 };
 props.background = {

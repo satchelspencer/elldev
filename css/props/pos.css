@@ -95,99 +95,47 @@
 	#boxleft{
 		left:0;
 	}
-#sequenceProps{
-	display:none;
-	border:1px solid #777777;
+#overflow{
 	width:80px;
 	height:80px;
 	left:40px;
 	top:40px;
+	cursor:pointer;
 }
-	#sequencePropsContent{
-		top:5px;
-		bottom:5px;
+	#overflowLabel{
+		width:100%;
+		height:100%;
+		text-align:center;
+		top:30px;
+	}
+	#overflowContent{
+		top:0;
+		bottom:0;
 		left:0;
 		right:0;
 		background:#575757;
-		transform:rotate(90deg);
+		border:1px solid #777777;
 	}
-	#sequenceDirection{
-		color:#777777;
-		font-size:20px;
-		top:50%;
-		left:50%;
-		margin-top:-10px;
-		margin-left:-7px;
-		transform:rotate(90deg);
-	}
-	#sequenceOverflow{
+	#overflowY, #overflowX{
 		top:5px;
 		bottom:5px;
 		left:-20px;
 		right:-20px;
 		border:1px dashed white;
+	}
+	#overflowY{
 		transform:rotate(90deg);
 	}
-		#sequenceOverflowRight{
+		.scrollTop{
 			right:5px;
-			top:20px;
+			top:19px;
 			font-size:20px;
 		}
-		#sequenceOverflowLeft{
+		.scrollBottom{
 			left:5px;
 			top:20px;
 			font-size:20px;
 		}
-#overflow{
-	border:1px dashed #777777;
-	width:100px;
-	height:100px;
-	left:30px;
-	top:28px;
-}
-	.overArrow{
-		color:white;
-		font-size:20px;
-	}
-	#overflowContainer{
-		top:50%;
-		left:50%;
-		margin-top:-37px;
-		margin-left:-37px;
-		width:74px;
-		height:74px;
-		background:#777;
-		border:1px solid white;
-	}
-	#overflowDarrow{
-		bottom:-3px;
-		left:50%;
-		margin-left:-5px;
-	}
-	#overflowUarrow{
-		top:-3px;
-		left:50%;
-		margin-left:-5px;
-	}
-	#overflowRarrow{
-		right:5px;
-		top:50%;
-		margin-top:-11px;
-	}
-	#overflowLarrow{
-		left:5px;
-		top:50%;
-		margin-top:-11px;
-	}
-	#overflowDiag{
-		width:34px;
-		height:1px;
-		top:74px;
-		left:75px;
-		border-top:1px dashed #474747;
-		transform-origin:0 0;
-		transform:rotate(45deg);
-	}
 .vlabel,.hlabel{
 	text-align:center;
 	font-size:10px;
