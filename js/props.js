@@ -31,7 +31,7 @@ props.position = {
 		}
 		$("#boxPositionWidth").first().first().innerHTML = data.hasOwnProperty("width")?val2css(data.width):"<span style='color:#777;'>auto</span>";
 		$("#boxPositionHeight").first().first().innerHTML = data.hasOwnProperty("height")?val2css(data.height):"<span style='color:#777;'>auto</span>";
-		var k = parseInt(selectedAddr[selectedAddr.length-1]);
+		var k = parseInt(selectedAddr[selectedAddr.length-1])+1;
 		$("#orderVal").innerHTML = k;
 		$("#orderSuffix").innerHTML = k>10&&k<20?"th":k%10==1?"st":k%10==2?"nd":k%10==3?"rd":"th"; 
 	}
@@ -67,7 +67,7 @@ props.padding = {
 	"init" : function(){
 	},
 	"disp" : function(data){
-		
+		for(var i in dirs) $("#padding"+dirs[i]).first().innerHTML = data[i]+"px";
 	},
 	"def" : [0,0,0,0]
 };

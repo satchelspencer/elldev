@@ -63,6 +63,7 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 			height:1px;
 			border-top:1px solid white;
 			border-left:1px solid white;
+			opacity:0.3;
 		}
 		.anchor div{
 			top:-1px;

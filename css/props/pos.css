@@ -136,7 +136,8 @@
 			top:11px;
 			font-size:20px;
 		}
-#padding{	
+#padding{
+	display:none;	
 	top:27px;
 	left:30px;
 	width:100px;
@@ -175,6 +176,14 @@
 	}
 	.phlabel{
 		-webkit-transform:rotate(90deg);
+	}
+	#paddingContent{
+		top:25px;
+		bottom:25px;
+		left:25px;
+		right:25px;
+		background:#373737;
+		border:1px dashed #777;
 	}
 .vlabel,.hlabel,.pvlabel,.phlabel{
 	text-align:center;

@@ -212,7 +212,7 @@ function elementEl(data, addr, parent, sel){
 	var el = element(false, "div", "element");
 	el.addr = addr;
 	var or = element(false, "div", "elementOrder");
-	or.innerHTML = addr[addr.length-1];
+	or.innerHTML = parseInt(addr[addr.length-1])+1;
 	var na = element(false, "div", "elementName");
 	na.innerHTML = data.name;
 	el.appendChild(or);
@@ -313,12 +313,12 @@ function elementEl(data, addr, parent, sel){
 			}
 			if(index !== false){
 				el.parent().nindex = index;
-				$("#dragEl").first().innerHTML = index;
+				$("#dragEl").first().innerHTML = index+1;
 				var pel = e.el;
 				while(pel && !pel.hasClass("element")) pel = pel.parent();
 				var s = pel.siblings();
 				for(var l=0;l<s.length;l++){
-					if(s[l].childs()) s[l].first().innerHTML = l;
+					if(s[l].childs()) s[l].first().innerHTML = l+1;
 				}
 			}
 			
