@@ -8,13 +8,18 @@ window.onload = function(){
 window.onresize = function(){
 	if(($("body").viewHeight < 700 || $("body").viewWidth < 800) && gui) halt("window too small");
 	else unhalt();
+	showSelectOn(getEl(selectedAddr));
 };
+window.onscroll = function(){
+	showSelectOn(getEl(selectedAddr));
+}
 function stopEvent(e){
 	e.stop();
 }
 var focus;
 var focusEvents = {};
 function focusInit(){
+	focus = $("#workspace");
 	$("body").event("keyup", function(e){
 		if(focusEvents[focus.id]) focusEvents[focus.id](e);
 	});

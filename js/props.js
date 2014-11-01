@@ -6,14 +6,19 @@ function displayProps(addr){
 	openElData = getData(addr);
 	$("#elementTitle").innerHTML = openElData.name;
 	$("#elementType").innerHTML = "("+openElData.type+")";
-	for(var p  in props) props[p].disp(openElData);
+	for(var p  in props) props[p].disp(normalizeProps(openElData[p], props[p].def));
+}
+function normalizeProps(data, def){
+	if(!def) return data;
+	var r = data||{};
+	for(var d in def) r[d] = r[d]||def[d];
+	return r;
 }
 var props = {};
 props.position = {
 	"init" : function(){
 	},
-	"disp" : function(adata){
-		var data = adata.position;
+	"disp" : function(data){
 		var mdirs = ["top", "left", "bottom", "right"];
 		for(var i in mdirs){
 			if(data.hasOwnProperty(mdirs[i])){
@@ -34,26 +39,37 @@ props.position = {
 props.overflow = {
 	"init" : function(){
 	},
-	"disp" : function(adata){
-		var data = adata.overflow;
-		if(adata.type == "canvas"){
-			var dirs = ["X", "Y"];
-			for(d in dirs){	
-				var val = data.hasOwnProperty(dirs[d])?data[dirs[d]]:"hidden";
-				log(val);
-				var horiz = dirs[d]=="X";
+	"disp" : function(data){
+		if(openElData.type == "content"){
+			$("#overflow").css("display", "none"); 
+			$("#padding").css("display", "block"); 
+		}else{
+			$("#overflow").css("display", "block"); 
+			$("#padding").css("display", "none"); 
+			$("#overflowX").css("display", openElData.type == "canvas"?"block":"none");
+			for(d in data){	
+				var val = data[d]||this.def[d];
+				var horiz = d=="X";
 				$("#overflowContent").css(!horiz?"top":"left", val=="expand"?"-20px":"0");
 				$("#overflowContent").css(!horiz?"bottom":"right", val=="expand"?"-20px":"0");
 				var adisp = !(val=="hidden")?"block":"none";
-				$("#overflow"+dirs[d]).childs().css("display", adisp);
-				$("#overflow"+dirs[d]).childs().css("display", adisp);
+				$("#overflow"+d).childs().css("display", adisp);
+				$("#overflow"+d).childs().css("display", adisp);
 			}
 		}
 	},
-	"default" : {
+	"def" : {
 		"X" : "hidden",
 		"Y" : "hidden"
 	}
+};
+props.padding = {
+	"init" : function(){
+	},
+	"disp" : function(data){
+		
+	},
+	"def" : [0,0,0,0]
 };
 props.background = {
 	"init" : function(){

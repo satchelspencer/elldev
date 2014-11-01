@@ -2,12 +2,15 @@ var openPage = "";
 var openData = [];
 var gui = true;
 var tool = "select";
+var showWireframe = true;
 var add = "addContent";
 var sendingEditData = false;
 function editInit(){
 	editPage("/");
 	$("#workspace").kevent(function(e){
 		if(e.code == 72) gui?hideGui():showGui();
+		else if(e.code == 65) setTool({"el" : $("#select")});
+		else if(e.code == 66) setTool({"el" : $("#add")});
 	});
 	$("#tools").event("click", setTool);
 }
@@ -43,7 +46,12 @@ function setTool(e){
 	var tEl = e.el;
 	while(tEl.parent().id != "tools") tEl = tEl.parent();
 	tool = tEl.id;
-	var cursors = {"select" : "default", "move" : "move", "add" : "crosshair"};
+	if(tool == "select" && e.e && e.e.shiftKey){
+		showWireframe = !showWireframe;
+		$("#wireframe").className = "icon icon-eye"+(showWireframe?"":"-off");
+		$("#selector").css("display", showWireframe?"block":"none");
+	}
+	var cursors = {"select" : "default", "add" : "crosshair"};
 	$("#canvas").css("cursor", cursors[tool]);
 	for(var i=0;i<tools.length;i++){
 		var d = tools[i].id=="add"? tools[i].childs(0):tools[i];
@@ -60,6 +68,7 @@ function hideGui(){
 	ani(0, -350, 3, function(w){
 		$("#gui").css("marginLeft", w+"px");
 		$("#workspace").css("left", (350+w)+"px");
+		showSelectOn(getEl(selectedAddr));
 	}, function(){
 		gui = false;
 	});
@@ -70,6 +79,7 @@ function showGui(){
 	ani(-350, 0, 3, function(w){
 		$("#gui").css("marginLeft", w+"px");
 		$("#workspace").css("left", (350+w)+"px");
+		showSelectOn(getEl(selectedAddr));
 	}, function(){
 		gui = true;
 	});
@@ -80,6 +90,9 @@ function elClick(e){
 	if(tool == "select"){
 		selectEl(e.el.addr);
 	}
+}
+function elScroll(e){
+	showSelectOn(getEl(selectedAddr));
 }
 var selectedAddr = false;
 var rootAddr = false;
@@ -173,11 +186,20 @@ function gotoParent(addr){
 	}
 }
 function showSelectOn(el){
-	$("#selector").css("display", "block");
+	$("#selector").css("display", showWireframe?"block":"none");
 	$("#selector").css("top", el.y($("#canvas"))+"px");
 	$("#selector").css("left", el.x($("#canvas"))+"px");
 	$("#selector").css("width", el.cssn("width")+"px");
 	$("#selector").css("height", el.cssn("height")+"px");
+	var spos = getData(el.addr).position;
+	var selcss = {"top" : ["height", "marginTop"], "bottom" : ["height", "marginBottom"], "left" : ["width", "marginLeft"], "right" : ["width", "marginRight"]};
+	for(var i in selcss){
+		if(spos[i]){
+			$("#selector"+i).css("display", "block");
+			$("#selector"+i).css(selcss[i][0], val2css(spos[i]));
+			$("#selector"+i).css(selcss[i][1], "-"+val2css(spos[i]));
+		}else $("#selector"+i).css("display", "none");
+	}
 }
 function insertEls(els, into, parent, selAddr){
 	into.clear();
@@ -246,7 +268,6 @@ function elementEl(data, addr, parent, sel){
 					data.childs.splice(col.nindex, 0, data.childs.splice(oldindex, 1)[0]);
 					var oldel = cel.childs(oldindex).dclone();
 					cel.childs(oldindex).remove();
-					log(col.nindex);
 					if(col.nindex == 0) cel.first().addBefore(oldel);
 					else if(col.nindex == cel.childs().length) cel.appendChild(oldel);
 					else cel.childs(col.nindex).addBefore(oldel);

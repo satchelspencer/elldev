@@ -17,18 +17,20 @@
 	}
 	#select{
 		left:0;		
-		padding-left:9px;
+		padding-left:4px;
 		border-right:1px solid #f0f0f0;
 		color:#a0a0a0;
 	}
-	#move{
-		left:35px;
-		border-right:1px solid #f0f0f0;
-	}
+		#wireframe{
+			top:1px;
+			left:17px;
+			color:#272727;
+			font-size:12px;
+		}
 	#add{
 		top:0;
 		bottom:0;
-		left:70px;
+		left:40px;
 		width:210px;
 	}
 		#addIcon{
@@ -61,7 +63,7 @@
 	top:4px;
 	right:4px;
 	bottom:5px;
-	left:285px;
+	left:255px;
 	background:white;
 	border-radius:3px 0px 0px 0px;
 	border:1px solid #777777;

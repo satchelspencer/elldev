@@ -15,6 +15,7 @@ function newEl(data, addr){
 	var el = element(false, "div", data.type);
 	el.addr = addr;
 	el.event("click", elClick);
+	el.event("scroll", elScroll);
 	return extcEl(el);
 }
 function extcEl(el){
@@ -53,6 +54,7 @@ elex.dclone = function(){
 	var nel = extcEl(this.clone());
 	nel.addr = this.addr;
 	nel.event("click", elClick);
+	nel.event("scroll", elScroll);
 	return nel;
 }
 elex.setAddr = function(addr){

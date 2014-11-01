@@ -24,11 +24,18 @@
 		<div id="wrapper">
 			<div id="workspace" class="focus">
 				<div id="canvas"></div>
-				<div id="selector"><div></div></div>
+				<div id="selector">
+					<div id="selectorIn"></div>
+					<div id="selectortop" class="anchor"><div></div></div>
+					<div id="selectorleft" class="anchor"><div></div></div>
+					<div id="selectorbottom" class="anchor"><div></div></div>
+					<div id="selectorright" class="anchor"><div></div></div>
+				</div>
 				<div id="bar">
-					<div id="tools">
-						<div id="select" class="tool icon icon-direction"></div>
-						<div id="move" class="tool icon icon-move"></div>
+					<div id="tools" class="unselectable">
+						<div id="select" class="tool icon icon-cursor">
+							<div id="wireframe" class="icon icon-eye"></div>
+						</div>
 						<div id="add">
 							<div id="addIcon" class="tool icon icon-plus"></div>
 							<div id="addOptions">
@@ -65,6 +72,12 @@
 									</div>
 									<div id="overflowContent"></div>
 									<div id="overflowLabel">overflow</div>
+								</div>
+								<div id="padding">
+									<div id="paddingTop"><div class="pvlabel">0px</div><div class="vspanBar"></div></div>
+									<div id="paddingBottom"><div class="pvlabel">0px</div><div class="vspanBar"></div></div>
+									<div id="paddingLeft"><div class="phlabel">0px</div><div class="hspanBar"></div></div>
+									<div id="paddingRight"><div class="phlabel">0px</div><div class="hspanBar"></div></div>
 								</div>
 								<div id="boxPosition">
 									<div id="boxPositionBox">
