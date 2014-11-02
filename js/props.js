@@ -88,6 +88,10 @@ props.background = {
 		$("#backgroundImage").css("background", !hasImg?"#474747":"url('../as"+data.image+"')");
 		$("#backgroundImage").css("backgroundSize", "cover");
 		$("#backgroundImageClear").css("display", hasImg?"block":"none");
+		var sizelefts = {"auto" : "2px", "contain" : "232px", "cover" : "252px"};
+		if(sizelefts[data.size]) $("#bgHandle").css("left", sizelefts[data.size]);
+		else $("#bgHandle").css("left", ((parseInt(data.size)*2.19)+6)+"px");
+		$("#bgSizeValue").innerHTML = data.size+(sizelefts[data.size]?"":"%");
 	},
 	"def" : {
 		"color" : "0,0,0,0",

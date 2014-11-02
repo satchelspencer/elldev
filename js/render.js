@@ -126,8 +126,13 @@ elex.background = function(dat){
 	if(dat.color) this.css("backgroundColor", "rgba("+dat.color+")");
 	if(dat.image){
 		this.css("backgroundImage", "url('../as"+dat.image+"')");
-		if(dat.repeat) this.css("backgroundRepeat", dat.repeat);
-		if(dat.size) this.css("backgroundSize", dat.size);
+		this.css("backgroundRepeat", dat.repeat||"no-repeat");
+		this.css("backgroundPosition", "center");
+		if(dat.size){
+			var sizes = ["auto", "contain", "cover"];
+			if(sizes.indexOf(dat.size) != -1) this.css("backgroundSize", dat.size);
+			else this.css("backgroundSize", parseInt(dat.size)+"%");
+		}
 	}
 };
 elex.font = function(dat){

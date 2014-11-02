@@ -141,3 +141,13 @@
 		#bgSize > .sliderLabel{width:30px;}
 		#bgSize > .sliderArea{left:35px;right:40px;}
 		#bgSize > .sliderValue{width:30px;}
+		#bgSizeAuto{
+			left:0;
+		}
+		#bgSizeFill{
+			left:230px;
+		}
+		#bgSizeCover{
+			left:250px;
+		}
+		

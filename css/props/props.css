@@ -130,11 +130,19 @@
 		bottom:9px;
 		background:#777777;
 	}
-		.sliderArea > div{
+		.sliderHandle{
 			width:2px;
 			background:white;
 			top:-5px;
 			bottom:-5px;
+		}
+		.sliderNotch{
+			width:6px;
+			top:0;
+			bottom:0;
+			left:100px;
+			background:#676767;
+			box-shadow:inset 1px 1px 2px rgba(0,0,0,0.7);
 		}
 	.sliderValue{
 		right:0;
