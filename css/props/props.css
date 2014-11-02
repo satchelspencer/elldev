@@ -135,6 +135,7 @@
 			background:white;
 			top:-5px;
 			bottom:-5px;
+			cursor:col-resize;
 		}
 		.sliderNotch{
 			width:6px;

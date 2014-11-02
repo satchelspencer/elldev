@@ -147,9 +147,9 @@ elex.font = function(dat){
 };
 elex.border = function(dat){
 	var borderStyle = "";
-	if(dat.width) this.css("borderWidth", val2css(dat.width));
+	if(dat.width) this.css("borderWidth", dat.width+"px");
 	if(dat.color) this.css("borderColor", "rgba("+dat.color+")");
-	if(dat.radius) this.css("borderRadius", val2css(dat.radius));
+	if(dat.radius) this.css("borderRadius", dat.radius+"px");
 	if(dat.style && dat.edges){
 		for(var e in dat.edges) this.css("border"+dirs[e]+"Style", dat.edges[e]?dat.style:"none");
 	}

@@ -187,7 +187,7 @@ function uploadHandler(dir){
 function assetListUpload(name){
 	var el = assetListFile(name);
 	el.class("uploadEl");
-	var up = element(false, "div", "icon uploadIcon icon-up");
+	var up = element(false, "div", "icon uploadIcon icon-up-bold");
 	el.insertBefore(up, el.firstChild);
 	var prog = element(false, "div", "uploadProg");
 	el.insertBefore(prog, el.firstChild);

@@ -110,5 +110,20 @@ props.border = {
 	"init" : function(){
 	},
 	"disp" : function(data){
+		$("#borderColor").first().css("background", "rgba("+data.color+")");
+		$("#borderStyle").innerHTML = data.style;
+		log(data.edges);
+		for(var i in data.edges) $("#border"+dirs[i]).first().className = data.edges[i]?"icon icon-ok":"icon";
+		$("#borderWidth").childs(1).innerHTML = data.width+"px";
+		$("#borderWidth").childs(2).first().css("left", ((parseInt(data.width)/100)*240)+"px");
+		$("#borderRadius").childs(1).innerHTML = data.radius+"px";
+		$("#borderRadius").childs(2).first().css("left", ((parseInt(data.radius)/1000)*240)+"px");
+	},
+	"def" : {
+		"color" : "0,0,0,0",
+		"width" : "0",
+		"style" : "none",
+		"radius" : "0",
+		"edges" : [0,0,0,0]
 	}
 };
