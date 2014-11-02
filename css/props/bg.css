@@ -41,6 +41,7 @@
 		height:70px;
 		background:#474747;
 		border:1px solid #777777;
+		background-size:cover;
 	}
 		#backgroundImageIcon{
 			bottom:5px;
@@ -48,10 +49,11 @@
 		}
 		#backgroundImageClear{
 			display:none;
-			top:-5px;
-			right:0px;
+			top:-1px;
+			right:3px;
 			color:red;
 			font-size:20px;
+			cursor:pointer;
 		}
 		
 	#backgroundTiling{

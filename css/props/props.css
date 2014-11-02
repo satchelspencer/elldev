@@ -18,7 +18,7 @@
 	}
 #propertiesList{
 	top:23px;
-	bottom:80px;
+	bottom:0px;
 	left:0;
 	right:0;
 	overflow-y:scroll;
@@ -53,7 +53,7 @@
 	bottom:0;
 	left:0;
 	right:0;
-	height:80px;
+	height:0px;
 	background:#474747;
 	box-shadow:0px -2px 4px rgba(0,0,0,0.5);
 }
@@ -114,7 +114,6 @@
 		left:0;
 		right:0;
 		bottom:0;
-		background:;
 	}
 .slider{
 	width:100%;

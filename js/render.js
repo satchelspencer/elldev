@@ -110,6 +110,9 @@ elex.position = function(dat){
 	}
 	this.css("overflow", dat.overflow=="fit"?"hidden":dat.overflow);
 };
+elex.padding = function(dat){
+	for(var i in dirs) this.css("padding"+dirs[i], dat[i]+"px");
+}
 elex.overflow = function(dat){
 	var ocss = {"expand" : "hidden", "contract" : "hidden"};
 	if(this.data().type == "canvas") for(var z in dat) this.css("overflow"+z, ocss[dat[z]]||dat[z]);

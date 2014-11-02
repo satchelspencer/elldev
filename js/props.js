@@ -75,6 +75,25 @@ props.background = {
 	"init" : function(){
 	},
 	"disp" : function(data){
+		$("#backgroundColor").first().css("background", "rgba("+data.color+")");
+		var repeatcss = {"no-repeat" : ["none","none"], "repeat-y" : ["block","none"], "repeat-x" : ["none","block"], "repeat" : ["block","block"]};
+		$("#tileVertRepeat").css("display", repeatcss[data.repeat][0]);
+		$("#tileHorRepeat").css("display", repeatcss[data.repeat][1]);
+		var clips = data.clip=="true"?50:68;
+		$("#backgroundClipBg").css("width", clips+"px");
+		$("#backgroundClipBg").css("height", clips+"px");
+		$("#backgroundClipBg").css("marginTop", "-"+(clips/2)+"px");
+		$("#backgroundClipBg").css("marginLeft", "-"+(clips/2)+"px");
+		var hasImg = data.hasOwnProperty("image");
+		$("#backgroundImage").css("background", !hasImg?"#474747":"url('../as"+data.image+"')");
+		$("#backgroundImage").css("backgroundSize", "cover");
+		$("#backgroundImageClear").css("display", hasImg?"block":"none");
+	},
+	"def" : {
+		"color" : "0,0,0,0",
+		"repeat" : "no-repeat",
+		"size" : "auto",
+		"clip" : "true"
 	}
 };
 props.font = {
