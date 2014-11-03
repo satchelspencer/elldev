@@ -55,7 +55,7 @@ function setTool(e){
 	$("#canvas").css("cursor", cursors[tool]);
 	for(var i=0;i<tools.length;i++){
 		var d = tools[i].id=="add"? tools[i].childs(0):tools[i];
-		d.css("color", tools[i].id == tool?"#a0a0a0":"#272727")
+		d.css("color", tools[i].id == tool?"#272727":"#a0a0a0");
 	}
 	if(e.el.parent().id == "addOptions"){
 		var o = tEl.childs(1).childs();

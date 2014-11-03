@@ -144,10 +144,10 @@
 		#bgSizeAuto{
 			left:0;
 		}
-		#bgSizeFill{
-			left:230px;
+		#bgSizeFit{
+			right:20px;
 		}
 		#bgSizeCover{
-			left:250px;
+			right:0px;
 		}
 		

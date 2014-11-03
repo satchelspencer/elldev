@@ -88,10 +88,10 @@ props.background = {
 		$("#backgroundImage").css("background", !hasImg?"#474747":"url('../as"+data.image+"')");
 		$("#backgroundImage").css("backgroundSize", "cover");
 		$("#backgroundImageClear").css("display", hasImg?"block":"none");
-		var sizelefts = {"auto" : "2px", "contain" : "232px", "cover" : "252px"};
+		var sizelefts = {"auto" : "2px", "contain" : ($("#bgSizeFit").offsetLeft+2)+"px", "cover" : ($("#bgSizeCover").offsetLeft+2)+"px"};
 		if(sizelefts[data.size]) $("#bgHandle").css("left", sizelefts[data.size]);
-		else $("#bgHandle").css("left", ((parseInt(data.size)*2.19)+6)+"px");
-		$("#bgSizeValue").innerHTML = data.size+(sizelefts[data.size]?"":"%");
+		else $("#bgHandle").css("left", (((parseInt(data.size)/100)*($("#bgSizeFit").offsetLeft-6))+6)+"px");
+		$("#bgSizeValue").innerHTML = data.size=="contain"?"fitted":data.size+(sizelefts[data.size]?"":"%");
 	},
 	"def" : {
 		"color" : "0,0,0,0",
@@ -104,6 +104,42 @@ props.font = {
 	"init" : function(){
 	},
 	"disp" : function(data){
+		data = data||{};
+		for(var x in this.fdef){
+			if(!data.hasOwnProperty(x)){
+				var inhaddr = selectedAddr.slice(0,-1);
+				while(inhaddr.length > 0){
+					var fprop = getData(inhaddr).font||{};
+					if(fprop.hasOwnProperty(x)){
+						data[x] = fprop[x];
+						break;
+					}
+					inhaddr = inhaddr.slice(0,-1);
+				}
+				data[x] = data[x]||this.fdef[x];
+			}
+		}
+		$("#fontFamily").innerHTML = data.family;
+		$("#fontColor").first().css("background", "rgba("+data.color+")");
+		$("#fontAlign").className = "icon icon-align-"+data.align;
+		$("#fontBold").css("color", data.bold=="true"?"#777":"#fff");
+		$("#fontUnderline").css("color", data.underline=="true"?"#777":"#fff");
+		$("#fontItalic").css("color", data.italic=="true"?"#777":"#fff");
+		$("#fontSize").childs(1).innerHTML = data.size+"px";
+		$("#fontSize").childs(2).first().css("left", ((parseInt(data.size)/500)*220)+"px");
+		$("#fontLineHeight").childs(1).innerHTML = data.height=="normal"?"auto":data.height+"px";
+		var lhval = data.height=="normal"?2:(((parseInt(data.height)/100)*204)+6);
+		$("#lineHeightHandle").css("left", lhval+"px");
+	},
+	"fdef" : {
+		"family" : "arial",
+		"size" : "12",
+		"color" : "0,0,0,1",
+		"align" : "left",
+		"bold" : "false",
+		"underline" : "false",
+		"italic" : "false",
+		"height" : "normal"
 	}
 };
 props.border = {
@@ -112,7 +148,6 @@ props.border = {
 	"disp" : function(data){
 		$("#borderColor").first().css("background", "rgba("+data.color+")");
 		$("#borderStyle").innerHTML = data.style;
-		log(data.edges);
 		for(var i in data.edges) $("#border"+dirs[i]).first().className = data.edges[i]?"icon icon-ok":"icon";
 		$("#borderWidth").childs(1).innerHTML = data.width+"px";
 		$("#borderWidth").childs(2).first().css("left", ((parseInt(data.width)/100)*240)+"px");

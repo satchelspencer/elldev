@@ -137,16 +137,15 @@ elex.background = function(dat){
 };
 elex.font = function(dat){
 	if(dat.family) this.css("fontFamily", dat.family);
-	if(dat.size) this.css("fontSize", dat.family);
+	if(dat.size) this.css("fontSize", dat.size+"px");
 	if(dat.color) this.css("color", "rgba("+dat.color+")");
 	if(dat.align) this.css("textAlign", dat.align);
-	if(dat.bold) this.css("fontWeight", dat.bold=="1"?"bold":"normal");
-	if(dat.underline) this.css("textDecoration", dat.underline=="1"?"underline":"none");
-	if(dat.italic) this.css("fontStyle", dat.italic=="1"?"italic":"normal");
-	if(dat.padding) for(var p in dat.padding) this.css("padding"+dirs[p], val2css(dat.padding[p]));
+	if(dat.bold) this.css("fontWeight", dat.bold=="true"?"bold":"normal");
+	if(dat.underline) this.css("textDecoration", dat.underline=="true"?"underline":"none");
+	if(dat.italic) this.css("fontStyle", dat.italic=="true"?"italic":"normal");
+	this.css("lineHeight", dat.height?dat.height+"px":"normal");
 };
 elex.border = function(dat){
-	var borderStyle = "";
 	if(dat.width) this.css("borderWidth", dat.width+"px");
 	if(dat.color) this.css("borderColor", "rgba("+dat.color+")");
 	if(dat.radius) this.css("borderRadius", dat.radius+"px");

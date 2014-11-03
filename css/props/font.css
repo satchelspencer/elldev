@@ -45,3 +45,6 @@
 		#fontLineHeight > .sliderLabel{width:70px;}
 		#fontLineHeight > .sliderArea{left:80px;right:40px;}
 		#fontLineHeight > .sliderValue{width:30px;}
+		#lineHeightAuto{
+			left:0px;
+		}
