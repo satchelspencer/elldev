@@ -8,10 +8,10 @@ window.onload = function(){
 window.onresize = function(){
 	if(($("body").viewHeight < 700 || $("body").viewWidth < 800) && gui) halt("window too small");
 	else unhalt();
-	showSelectOn(getEl(selectedAddr));
+	redrawSelection();
 };
 window.onscroll = function(){
-	showSelectOn(getEl(selectedAddr));
+	redrawSelection();
 }
 function stopEvent(e){
 	e.stop();

@@ -104,9 +104,8 @@ elex.position = function(dat){
 		},0);
 	}else if(parent.type == "sequence"){
 		this.css("position", "relative");
-		this.css("width", "100%");
-		var seqPos = {"top" : "marginTop", "left" : "marginLeft", "bottom" : "marginBottom", "right" : "marginRight", "size" : "height"};
-		for(var d in dat) if(seqPos[d] && dat[d]) this.css(seqPos[d], val2css(dat[d]));
+		var pdprops = {"top" : "marginTop", "left" : "marginLeft", "bottom" : "marginBottom", "right" : "marginRight", "height" : "height"};
+		for(var d in pdprops) this.css(pdprops[d], val2css(dat[d]||"0"));
 	}
 	this.css("overflow", dat.overflow=="fit"?"hidden":dat.overflow);
 };
@@ -114,13 +113,8 @@ elex.padding = function(dat){
 	for(var i in dirs) this.css("padding"+dirs[i], dat[i]+"px");
 }
 elex.overflow = function(dat){
-	var ocss = {"expand" : "hidden", "contract" : "hidden"};
-	if(this.data().type == "canvas") for(var z in dat) this.css("overflow"+z, ocss[dat[z]]||dat[z]);
-	else if(this.data().type == "sequence"){
-		var val = ocss[dat.orient]||dat.orient;
-		this.css("overflowX", dat.orient=="horiz"?val:"hidden");
-		this.css("overflowY", dat.orient=="vert"?val:"hidden");
-	}
+	var ocss = {"expand" : "hidden"};
+	for(var z in dat) this.css("overflow"+z, ocss[dat[z]]||dat[z]);
 }
 elex.background = function(dat){
 	if(dat.color) this.css("backgroundColor", "rgba("+dat.color+")");

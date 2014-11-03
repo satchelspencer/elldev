@@ -92,7 +92,7 @@ function elClick(e){
 	}
 }
 function elScroll(e){
-	showSelectOn(getEl(selectedAddr));
+	if(e.el !== getEl(selectedAddr)) redrawSelection();
 }
 var selectedAddr = false;
 var rootAddr = false;
@@ -184,6 +184,9 @@ function gotoParent(addr){
 			cols[2].css("background", "rgb(60,60,60)");
 		});
 	}
+}
+function redrawSelection(){
+	if(showWireframe) showSelectOn(getEl(selectedAddr));
 }
 function showSelectOn(el){
 	$("#selector").css("display", showWireframe?"block":"none");

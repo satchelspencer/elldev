@@ -6,7 +6,7 @@ function displayProps(addr){
 	openElData = getData(addr);
 	$("#elementTitle").innerHTML = openElData.name;
 	$("#elementType").innerHTML = "("+openElData.type+")";
-	for(var p  in props) props[p].disp(normalizeProps(openElData[p], props[p].def));
+	for(var p  in props) props[p].disp(normalizeProps(openElData[p], defaults[p]));
 }
 function normalizeProps(data, def){
 	if(!def) return data;
@@ -57,10 +57,6 @@ props.overflow = {
 				$("#overflow"+d).childs().css("display", adisp);
 			}
 		}
-	},
-	"def" : {
-		"X" : "hidden",
-		"Y" : "hidden"
 	}
 };
 props.padding = {
@@ -68,8 +64,7 @@ props.padding = {
 	},
 	"disp" : function(data){
 		for(var i in dirs) $("#padding"+dirs[i]).first().innerHTML = data[i]+"px";
-	},
-	"def" : [0,0,0,0]
+	}
 };
 props.background = {
 	"init" : function(){
@@ -92,12 +87,6 @@ props.background = {
 		if(sizelefts[data.size]) $("#bgHandle").css("left", sizelefts[data.size]);
 		else $("#bgHandle").css("left", (((parseInt(data.size)/100)*($("#bgSizeFit").offsetLeft-6))+6)+"px");
 		$("#bgSizeValue").innerHTML = data.size=="contain"?"fitted":data.size+(sizelefts[data.size]?"":"%");
-	},
-	"def" : {
-		"color" : "0,0,0,0",
-		"repeat" : "no-repeat",
-		"size" : "auto",
-		"clip" : "true"
 	}
 };
 props.font = {
@@ -153,12 +142,24 @@ props.border = {
 		$("#borderWidth").childs(2).first().css("left", ((parseInt(data.width)/100)*240)+"px");
 		$("#borderRadius").childs(1).innerHTML = data.radius+"px";
 		$("#borderRadius").childs(2).first().css("left", ((parseInt(data.radius)/1000)*240)+"px");
-	},
-	"def" : {
-		"color" : "0,0,0,0",
-		"width" : "0",
-		"style" : "none",
-		"radius" : "0",
-		"edges" : [0,0,0,0]
 	}
+};
+defaults = {};
+defaults.overflow = {
+	"X" : "hidden",
+	"Y" : "hidden"
+};
+defaults.padding = [0,0,0,0];
+defaults.background = {
+	"color" : "0,0,0,0",
+	"repeat" : "no-repeat",
+	"size" : "auto",
+	"clip" : "true"
+};
+defaults.border = {
+	"color" : "0,0,0,0",
+	"width" : "0",
+	"style" : "none",
+	"radius" : "0",
+	"edges" : [0,0,0,0]
 };
