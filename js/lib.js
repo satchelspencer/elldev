@@ -222,8 +222,8 @@ ext.pos = function(stop){
 	var x = 0, y = 0;
 	var el = this;
 	while(el){
-		x += el.offsetLeft - el.offsetParent.scrollLeft + (el.offsetParent?extEl(el.offsetParent).cssn("border-left-width"):0);
-		y += el.offsetTop - el.offsetParent.scrollTop + (el.offsetParent?extEl(el.offsetParent).cssn("border-top-width"):0);
+		x += el.offsetLeft - (el.offsetParent?el.offsetParent.scrollLeft:0) + (el.offsetParent?extEl(el.offsetParent).cssn("border-left-width"):0);
+		y += el.offsetTop - (el.offsetParent?el.offsetParent.scrollTop:0) + (el.offsetParent?extEl(el.offsetParent).cssn("border-top-width"):0);
 		if(el == stop) break;
 		el = el.offsetParent;
 	}

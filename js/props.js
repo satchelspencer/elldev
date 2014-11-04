@@ -21,8 +21,8 @@ props.position = {
 	"disp" : function(data){
 		var mdirs = ["top", "left", "bottom", "right"];
 		for(var i in mdirs){
-			if(data.hasOwnProperty(mdirs[i])){
-				$("#box"+mdirs[i]).first().innerHTML = val2css(data[mdirs[i]]);
+			if(data.hasOwnProperty(mdirs[i]) || getEl(selectedAddr).parent().data().type == "sequence"){
+				$("#box"+mdirs[i]).first().innerHTML = val2css(data[mdirs[i]]||"0");
 				$("#box"+mdirs[i]).className = "";
 			}else{
 				$("#box"+mdirs[i]).first().innerHTML = "";

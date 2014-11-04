@@ -106,6 +106,13 @@ elex.position = function(dat){
 		this.css("position", "relative");
 		var pdprops = {"top" : "marginTop", "left" : "marginLeft", "bottom" : "marginBottom", "right" : "marginRight", "height" : "height"};
 		for(var d in pdprops) this.css(pdprops[d], val2css(dat[d]||"0"));
+		var el = this;
+		setTimeout(function(){
+			var overflow = parent.overflow;
+			var elh = el.offsetTop+el.cssn("height")+el.cssn("margin-bottom");
+			var bound = parent.position.hasOwnProperty("top") && parent.position.hasOwnProperty("bottom");
+			if(!bound && elh > el.parent().cssn("height")) el.parent().set("position.height", String(elh));
+		},0);
 	}
 	this.css("overflow", dat.overflow=="fit"?"hidden":dat.overflow);
 };
