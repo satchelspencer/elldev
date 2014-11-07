@@ -1,6 +1,7 @@
 function propsInit(){
 	for(var p  in props) if(props[p].init) props[p].init();
 }
+var mdirs = ["top", "left", "bottom", "right"];
 var openElData = false;
 function displayProps(addr){
 	openElData = getData(addr);
@@ -8,21 +9,47 @@ function displayProps(addr){
 	$("#elementType").innerHTML = "("+openElData.type+")";
 	for(var p  in props) props[p].disp(normalizeProps(openElData[p], defaults[p]));
 }
-function normalizeProps(data, def){
-	if(!def) return data;
-	var r = data||{};
+function normalizeProps(data, defn){
+	if(!defn) return data;
+	var def = defn();
+	var r = {};
+	if(data) for(var i in data) r[i] = data[i];
 	for(var d in def) r[d] = r[d]||def[d];
 	return r;
 }
 var props = {};
 props.position = {
 	"init" : function(){
+		for(var i in mdirs){
+			(function(i){
+				$("#box"+mdirs[i]).event("click", function(e){
+					if(!e.e.shiftKey && $("#box"+mdirs[i]).className != "positionDisabled"){
+						var field = $("#box"+mdirs[i]).first();
+						field.attr("contenteditable", "true");
+						field.focus();
+						field.prevval = field.innerHTML;
+						document.execCommand('selectAll',false,null);
+						field.event("keyup", function(ev){
+							field.css("color", validPosition(field.innerHTML)?"#a0a0a0":"red");
+						});
+						field.event("keydown", function(ev){
+							if(ev.code == 13){
+								ev.e.preventDefault();
+								setPosition(ev, true);
+								return false;
+							}
+						});
+						field.event("blur", setPosition);
+					}
+				});
+				$("#box"+mdirs[i]).first().prop = mdirs[i];
+			})(i);
+		}
 	},
 	"disp" : function(data){
-		var mdirs = ["top", "left", "bottom", "right"];
 		for(var i in mdirs){
 			if(data.hasOwnProperty(mdirs[i]) || getEl(selectedAddr).parent().data().type == "sequence"){
-				$("#box"+mdirs[i]).first().innerHTML = val2css(data[mdirs[i]]||"0");
+				$("#box"+mdirs[i]).first().innerHTML = data[mdirs[i]]||"0";
 				$("#box"+mdirs[i]).className = "";
 			}else{
 				$("#box"+mdirs[i]).first().innerHTML = "";
@@ -36,6 +63,22 @@ props.position = {
 		$("#orderSuffix").innerHTML = k>10&&k<20?"th":k%10==1?"st":k%10==2?"nd":k%10==3?"rd":"th"; 
 	}
 };
+function setPosition(e, noblur){
+	var val = e.el.innerHTML;
+	if(validPosition(val, e.el.prop)){
+		log(e.el.prop+" - "+val);
+		getEl(selectedAddr).set("position", e.el.prop, val);
+		if(noblur == undefined) e.el.attr("contenteditable", "false");
+	}else{
+		e.el.css("color", "#a0a0a0");
+		e.el.innerHTML = e.el.prevval;
+		if(noblur !== undefined) document.execCommand('selectAll',false,null);
+		else e.el.attr("contenteditable", "false");
+	}
+}
+function validPosition(val, type){
+	return val.match(/^\d+$/i) != null;
+}
 props.overflow = {
 	"init" : function(){
 	},
@@ -70,6 +113,7 @@ props.background = {
 	"init" : function(){
 	},
 	"disp" : function(data){
+		log(data);
 		$("#backgroundColor").first().css("background", "rgba("+data.color+")");
 		var repeatcss = {"no-repeat" : ["none","none"], "repeat-y" : ["block","none"], "repeat-x" : ["none","block"], "repeat" : ["block","block"]};
 		$("#tileVertRepeat").css("display", repeatcss[data.repeat][0]);
@@ -93,31 +137,32 @@ props.font = {
 	"init" : function(){
 	},
 	"disp" : function(data){
-		data = data||{};
+		tdata = {};
+		for(var i in data) tdata[i] = data[i];
 		for(var x in this.fdef){
-			if(!data.hasOwnProperty(x)){
+			if(!tdata.hasOwnProperty(x)){
 				var inhaddr = selectedAddr.slice(0,-1);
 				while(inhaddr.length > 0){
-					var fprop = getData(inhaddr).font||{};
+					var fprop = gettdata(inhaddr).font||{};
 					if(fprop.hasOwnProperty(x)){
-						data[x] = fprop[x];
+						tdata[x] = fprop[x];
 						break;
 					}
 					inhaddr = inhaddr.slice(0,-1);
 				}
-				data[x] = data[x]||this.fdef[x];
+				tdata[x] = tdata[x]||this.fdef[x];
 			}
 		}
-		$("#fontFamily").innerHTML = data.family;
-		$("#fontColor").first().css("background", "rgba("+data.color+")");
-		$("#fontAlign").className = "icon icon-align-"+data.align;
-		$("#fontBold").css("color", data.bold=="true"?"#777":"#fff");
-		$("#fontUnderline").css("color", data.underline=="true"?"#777":"#fff");
-		$("#fontItalic").css("color", data.italic=="true"?"#777":"#fff");
-		$("#fontSize").childs(1).innerHTML = data.size+"px";
-		$("#fontSize").childs(2).first().css("left", ((parseInt(data.size)/500)*220)+"px");
-		$("#fontLineHeight").childs(1).innerHTML = data.height=="normal"?"auto":data.height+"px";
-		var lhval = data.height=="normal"?2:(((parseInt(data.height)/100)*204)+6);
+		$("#fontFamily").innerHTML = tdata.family;
+		$("#fontColor").first().css("background", "rgba("+tdata.color+")");
+		$("#fontAlign").className = "icon icon-align-"+tdata.align;
+		$("#fontBold").css("color", tdata.bold=="true"?"#777":"#fff");
+		$("#fontUnderline").css("color", tdata.underline=="true"?"#777":"#fff");
+		$("#fontItalic").css("color", tdata.italic=="true"?"#777":"#fff");
+		$("#fontSize").childs(1).innerHTML = tdata.size+"px";
+		$("#fontSize").childs(2).first().css("left", ((parseInt(tdata.size)/500)*220)+"px");
+		$("#fontLineHeight").childs(1).innerHTML = tdata.height=="normal"?"auto":tdata.height+"px";
+		var lhval = tdata.height=="normal"?2:(((parseInt(tdata.height)/100)*204)+6);
 		$("#lineHeightHandle").css("left", lhval+"px");
 	},
 	"fdef" : {
@@ -145,21 +190,41 @@ props.border = {
 	}
 };
 defaults = {};
-defaults.overflow = {
-	"X" : "hidden",
-	"Y" : "hidden"
+defaults.overflow = function(){
+	return {
+		"X" : "hidden",
+		"Y" : "hidden"
+	};
 };
-defaults.padding = [0,0,0,0];
-defaults.background = {
-	"color" : "0,0,0,0",
-	"repeat" : "no-repeat",
-	"size" : "auto",
-	"clip" : "true"
+defaults.padding = function(){
+	return [0,0,0,0];
 };
-defaults.border = {
-	"color" : "0,0,0,0",
-	"width" : "0",
-	"style" : "none",
-	"radius" : "0",
-	"edges" : [0,0,0,0]
+defaults.background = function(){
+	return {
+		"color" : "0,0,0,0",
+		"repeat" : "no-repeat",
+		"size" : "auto",
+		"clip" : "true"
+	};
+};
+defaults.font = function(){
+	return {
+		"family" : "arial",
+		"size" : "12",
+		"color" : "0,0,0,1",
+		"align" : "left",
+		"bold" : "false",
+		"underline" : "false",
+		"italic" : "false",
+		"height" : "normal"
+	};
+}
+defaults.border = function(){
+	return {
+		"color" : "0,0,0,0",
+		"width" : "0",
+		"style" : "none",
+		"radius" : "0",
+		"edges" : [0,0,0,0]
+	};
 };

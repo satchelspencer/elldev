@@ -197,7 +197,7 @@
 } 
 .vlabel,.hlabel{
 	background:#373737;
-	color:#777777;
+	color:#a0a0a0;
 }
 .hlabel{
 	-webkit-transform:rotate(90deg);

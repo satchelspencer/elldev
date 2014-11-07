@@ -64,15 +64,23 @@ elex.setAddr = function(addr){
 		cs[i].setAddr(addr.concat(String(i)));
 	}
 };
-elex.set = function(propTree, val){
-	propTree = propTree.split(".");
+elex.set = function(type, prop, val){
 	var dat = this.data();
-	var prop = dat;
-	for(var p=0;p<propTree.length-1;p++) prop = prop[propTree[p]];
-	if(val) prop[propTree[p]] = val;
-	else delete prop[propTree[p]];
-	this.disp(propTree[0], dat[propTree[0]]);
-};
+	dat[type] = dat[type]||{};
+	if(!defaults[type]) dat[type][prop] = val;
+	else{
+		var def = defaults[type]();
+		if(def[prop] == val){
+			log(val);
+			delete dat[type][prop];
+			var empty = true;
+			for(var i in dat[type]) empty = false;
+			if(empty) delete dat[type];
+		}else dat[type][prop] = val;
+	}
+	this.disp(type, dat[type]);
+	redrawSelection();
+}
 elex.disp = function(prop, val){
 	if(this[prop]) this[prop].call(this, val);
 };
@@ -80,6 +88,7 @@ elex.position = function(dat){
 	var parent = this.parent().data();
 	if(parent.type == "canvas"){
 		for(var d in dat) this.css(d, val2css(dat[d]));
+		log(dat);
 		if(!dat.hasOwnProperty("top") && !dat.hasOwnProperty("bottom")){
 			this.css("top", "50%");
 			this.css("marginTop", "-"+(val2int(dat.height)/2)+valunit(dat.height));
@@ -98,7 +107,7 @@ elex.position = function(dat){
 					var offsetrb = offsetlt+el.cssn(wh)-el.parent().cssn(wh);
 					sizeOffset = (offsetlt<0?Math.abs(offsetlt):0)+offsetrb;
 					var bound = parent.position.hasOwnProperty(z=="X"?"left":"top") && parent.position.hasOwnProperty(z=="X"?"right":"bottom");
-					if(sizeOffset > 0 && !bound) el.parent().set("position."+(wh), (val2int(parent.position[wh])+sizeOffset)+valunit(parent.position[wh]));
+					if(sizeOffset > 0 && !bound) el.parent().set("position", wh, (val2int(parent.position[wh])+sizeOffset)+valunit(parent.position[wh]));
 				}
 			}
 		},0);
@@ -111,7 +120,7 @@ elex.position = function(dat){
 			var overflow = parent.overflow;
 			var elh = el.offsetTop+el.cssn("height")+el.cssn("margin-bottom");
 			var bound = parent.position.hasOwnProperty("top") && parent.position.hasOwnProperty("bottom");
-			if(!bound && elh > el.parent().cssn("height")) el.parent().set("position.height", String(elh));
+			if(!bound && elh > el.parent().cssn("height")) el.parent().set("position", "height", String(elh));
 		},0);
 	}
 	this.css("overflow", dat.overflow=="fit"?"hidden":dat.overflow);
