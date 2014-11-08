@@ -332,7 +332,33 @@ function elementEl(data, addr, parent, sel){
 	return el;
 }
 function selectorDrag(e){
-	log(e);
+	var seld = getData(selectedAddr);
+	var selel = getEl(selectedAddr);
+	var dirsProps = {"n":"top","e":"right","s":"bottom","w":"left"};
+	var dirsSizes = {"top" : "height", "bottom" : "height", "left" : "width", "right" : "width"};
+	var dirsSigns = {"top" : -1, "bottom" : 1, "left" : -1, "right" : 1};
+	var dir = e.el.id.replace("drag", "");
+	toSet = {};
+	for(var c in dir){
+		var hasDir = seld.position.hasOwnProperty(dirsProps[dir[c]]);
+		var prop = hasDir?dirsProps[dir[c]]:dirsSizes[dirsProps[dir[c]]];
+		toSet[prop] = {};
+		toSet[prop].sign = dirsSigns[dirsProps[dir[c]]];
+		if(prop == "height" || prop == "width") toSet[prop].sign *= -1;
+		toSet[prop].dir = dirsSizes[dirsProps[dir[c]]]=="width"?"x":"y";
+		toSet[prop].init = val2int(seld.position[prop]);
+	}
+	log(toSet);
+	$("body").event("mousemove", function(me){
+		for(var i in toSet){
+			var delt = (e[toSet[i].dir]-me[toSet[i].dir])*toSet[i].sign;
+			selel.set("position", i, String(toSet[i].init+delt));
+		}
+	});
+	$("body").event("mouseup", function(){
+		$("body").rmEvent("mousemove");
+		$("body").rmEvent("mouseup");
+	});
 }
 function getData(addr){
 	var r = openData;
