@@ -8,11 +8,12 @@ var sendingEditData = false;
 function editInit(){
 	editPage("/");
 	$("#workspace").kevent(function(e){
-		if(e.code == 72) gui?hideGui():showGui();
+		if(e.code == 72) setTool({"el" : $("#select"), "e" : {"shiftKey" : "true"}});
 		else if(e.code == 65) setTool({"el" : $("#select")});
 		else if(e.code == 66) setTool({"el" : $("#add")});
 	});
 	$("#tools").event("click", setTool);
+	$(".selectorDrag").event("mousedown", selectorDrag);
 }
 function editPage(e){
 	var path;
@@ -48,7 +49,7 @@ function setTool(e){
 	tool = tEl.id;
 	if(tool == "select" && e.e && e.e.shiftKey){
 		showWireframe = !showWireframe;
-		$("#wireframe").className = "icon icon-eye"+(showWireframe?"":"-off");
+		$("#wireframe").className = "icon "+(showWireframe?"icon-move":"icon-eye");
 		$("#selector").css("display", showWireframe?"block":"none");
 	}
 	var cursors = {"select" : "default", "add" : "crosshair"};
@@ -202,7 +203,7 @@ function showSelectOn(el){
 			$("#selector"+i).css(selcss[i][0], val2css(spos[i]));
 			$("#selector"+i).css(selcss[i][1], "-"+val2css(spos[i]));
 		}else $("#selector"+i).css("display", "none");
-	}
+	}	
 }
 function insertEls(els, into, parent, selAddr){
 	into.clear();
@@ -329,6 +330,9 @@ function elementEl(data, addr, parent, sel){
 	});
 	if(sel) el.select();
 	return el;
+}
+function selectorDrag(e){
+	log(e);
 }
 function getData(addr){
 	var r = openData;

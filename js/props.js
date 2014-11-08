@@ -7,11 +7,11 @@ function displayProps(addr){
 	openElData = getData(addr);
 	$("#elementTitle").innerHTML = openElData.name;
 	$("#elementType").innerHTML = "("+openElData.type+")";
-	for(var p  in props) props[p].disp(normalizeProps(openElData[p], defaults[p]));
+	for(var p  in props) props[p].disp(normalizeProps(openElData[p], defaults[p], addr));
 }
-function normalizeProps(data, defn){
+function normalizeProps(data, defn, addr){
 	if(!defn) return data;
-	var def = defn();
+	var def = defn(addr);
 	var r = {};
 	if(data) for(var i in data) r[i] = data[i];
 	for(var d in def) r[d] = r[d]||def[d];
@@ -66,7 +66,6 @@ props.position = {
 function setPosition(e, noblur){
 	var val = e.el.innerHTML;
 	if(validPosition(val, e.el.prop)){
-		log(e.el.prop+" - "+val);
 		getEl(selectedAddr).set("position", e.el.prop, val);
 		if(noblur == undefined) e.el.attr("contenteditable", "false");
 	}else{
@@ -113,7 +112,6 @@ props.background = {
 	"init" : function(){
 	},
 	"disp" : function(data){
-		log(data);
 		$("#backgroundColor").first().css("background", "rgba("+data.color+")");
 		var repeatcss = {"no-repeat" : ["none","none"], "repeat-y" : ["block","none"], "repeat-x" : ["none","block"], "repeat" : ["block","block"]};
 		$("#tileVertRepeat").css("display", repeatcss[data.repeat][0]);
@@ -137,32 +135,16 @@ props.font = {
 	"init" : function(){
 	},
 	"disp" : function(data){
-		tdata = {};
-		for(var i in data) tdata[i] = data[i];
-		for(var x in this.fdef){
-			if(!tdata.hasOwnProperty(x)){
-				var inhaddr = selectedAddr.slice(0,-1);
-				while(inhaddr.length > 0){
-					var fprop = gettdata(inhaddr).font||{};
-					if(fprop.hasOwnProperty(x)){
-						tdata[x] = fprop[x];
-						break;
-					}
-					inhaddr = inhaddr.slice(0,-1);
-				}
-				tdata[x] = tdata[x]||this.fdef[x];
-			}
-		}
-		$("#fontFamily").innerHTML = tdata.family;
-		$("#fontColor").first().css("background", "rgba("+tdata.color+")");
-		$("#fontAlign").className = "icon icon-align-"+tdata.align;
-		$("#fontBold").css("color", tdata.bold=="true"?"#777":"#fff");
-		$("#fontUnderline").css("color", tdata.underline=="true"?"#777":"#fff");
-		$("#fontItalic").css("color", tdata.italic=="true"?"#777":"#fff");
-		$("#fontSize").childs(1).innerHTML = tdata.size+"px";
-		$("#fontSize").childs(2).first().css("left", ((parseInt(tdata.size)/500)*220)+"px");
-		$("#fontLineHeight").childs(1).innerHTML = tdata.height=="normal"?"auto":tdata.height+"px";
-		var lhval = tdata.height=="normal"?2:(((parseInt(tdata.height)/100)*204)+6);
+		$("#fontFamily").innerHTML = data.family;
+		$("#fontColor").first().css("background", "rgba("+data.color+")");
+		$("#fontAlign").className = "icon icon-align-"+data.align;
+		$("#fontBold").css("color", data.bold=="true"?"#777":"#fff");
+		$("#fontUnderline").css("color", data.underline=="true"?"#777":"#fff");
+		$("#fontItalic").css("color", data.italic=="true"?"#777":"#fff");
+		$("#fontSize").childs(1).innerHTML = data.size+"px";
+		$("#fontSize").childs(2).first().css("left", ((parseInt(data.size)/500)*220)+"px");
+		$("#fontLineHeight").childs(1).innerHTML = data.height=="normal"?"auto":data.height+"px";
+		var lhval = data.height=="normal"?2:(((parseInt(data.height)/100)*204)+6);
 		$("#lineHeightHandle").css("left", lhval+"px");
 	},
 	"fdef" : {
@@ -207,8 +189,8 @@ defaults.background = function(){
 		"clip" : "true"
 	};
 };
-defaults.font = function(){
-	return {
+defaults.font = function(addr){
+	var def = {
 		"family" : "arial",
 		"size" : "12",
 		"color" : "0,0,0,1",
@@ -218,6 +200,18 @@ defaults.font = function(){
 		"italic" : "false",
 		"height" : "normal"
 	};
+	for(var x in def){
+		var a = addr;
+		while(a.length > 0){
+			var fprop = getData(a).font||{};
+			if(fprop.hasOwnProperty(x)){
+				def[x] = fprop[x];
+				break;
+			}
+			a = a.slice(0,-1);
+		}
+	}
+	return def;
 }
 defaults.border = function(){
 	return {

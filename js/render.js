@@ -69,9 +69,8 @@ elex.set = function(type, prop, val){
 	dat[type] = dat[type]||{};
 	if(!defaults[type]) dat[type][prop] = val;
 	else{
-		var def = defaults[type]();
+		var def = defaults[type](this.addr);
 		if(def[prop] == val){
-			log(val);
 			delete dat[type][prop];
 			var empty = true;
 			for(var i in dat[type]) empty = false;
@@ -88,7 +87,6 @@ elex.position = function(dat){
 	var parent = this.parent().data();
 	if(parent.type == "canvas"){
 		for(var d in dat) this.css(d, val2css(dat[d]));
-		log(dat);
 		if(!dat.hasOwnProperty("top") && !dat.hasOwnProperty("bottom")){
 			this.css("top", "50%");
 			this.css("marginTop", "-"+(val2int(dat.height)/2)+valunit(dat.height));
