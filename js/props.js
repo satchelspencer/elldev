@@ -26,24 +26,13 @@ props.position = {
 			(function(i){
 				$("#box"+mdirs[i]).event("click", function(e){
 					if(!e.e.shiftKey && $("#box"+mdirs[i]).className != "positionDisabled"){
-						var field = $("#box"+mdirs[i]).first().first();
-						field.attr("contenteditable", "true");
-						field.focus();
-						document.execCommand('selectAll',false,null);
-						field.event("keyup", function(ev){
-							field.css("color", validPosition(field.innerHTML)?"#a0a0a0":"red");
+						fieldClicked($("#box"+mdirs[i]).first().first(), validPosition, "#a0a0a0", function(val){
+							getEl(selectedAddr).set("position", mdirs[i], val);
+						}, function(){
+							return getData(selectedAddr).position[mdirs[i]];
 						});
-						field.event("keydown", function(ev){
-							if(ev.code == 13){
-								ev.e.preventDefault();
-								setPosition(ev, true);
-								return false;
-							}
-						});
-						field.event("blur", setPosition);
 					}
 				});
-				$("#box"+mdirs[i]).first().first().prop = mdirs[i];
 			})(i);
 		}
 		var whels = ["boxWidthLabel", "boxHeightLabel"];
@@ -52,24 +41,13 @@ props.position = {
 			(function(i){
 				$("#"+whels[i]).event("click", function(e){
 					if(!e.e.shiftKey && $("#"+whels[i]).first().innerHTML != "auto"){
-						var field = $("#"+whels[i]).first();
-						field.attr("contenteditable", "true");
-						field.focus();
-						document.execCommand('selectAll',false,null);
-						field.event("keyup", function(ev){
-							field.css("color", validSize(field.innerHTML)?"#fff":"red");
+						fieldClicked($("#"+whels[i]).first(), validSize, "#fff", function(val){
+							getEl(selectedAddr).set("position", wprops[i], val);
+						}, function(){
+							return getData(selectedAddr).position[wprops[i]];
 						});
-						field.event("keydown", function(ev){
-							if(ev.code == 13){
-								ev.e.preventDefault();
-								setSize(ev, true);
-								return false;
-							}
-						});
-						field.event("blur", setSize);
 					}
 				});
-				$("#"+whels[i]).first().prop = wprops[i];
 			})(i);
 		}
 	},
@@ -96,32 +74,36 @@ props.position = {
 		$("#orderSuffix").innerHTML = k>10&&k<20?"th":k%10==1?"st":k%10==2?"nd":k%10==3?"rd":"th"; 
 	}
 };
-function setPosition(e, noblur){
-	var val = e.el.innerHTML;
-	if(validPosition(val, e.el.prop)){
-		getEl(selectedAddr).set("position", e.el.prop, val);
-		if(noblur == undefined) e.el.attr("contenteditable", "false");
-	}else{
-		e.el.css("color", "#a0a0a0");
-		e.el.innerHTML = getData(selectedAddr).position[e.el.prop];
-		if(noblur !== undefined) document.execCommand('selectAll',false,null);
-		else e.el.attr("contenteditable", "false");
-	}
+function fieldClicked(field, test, vcolor, set, getRevert){
+	var finish = function(e, noblur){
+		var val = e.el.innerHTML;
+		if(test(val)){
+			set(val);
+			if(noblur == undefined) e.el.attr("contenteditable", "false");
+		}else{
+			e.el.css("color", vcolor);
+			e.el.innerHTML = getRevert();
+			if(noblur !== undefined) document.execCommand('selectAll',false,null);
+			else e.el.attr("contenteditable", "false");
+		}
+	};
+	field.attr("contenteditable", "true");
+	field.focus();
+	document.execCommand('selectAll',false,null);
+	field.event("keyup", function(ev){
+		field.css("color", test(field.innerHTML)?vcolor:"red");
+	});
+	field.event("keydown", function(ev){
+		if(ev.code == 13){
+			ev.e.preventDefault();
+			finish(ev, true);
+			return false;
+		}
+	});
+	field.event("blur", finish);
 }
-function validPosition(val, type){
+function validPosition(val){
 	return val.match(/^-?\d+$/i) != null;
-}
-function setSize(e, noblur){
-	var val = e.el.innerHTML;
-	if(validPosition(val, e.el.prop)){
-		getEl(selectedAddr).set("position", e.el.prop, val);
-		if(noblur == undefined) e.el.attr("contenteditable", "false");
-	}else{
-		e.el.css("color", "#fff");
-		e.el.innerHTML = getData(selectedAddr).position[e.el.prop];
-		if(noblur !== undefined) document.execCommand('selectAll',false,null);
-		else e.el.attr("contenteditable", "false");
-	}
 }
 function validSize(val, type){
 	return val.match(/^\d+$/i) != null;
