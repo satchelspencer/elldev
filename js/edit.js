@@ -14,6 +14,15 @@ function editInit(){
 	});
 	$("#tools").event("click", setTool);
 	$(".selectorDrag").event("mousedown", selectorDrag);
+	$("#selectorcenter").event("mousedown", selectorCenterDrag);
+	$("#selectorcenter").event("mouseover", function(){
+		$("#selectorcenter").css("opacity", "1");
+		$("#selectorcenter").css("background", "rgba(100,100,100,0.5)");
+	});
+	$("#selectorcenter").event("mouseout", function(){
+		$("#selectorcenter").css("opacity", "0.5");
+		$("#selectorcenter").css("background", "none");
+	});
 }
 function editPage(e){
 	var path;
@@ -218,6 +227,7 @@ function showSelectOn(el){
 			for(var k in toHide) $("#drag"+toHide[k]).css("display", "none");
 		}
 	}	
+	$("#selectorcenter").css("display", el.parent().data().type=="sequence"?"none":"block");
 }
 function insertEls(els, into, parent, selAddr){
 	into.clear();
@@ -368,6 +378,34 @@ function selectorDrag(e){
 		for(var i in toSet){
 			var delt = (e[toSet[i].dir]-me[toSet[i].dir])*toSet[i].sign;
 			selel.showset("position", i, String(toSet[i].init+delt));
+		}
+	});
+	$("body").event("mouseup", function(){
+		$("body").rmClass("unselectable");
+		$("body").rmEvent("mousemove");
+		$("body").rmEvent("mouseup");
+	});
+}
+function selectorCenterDrag(e){
+	$("body").class("unselectable");
+	var seld = getData(selectedAddr);
+	var selel = getEl(selectedAddr);
+	var props = ["left", "right", "top", "bottom"];
+	var dirsSigns = {"top" : -1, "bottom" : 1, "left" : -1, "right" : 1};
+	var propsDirs = {"left" : "x", "right" : "x", "top" : "y", "bottom" : "y"};
+	var toSet = [];
+	var inits = {};
+	for(var i in props){
+		if(seld.position.hasOwnProperty(props[i])){
+			toSet.push(props[i]);
+			inits[props[i]] = val2int(seld.position[props[i]]);
+		}
+	}
+	$("body").event("mousemove", function(me){
+		for(var i in toSet){
+			var prop = toSet[i];
+			var delt = (e[propsDirs[prop]]-me[propsDirs[prop]])*dirsSigns[prop];
+			selel.showset("position", prop, String(inits[prop]+delt));
 		}
 	});
 	$("body").event("mouseup", function(){

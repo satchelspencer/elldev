@@ -66,6 +66,7 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 			height:1px;
 			border-top:1px solid white;
 			border-left:1px solid white;
+			opacity:0.3;
 		}
 		.anchor div{
 			top:-1px;
@@ -74,6 +75,27 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 			bottom:-1px;
 			border-top:1px dashed black;
 			border-left:1px dashed black;
+		}
+		#selectorcenter{
+			top:50%;
+			left:50%;
+			margin-top:-8px;
+			margin-left:-8px;
+			height:16px;
+			width:16px;
+			border-radius:8px;
+			border:1px solid white;
+			cursor:move;
+			pointer-events:all;
+			opacity:0.5;
+		}
+		#selectorcenter div{
+			top:-1px;
+			left:-1px;
+			height:16px;
+			width:16px;
+			border-radius:8px;
+			border:1px dashed black;
 		}
 		#selectortop{
 			left:50%;
