@@ -46,6 +46,9 @@ div{position:absolute;-moz-box-sizing: border-box; -webkit-box-sizing: border-bo
 		overflow:scroll;
 		cursor:default;
 	}
+		#canvas div{
+			overflow:hidden;
+		}
 	#selector{
 		display:none;
 		pointer-events:none;

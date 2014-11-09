@@ -1,5 +1,7 @@
 function propsInit(){
-	for(var p  in props) if(props[p].init) props[p].init();
+	for(var p  in props){
+		if(props[p].init) props[p].init();
+	}
 }
 var mdirs = ["top", "left", "bottom", "right"];
 var openElData = false;

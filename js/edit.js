@@ -203,6 +203,20 @@ function showSelectOn(el){
 			$("#selector"+i).css(selcss[i][0], val2css(spos[i]));
 			$("#selector"+i).css(selcss[i][1], "-"+val2css(spos[i]));
 		}else $("#selector"+i).css("display", "none");
+	}
+	$(".selectorDrag").css("display", "block");
+	var hideOnExpand = {"top" : ["n", "nw", "ne"], "bottom" : ["s", "sw", "se"], "left" : ["w", "nw", "sw"], "right" : ["e", "ne", "se"]};
+	var overflow = el.data().overflow;
+	var expandPos = {"X" : ["left", "right"], "Y" : ["top", "bottom"]}
+	for(var o in overflow){
+		if(overflow[o] == "expand"){
+			var pos = expandPos[o];
+			var toHide = [];
+			for(var i in pos){
+				if(!el.data().position.hasOwnProperty(pos[i])) toHide = toHide.concat(hideOnExpand[pos[i]]);
+			}
+			for(var k in toHide) $("#drag"+toHide[k]).css("display", "none");
+		}
 	}	
 }
 function insertEls(els, into, parent, selAddr){
@@ -332,6 +346,7 @@ function elementEl(data, addr, parent, sel){
 	return el;
 }
 function selectorDrag(e){
+	$("body").class("unselectable");
 	var seld = getData(selectedAddr);
 	var selel = getEl(selectedAddr);
 	var dirsProps = {"n":"top","e":"right","s":"bottom","w":"left"};
@@ -342,20 +357,21 @@ function selectorDrag(e){
 	for(var c in dir){
 		var hasDir = seld.position.hasOwnProperty(dirsProps[dir[c]]);
 		var prop = hasDir?dirsProps[dir[c]]:dirsSizes[dirsProps[dir[c]]];
+		if(selel.parent().data().type == "sequence" && prop == "bottom") prop = "height";
 		toSet[prop] = {};
 		toSet[prop].sign = dirsSigns[dirsProps[dir[c]]];
 		if(prop == "height" || prop == "width") toSet[prop].sign *= -1;
 		toSet[prop].dir = dirsSizes[dirsProps[dir[c]]]=="width"?"x":"y";
 		toSet[prop].init = val2int(seld.position[prop]);
 	}
-	log(toSet);
 	$("body").event("mousemove", function(me){
 		for(var i in toSet){
 			var delt = (e[toSet[i].dir]-me[toSet[i].dir])*toSet[i].sign;
-			selel.set("position", i, String(toSet[i].init+delt));
+			selel.showset("position", i, String(toSet[i].init+delt));
 		}
 	});
 	$("body").event("mouseup", function(){
+		$("body").rmClass("unselectable");
 		$("body").rmEvent("mousemove");
 		$("body").rmEvent("mouseup");
 	});

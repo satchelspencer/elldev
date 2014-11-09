@@ -23,10 +23,10 @@ function extcEl(el){
 	return el;
 }
 function val2int(s){
-	return parseInt(s.replace(/(\d+)\D?/, '$1'));
+	return parseInt(s.replace(/(-?\d+)\D?/, '$1'));
 }
 function valunit(s){
-	return s.replace(/\d+(\D?)/, '$1')||"px";
+	return s.replace(/-?\d+(\D?)/, '$1')||"px";
 }
 function val2css(s){
 	return val2int(s)+valunit(s);
@@ -79,6 +79,11 @@ elex.set = function(type, prop, val){
 	}
 	this.disp(type, dat[type]);
 	redrawSelection();
+	return dat[type];
+}
+elex.showset = function(type, prop, val){
+	this.set(type, prop, val);
+	displayProps(selectedAddr);
 }
 elex.disp = function(prop, val){
 	if(this[prop]) this[prop].call(this, val);
@@ -113,7 +118,7 @@ elex.position = function(dat){
 		this.css("position", "relative");
 		var pdprops = {"top" : "marginTop", "left" : "marginLeft", "bottom" : "marginBottom", "right" : "marginRight", "height" : "height"};
 		for(var d in pdprops) this.css(pdprops[d], val2css(dat[d]||"0"));
-		var el = this;
+		var el = this.parent().last();
 		setTimeout(function(){
 			if(parent.overflow.Y == "expand"){
 				var elh = el.offsetTop+el.cssn("height")+el.cssn("margin-bottom");
@@ -122,12 +127,12 @@ elex.position = function(dat){
 			}
 		},0);
 	}
-	this.css("overflow", dat.overflow=="fit"?"hidden":dat.overflow);
 };
 elex.padding = function(dat){
 	for(var i in dirs) this.css("padding"+dirs[i], dat[i]+"px");
 }
 elex.overflow = function(dat){
+	dat = dat||defaults.overflow();
 	var ocss = {"expand" : "hidden"};
 	for(var z in dat) this.css("overflow"+z, ocss[dat[z]]||dat[z]);
 }
