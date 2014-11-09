@@ -110,7 +110,7 @@ elex.position = function(dat){
 					var offsetrb = offsetlt+el.cssn(wh)-el.parent().cssn(wh);
 					sizeOffset = (offsetlt<0?Math.abs(offsetlt):0)+offsetrb;
 					var bound = parent.position.hasOwnProperty(z=="X"?"left":"top") && parent.position.hasOwnProperty(z=="X"?"right":"bottom");
-					if(sizeOffset > 0 && !bound) el.parent().set("position", wh, (val2int(parent.position[wh])+sizeOffset)+valunit(parent.position[wh]));
+					if(sizeOffset > 0 && !bound) el.parent().set("position", wh, String(val2int(parent.position[wh])+sizeOffset));
 				}
 			}
 		},0);
