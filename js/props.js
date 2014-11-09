@@ -31,6 +31,29 @@ props.position = {
 						}, function(){
 							return getData(selectedAddr).position[mdirs[i]];
 						});
+					}else if(e.e.shiftKey){
+						var prop = mdirs[i];
+						var opposites = {"top" : "bottom", "bottom" : "top", "left" : "right", "right" : "left"};
+						var alternates = {"top" : "height", "bottom" : "height", "left" : "width", "right" : "width"};
+						var opp = opposites[prop];
+						var alt = alternates[prop];
+						var altu = alt[0].toUpperCase()+alt.substring(1);
+						var sel = getEl(selectedAddr);
+						var dat = sel.data();
+						var parentsize = sel.parent()["scroll"+altu];
+						if(dat.position.hasOwnProperty(prop)){
+							delete dat.position[prop];
+							sel.showset("position", alt, String(sel.cssn(alt)));
+						}else{
+							if(dat.position.hasOwnProperty(opp)){
+								delete dat.position[alt];
+								sel.showset("position", prop, String(parentsize-val2int(dat.position[opp])-sel.cssn(alt)));
+							}else{
+								log("back from center");
+								log(Math.abs(parentsize-sel.cssn(alt))/2);
+								sel.showset("position", prop, String(Math.abs(parentsize-sel.cssn(alt))/2));
+							}
+						}
 					}
 				});
 			})(i);
@@ -74,34 +97,6 @@ props.position = {
 		$("#orderSuffix").innerHTML = k>10&&k<20?"th":k%10==1?"st":k%10==2?"nd":k%10==3?"rd":"th"; 
 	}
 };
-function fieldClicked(field, test, vcolor, set, getRevert){
-	var finish = function(e, noblur){
-		var val = e.el.innerHTML;
-		if(test(val)){
-			set(val);
-			if(noblur == undefined) e.el.attr("contenteditable", "false");
-		}else{
-			e.el.css("color", vcolor);
-			e.el.innerHTML = getRevert();
-			if(noblur !== undefined) document.execCommand('selectAll',false,null);
-			else e.el.attr("contenteditable", "false");
-		}
-	};
-	field.attr("contenteditable", "true");
-	field.focus();
-	document.execCommand('selectAll',false,null);
-	field.event("keyup", function(ev){
-		field.css("color", test(field.innerHTML)?vcolor:"red");
-	});
-	field.event("keydown", function(ev){
-		if(ev.code == 13){
-			ev.e.preventDefault();
-			finish(ev, true);
-			return false;
-		}
-	});
-	field.event("blur", finish);
-}
 function validPosition(val){
 	return val.match(/^-?\d+$/i) != null;
 }
@@ -252,3 +247,31 @@ defaults.border = function(){
 		"edges" : [0,0,0,0]
 	};
 };
+function fieldClicked(field, test, vcolor, set, getRevert){
+	var finish = function(e, noblur){
+		var val = e.el.innerHTML;
+		if(test(val)){
+			set(val);
+			if(noblur == undefined) e.el.attr("contenteditable", "false");
+		}else{
+			e.el.css("color", vcolor);
+			e.el.innerHTML = getRevert();
+			if(noblur !== undefined) document.execCommand('selectAll',false,null);
+			else e.el.attr("contenteditable", "false");
+		}
+	};
+	field.attr("contenteditable", "true");
+	field.focus();
+	document.execCommand('selectAll',false,null);
+	field.event("keyup", function(ev){
+		field.css("color", test(field.innerHTML)?vcolor:"red");
+	});
+	field.event("keydown", function(ev){
+		if(ev.code == 13){
+			ev.e.preventDefault();
+			finish(ev, true);
+			return false;
+		}
+	});
+	field.event("blur", finish);
+}

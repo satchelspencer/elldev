@@ -90,16 +90,20 @@ elex.disp = function(prop, val){
 };
 elex.position = function(dat){
 	var parent = this.parent().data();
+	var pprops = ["top", "bottom", "left", "right", "width", "height"];
 	if(parent.type == "canvas"){
-		for(var d in dat) this.css(d, val2css(dat[d]));
+		for(var d in pprops){
+			if(dat.hasOwnProperty(pprops[d])) this.css(pprops[d], val2css(dat[pprops[d]]));
+			else this.style.removeProperty(pprops[d]);
+		}
 		if(!dat.hasOwnProperty("top") && !dat.hasOwnProperty("bottom")){
 			this.css("top", "50%");
 			this.css("marginTop", "-"+(val2int(dat.height)/2)+valunit(dat.height));
-		}
+		}else this.css("marginTop", "0");
 		if(!dat.hasOwnProperty("left") && !dat.hasOwnProperty("right")){
 			this.css("left", "50%");
 			this.css("marginLeft", "-"+(val2int(dat.width)/2)+valunit(dat.width));
-		}
+		}else this.css("marginLeft", "0");
 		if(dat.rotation) this.css("transform", "rotate("+dat.rotation+"deg)");
 		var el = this;
 		setTimeout(function(){
