@@ -26,7 +26,7 @@ props.position = {
 			(function(i){
 				$("#box"+mdirs[i]).event("click", function(e){
 					if(!e.e.shiftKey && $("#box"+mdirs[i]).className != "positionDisabled"){
-						var field = $("#box"+mdirs[i]).first();
+						var field = $("#box"+mdirs[i]).first().childs(1);
 						field.attr("contenteditable", "true");
 						field.focus();
 						field.prevval = field.innerHTML;
@@ -44,17 +44,17 @@ props.position = {
 						field.event("blur", setPosition);
 					}
 				});
-				$("#box"+mdirs[i]).first().prop = mdirs[i];
+				$("#box"+mdirs[i]).first().childs(1).prop = mdirs[i];
 			})(i);
 		}
 	},
 	"disp" : function(data){
 		for(var i in mdirs){
 			if(data.hasOwnProperty(mdirs[i]) || getEl(selectedAddr).parent().data().type == "sequence"){
-				$("#box"+mdirs[i]).first().innerHTML = data[mdirs[i]]||"0";
+				$("#box"+mdirs[i]).first().childs(1).innerHTML = data[mdirs[i]]||"0";
 				$("#box"+mdirs[i]).className = "";
 			}else{
-				$("#box"+mdirs[i]).first().innerHTML = "";
+				$("#box"+mdirs[i]).first().childs(1).innerHTML = "";
 				$("#box"+mdirs[i]).className = "positionDisabled";
 			}
 		}
