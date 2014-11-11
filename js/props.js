@@ -35,6 +35,7 @@ props.position = {
 						var prop = mdirs[i];
 						var opposites = {"top" : "bottom", "bottom" : "top", "left" : "right", "right" : "left"};
 						var alternates = {"top" : "height", "bottom" : "height", "left" : "width", "right" : "width"};
+						var altAxis = {"width" : "X", "height" : "Y"};
 						var opp = opposites[prop];
 						var alt = alternates[prop];
 						var altu = alt[0].toUpperCase()+alt.substring(1);
@@ -42,16 +43,24 @@ props.position = {
 						var dat = sel.data();
 						var parentsize = sel.parent()["scroll"+altu];
 						if(dat.position.hasOwnProperty(prop)){
+							if(dat.overflow && dat.overflow[altAxis[alt]] == "expand"){
+								sel.showset("position", opp, String(parentsize-val2int(dat.position[prop])-sel.cssn(alt)));
+								sel.fit(altAxis[alt]);
+							}
 							delete dat.position[prop];
 							sel.showset("position", alt, String(sel.cssn(alt)));
 						}else{
 							if(dat.position.hasOwnProperty(opp)){
 								delete dat.position[alt];
 								sel.showset("position", prop, String(parentsize-val2int(dat.position[opp])-sel.cssn(alt)));
+								if(dat.overflow && dat.overflow[altAxis[alt]] == "expand"){
+									sel.showset("position", prop, String(parentsize-val2int(dat.position[opp])-sel.cssn(alt)));
+									delete dat.position[opp];
+									sel.showset("position", alt, String(sel.cssn(alt)));
+									sel.fit(altAxis[alt]);
+								}
 							}else{
-								log("back from center");
-								log(Math.abs(parentsize-sel.cssn(alt))/2);
-								sel.showset("position", prop, String(Math.abs(parentsize-sel.cssn(alt))/2));
+								sel.showset("position", prop, String(Math.round((parentsize-sel.cssn(alt))/2)));
 							}
 						}
 					}
@@ -105,6 +114,13 @@ function validSize(val, type){
 }
 props.overflow = {
 	"init" : function(){
+		for(var ax in axis){
+			(function(ax){
+				$("#overflow"+ax).event("click", function(e){
+					//log(ax);
+				});
+			})(ax)
+		}
 	},
 	"disp" : function(data){
 		if(openElData.type == "content"){
@@ -114,7 +130,7 @@ props.overflow = {
 			$("#overflow").css("display", "block"); 
 			$("#padding").css("display", "none"); 
 			$("#overflowX").css("display", openElData.type == "canvas"?"block":"none");
-			for(d in data){	
+			for(d in axis){	
 				var val = data[d]||this.def[d];
 				var horiz = d=="X";
 				$("#overflowContent").css(!horiz?"top":"left", val=="expand"?"-20px":"0");

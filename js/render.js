@@ -1,4 +1,5 @@
 var dirs = ["Top", "Left", "Bottom", "Right"];
+var axis = {"X":"","Y":""};
 function render(data, to, addr, callback){
 	to.clear();
 	var addr = addr||[];
@@ -107,14 +108,17 @@ elex.position = function(dat){
 		if(dat.rotation) this.css("transform", "rotate("+dat.rotation+"deg)");
 		var el = this;
 		setTimeout(function(){
-			for(var z in parent.overflow){
+			for(var z in axis){
 				var wh = z=="X"?"width":"height";
-				if(parent.overflow[z] == "expand"){
-					var offsetlt = (z=="X"?el.offsetLeft:el.offsetTop);
+				if(parent.overflow && parent.overflow[z] == "expand"){
+					el.parent().fit(z);
+					/*
+var offsetlt = (z=="X"?el.offsetLeft:el.offsetTop);
 					var offsetrb = offsetlt+el.cssn(wh)-el.parent().cssn(wh);
 					sizeOffset = (offsetlt<0?Math.abs(offsetlt):0)+offsetrb;
 					var bound = parent.position.hasOwnProperty(z=="X"?"left":"top") && parent.position.hasOwnProperty(z=="X"?"right":"bottom");
 					if(sizeOffset > 0 && !bound) el.parent().set("position", wh, String(val2int(parent.position[wh])+sizeOffset));
+*/
 				}
 			}
 		},0);
@@ -132,13 +136,37 @@ elex.position = function(dat){
 		},0);
 	}
 };
+elex.fit = function(axis){
+	var childs = this.childs();
+	var anchor = false;
+	var axisAnchors = {"X" : ["left", "right"], "Y" : ["top", "bottom"]};
+	var axisAlts = {"X" : "width", "Y" : "height"};
+	var propOpps = {"top" : "bottom", "bottom" : "top", "left" : "right", "right" : "left"};
+	for(var x in axisAnchors[axis]) if(this.data().position.hasOwnProperty(axisAnchors[axis][x])) anchor = axisAnchors[axis][x];
+	var max = false;
+	var X = axis == "X";
+	for(var i=0;i<childs.length;i++){
+		if(childs[i].data().position.hasOwnProperty(anchor) && !childs[i].data().position.hasOwnProperty(propOpps[anchor])){
+			var offset;
+			var poff = childs[i]["offset"+(X?"Left":"Top")];
+			if(anchor == "top" || anchor == "left"){
+				offset = poff+childs[i].cssn(X?"width":"height");
+			}else{
+				offset = this.cssn(X?"width":"height")-poff;
+			}
+			if(offset > max) max = offset;
+		}
+	}
+	if(max) this.css("height", max+"px");
+	else this.css("height", this.overflow[axisAlts[axis]])
+}
 elex.padding = function(dat){
 	for(var i in dirs) this.css("padding"+dirs[i], dat[i]+"px");
 }
 elex.overflow = function(dat){
 	dat = dat||defaults.overflow();
 	var ocss = {"expand" : "hidden"};
-	for(var z in dat) this.css("overflow"+z, ocss[dat[z]]||dat[z]);
+	for(var z in axis) this.css("overflow"+z, ocss[dat[z]]||dat[z]);
 }
 elex.background = function(dat){
 	if(dat.color) this.css("backgroundColor", "rgba("+dat.color+")");
