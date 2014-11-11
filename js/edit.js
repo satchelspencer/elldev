@@ -99,7 +99,6 @@ function elClick(e){
 	clickFocus(e);
 	if(tool == "select"){
 		selectEl(e.el.addr);
-		log(e.el.data().position);
 	}
 }
 function elScroll(e){

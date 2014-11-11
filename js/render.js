@@ -110,16 +110,7 @@ elex.position = function(dat){
 		setTimeout(function(){
 			for(var z in axis){
 				var wh = z=="X"?"width":"height";
-				if(parent.overflow && parent.overflow[z] == "expand"){
-					el.parent().fit(z);
-					/*
-var offsetlt = (z=="X"?el.offsetLeft:el.offsetTop);
-					var offsetrb = offsetlt+el.cssn(wh)-el.parent().cssn(wh);
-					sizeOffset = (offsetlt<0?Math.abs(offsetlt):0)+offsetrb;
-					var bound = parent.position.hasOwnProperty(z=="X"?"left":"top") && parent.position.hasOwnProperty(z=="X"?"right":"bottom");
-					if(sizeOffset > 0 && !bound) el.parent().set("position", wh, String(val2int(parent.position[wh])+sizeOffset));
-*/
-				}
+				if(parent.overflow && parent.overflow[z] == "expand") el.parent().fit(z);
 			}
 		},0);
 	}else if(parent.type == "sequence"){
@@ -158,7 +149,8 @@ elex.fit = function(axis){
 		}
 	}
 	if(max) this.css("height", max+"px");
-	else this.css("height", this.overflow[axisAlts[axis]])
+	else this.css("height", this.overflow[axisAlts[axis]]);
+	if(this.parent().data().overflow && this.parent().data().overflow[axis] == "expand") this.parent().fit(axis);
 }
 elex.padding = function(dat){
 	for(var i in dirs) this.css("padding"+dirs[i], dat[i]+"px");

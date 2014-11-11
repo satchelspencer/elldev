@@ -117,7 +117,36 @@ props.overflow = {
 		for(var ax in axis){
 			(function(ax){
 				$("#overflow"+ax).event("click", function(e){
-					//log(ax);
+					var sel = getEl(selectedAddr);
+					var dat = sel.data();
+					var odat = normalizeProps(dat.overflow, defaults.overflow, selectedAddr);
+					var overflows = ["hidden", "scroll", "expand"];
+					var prev = odat[ax];
+					var noverflow = overflows[(overflows.indexOf(prev)+1)%3];
+					var axisAlts = {"X" : "width", "Y" : "height"};
+					var axisAnchors = {"X" : ["left", "right"], "Y" : ["top", "bottom"]};
+					if(noverflow == "expand"){
+						var anchors = [];
+						for(var x in axisAnchors[ax]) if(dat.position.hasOwnProperty(axisAnchors[ax][x])) anchors.push(axisAnchors[ax][x]);
+						if(dat.position.hasOwnProperty(axisAlts[ax]) && anchors.length == 1){
+							for(var x in axisAnchors[ax]) $("#overflowContent").css(axisAnchors[ax][x], "-20px");
+							$("#overflow"+ax).childs().css("display", "none");
+						}else noverflow = "hidden";
+					}
+					if(noverflow == "hidden"){
+						for(var x in axisAnchors[ax]) $("#overflowContent").css(axisAnchors[ax][x], "0px");
+						$("#overflow"+ax).childs().css("display", "none");
+					}
+					if(noverflow == "scroll"){
+						for(var x in axisAnchors[ax]) $("#overflowContent").css(axisAnchors[ax][x], "0px");
+						$("#overflow"+ax).childs().css("display", "block");
+					}
+					if(prev == "expand") sel.set("position", axisAlts[ax], odat[axisAlts[ax]]);
+					sel.showset("overflow", ax, noverflow);
+					if(noverflow == "expand"){
+						dat.overflow[axisAlts[ax]] = sel.cssn("height");
+						sel.fit(ax);
+					}
 				});
 			})(ax)
 		}
