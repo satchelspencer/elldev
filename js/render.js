@@ -148,8 +148,8 @@ elex.fit = function(axis){
 			if(offset > max) max = offset;
 		}
 	}
-	if(max) this.css("height", max+"px");
-	else this.css("height", this.overflow[axisAlts[axis]]);
+	if(max) this.css(axisAlts[axis], max+"px");
+	else this.css(axisAlts[axis], this.overflow[axisAlts[axis]]);
 	if(this.parent().data().overflow && this.parent().data().overflow[axis] == "expand") this.parent().fit(axis);
 }
 elex.padding = function(dat){
