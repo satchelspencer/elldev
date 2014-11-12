@@ -193,6 +193,12 @@ props.background = {
 				getEl(selectedAddr).set("background", "color", val);
 			});
 		});
+		$("#backgroundImage").event("mouseup", function(e){
+			getEl(selectedAddr).showset("background", "image", draggingAssetOut);
+		});
+		$("#backgroundImageClear").event("click", function(e){
+			getEl(selectedAddr).showset("background", "image");
+		});
 	},
 	"disp" : function(data){
 		$("#backgroundColor").first().css("background", "rgba("+data.color+")");

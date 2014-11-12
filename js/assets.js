@@ -432,20 +432,24 @@ function hideAssetInspector(){
 		$("#assetList").css("bottom", (25-b)+"px");
 	});
 }
+function getIconFromName(name){
+	var ext = name.match(/\..+$/i);
+	var r = false;
+	if(ext) for(var e in extTable){
+		if(name.match(extTable[e])){
+			r = e;
+			break;
+		}
+	}
+	if(!r) r = "doc";
+	return r;
+}
 function assetListFile(name){
 	var el = element(false, "div", "assetListEl");
 	el.selected = false;
 	el.dragging = false;
 	el.name = name;
-	var ext = name.match(/\..+$/i);
-	extIcon = false;
-	if(ext) for(var e in extTable){
-		if(name.match(extTable[e])){
-			extIcon = e;
-			break;
-		}
-	}
-	if(!extIcon) extIcon = "doc";
+	extIcon = getIconFromName(name);
 	var t = element(false, "span", "assetListType icon icon-"+extIcon);
 	el.appendChild(t);
 	var n = element(false, "span", "assetName");
@@ -528,6 +532,10 @@ function assetClickStart(e, el){
 		if(el.dragging){
 			var containerh = $("#browser").cssn("height")-25;
 			var val = e.y-$("#browser").y()+offset;
+			if(e.x > 360 || e.y < $("#browser").y()){
+				cancelAssetDrop(draggedAssets);
+				assetDragOut(draggedAssets);
+			}
 			$("#browserListDrag").css("top", (val<25?25:val>containerh?containerh:val)+"px");
 		}
 	});
@@ -624,4 +632,29 @@ function cancelAssetDrop(assets){
 		assets[i].select();
 	}
 	inspectAssets();
+}
+var draggingAssetOut = false;
+function assetDragOut(assets){
+	$("body").css("cursor", "default");
+	assetDragging = false;
+	$("#parentFolder").css("background", "none");
+	$("#browserListDrag").css("display", "none");
+	$("body").rmEvent("mousemove");
+	$("body").rmEvent("mouseup");
+	if(assets.length == 1 && getIconFromName(assets[0].name) == "file-image"){
+		var asset = getCurrentDir(assetDir)+assets[0].name;
+		draggingAssetOut = asset;
+		$("#assetDragOut").css("display", "block");
+		$("body").event("mousemove", function(e){
+			$("#assetDragOut").css("top", (e.y-8)+"px");
+			$("#assetDragOut").css("left", (e.x-8)+"px");
+		});
+		$("body").event("mouseup", function(){
+			setTimeout(function(){draggingAssetOut = false;}, 10);
+			$("#assetDragOut").css("display", "none");
+			$("body").rmClass("unselectable");
+			$("body").rmEvent("mousemove");
+			$("body").rmEvent("mouseup");
+		});
+	}
 }
