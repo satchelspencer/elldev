@@ -153,7 +153,8 @@ elex.fit = function(axis){
 	if(this.parent().data().overflow && this.parent().data().overflow[axis] == "expand") this.parent().fit(axis);
 }
 elex.padding = function(dat){
-	for(var i in dirs) this.css("padding"+dirs[i], dat[i]+"px");
+	dat = dat||{};
+	for(var i in dirs) if(dirs[i]) this.css("padding"+dirs[i], (dat[dirs[i]]||defaults.padding()[dirs[i]])+"px");
 }
 elex.overflow = function(dat){
 	dat = dat||defaults.overflow();

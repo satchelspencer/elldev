@@ -131,8 +131,6 @@ props.overflow = {
 						if(!(dat.position.hasOwnProperty(axisAlts[ax]) && anchors.length == 1)) noverflow = "hidden";
 					}
 					if(prev == "expand"){
-						log("coming from expand");
-						log(odat);
 						sel.set("position", axisAlts[ax], odat[axisAlts[ax]]);
 					}
 					sel.showset("overflow", ax, noverflow);
@@ -167,11 +165,26 @@ props.overflow = {
 };
 props.padding = {
 	"init" : function(){
+		for(var i in dirs){
+			(function(i){
+				$("#padding"+dirs[i]).event("click", function(e){
+					fieldClicked($("#padding"+dirs[i]).first().first(), validPadding, "#a0a0a0", function(val){
+						getEl(selectedAddr).set("padding", dirs[i], val);
+					}, function(){
+						if(getData(selectedAddr).padding && getData(selectedAddr).padding.hasOwnProperty(dirs[i])) return getData(selectedAddr).padding[dirs[i]];
+						else return defaults.padding()[dirs[i]];
+					});
+				});	
+			})(i);
+		}
 	},
 	"disp" : function(data){
-		for(var i in dirs) $("#padding"+dirs[i]).first().innerHTML = data[i]+"px";
+		for(var i in dirs) $("#padding"+dirs[i]).first().first().innerHTML = data[dirs[i]];
 	}
 };
+function validPadding(val){
+	return val.match(/^\d+$/i) != null;
+}
 props.background = {
 	"init" : function(){
 	},
@@ -243,7 +256,12 @@ defaults.overflow = function(){
 	};
 };
 defaults.padding = function(){
-	return [0,0,0,0];
+	return {
+		"Top" : "0",
+		"Left" : "0",
+		"Right" : "0",
+		"Bottom" : "0"
+	};
 };
 defaults.background = function(){
 	return {
