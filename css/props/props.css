@@ -131,6 +131,7 @@
 		background:#777777;
 	}
 		.sliderHandle{
+			pointer-events:none;
 			width:2px;
 			background:white;
 			top:-4px;

@@ -199,6 +199,28 @@ props.background = {
 		$("#backgroundImageClear").event("click", function(e){
 			getEl(selectedAddr).showset("background", "image");
 		});
+		$("#backgroundClip").event("click", function(e){
+			var prev = getEl(selectedAddr).getnorm("background").clip == "true";
+			getEl(selectedAddr).showset("background", "clip", prev?"false":"true");
+		});
+		var idsAxis = {"tileVert" : "y", "tileHor" : "x"};
+		var axisOpp = {"x" : "y", "y" : "x"};
+		for(var i in idsAxis){
+			(function(i){
+				$("#"+i).event("click", function(e){
+					var prev = getEl(selectedAddr).getnorm("background").repeat;
+					var set = "";
+					if(prev == "no-repeat") set = "repeat-"+idsAxis[i];
+					else if(prev == "repeat-"+axisOpp[idsAxis[i]]) set = "repeat";
+					else if(prev == "repeat-"+idsAxis[i]) set = "no-repeat";
+					else set = "repeat-"+axisOpp[idsAxis[i]];
+					getEl(selectedAddr).showset("background", "repeat", set);
+				});
+			})(i);
+		}
+		sliderInit($("#bgSize"), [[0,100], false, false],function(val){
+			log(val);
+		})
 	},
 	"disp" : function(data){
 		$("#backgroundColor").first().css("background", "rgba("+data.color+")");
@@ -210,7 +232,7 @@ props.background = {
 		$("#backgroundClipBg").css("height", clips+"px");
 		$("#backgroundClipBg").css("marginTop", "-"+(clips/2)+"px");
 		$("#backgroundClipBg").css("marginLeft", "-"+(clips/2)+"px");
-		var hasImg = data.hasOwnProperty("image");
+		var hasImg = data.hasOwnProperty("image") && data.image !== "none";
 		$("#backgroundImage").css("background", !hasImg?"#474747":"url('../as"+data.image+"')");
 		$("#backgroundImage").css("backgroundSize", "cover");
 		$("#backgroundImageClear").css("display", hasImg?"block":"none");
@@ -280,7 +302,8 @@ defaults.background = function(){
 		"color" : "0,0,0,0",
 		"repeat" : "no-repeat",
 		"size" : "auto",
-		"clip" : "true"
+		"clip" : "false",
+		"image" : "none"
 	};
 };
 defaults.font = function(addr){

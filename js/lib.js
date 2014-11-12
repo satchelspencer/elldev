@@ -139,7 +139,8 @@ ext.css = function(p, v){
 			this.style.filter = "alpha(opacity="+(v*100)+")";
 		}
 		else this.style[p] = v;
-	}else return this.currentStyle ? this.currentStyle[p] : document.defaultView.getComputedStyle(this,null).getPropertyValue(p);
+	}else if(v === false) this.style.removeProperty(jprop2css(p));
+	else return this.currentStyle ? this.currentStyle[p] : document.defaultView.getComputedStyle(this,null).getPropertyValue(p);
 }
 ext.cssn = function(p){
 	var s = this.currentStyle ? this.currentStyle[p] : document.defaultView.getComputedStyle(this,null).getPropertyValue(p);
@@ -292,4 +293,9 @@ function ani(start, finish, steps, call, callback){
 		}
 		start += step;
 	}, 30);
+}
+function jprop2css(jprop){
+	var w = jprop.split(/(?=[A-Z])/);
+	for(var i in w) w[i] = w[i].toLowerCase();
+	return w.join("-");
 }

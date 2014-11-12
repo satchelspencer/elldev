@@ -484,3 +484,28 @@ function hidePicker(){
 		$("#propertiesList").css("bottom", h+"px");
 	});
 }
+function sliderInit(el, ranges,callback){
+	var field = el.childs(1);
+	var slider = el.childs(2);
+	var sw = slider.cssn("width");
+	var handle = slider.last();
+	var offset = slider.x();
+	var cs = slider.childs();
+	var notches = {};
+	for(var i=0;i<cs.length-1;i++){
+		notches[cs[i].id] = cs[i].offsetLeft;
+	}
+	//log(notches);
+	slider.event("mousedown", function(ev){
+		handle.css("left", (ev.x-offset)+"px");
+		$("body").event("mousemove", function(e){
+			var l = e.x-offset;
+			l = l>sw?sw:l<0?0:l;
+			handle.css("left", l+"px");
+		});
+		$("body").event("mouseup", function(e){
+			$("body").rmEvent("mousemove");
+			$("body").rmEvent("mouseup");
+		});
+	});
+}

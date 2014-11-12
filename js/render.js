@@ -38,8 +38,19 @@ elex.data = function(){
 };
 elex.getnorm = function(type, prop){
 	var dat = this.data();
-	if(dat[type] && dat[type][prop]) return dat[type][prop];
-	else return defaults[type][prop]
+	if(prop){
+		if(dat[type] && dat[type][prop]) return dat[type][prop];
+		else return defaults[type][prop];
+	}else{
+		var r = {};
+		var d = dat[type]||{};
+		var def = defaults[type]();
+		for(var i in dat[type]) r[i] = dat[type][i];
+		for(var j in def){
+			r[j] = r[j]||def[j];
+		}
+		return r;
+	}
 }
 elex.parent = function(){
 	return extcEl(this.parentNode);
@@ -76,7 +87,7 @@ elex.set = function(type, prop, val){
 	if(!defaults[type]) dat[type][prop] = val;
 	else{
 		var def = defaults[type](this.addr);
-		if(def[prop] == val){
+		if(def[prop] == val || !val){
 			delete dat[type][prop];
 			var empty = true;
 			for(var i in dat[type]) empty = false;
@@ -100,7 +111,7 @@ elex.position = function(dat){
 	if(parent.type == "canvas"){
 		for(var d in pprops){
 			if(dat.hasOwnProperty(pprops[d])) this.css(pprops[d], val2css(dat[pprops[d]]));
-			else this.style.removeProperty(pprops[d]);
+			else this.css(pprops[d], false);
 		}
 		if(!dat.hasOwnProperty("top") && !dat.hasOwnProperty("bottom")){
 			this.css("top", "50%");
@@ -167,17 +178,16 @@ elex.overflow = function(dat){
 	for(var z in axis) this.css("overflow"+z, ocss[dat[z]]||dat[z]);
 }
 elex.background = function(dat){
-	dat = dat||{};
+	dat = this.getnorm("background");
 	if(dat.color) this.css("backgroundColor", "rgba("+dat.color+")");
-	if(dat.image){
-		this.css("backgroundImage", "url('../as"+dat.image+"')");
-		this.css("backgroundRepeat", dat.repeat||"no-repeat");
-		this.css("backgroundPosition", "center");
-		if(dat.size){
-			var sizes = ["auto", "contain", "cover"];
-			if(sizes.indexOf(dat.size) != -1) this.css("backgroundSize", dat.size);
-			else this.css("backgroundSize", parseInt(dat.size)+"%");
-		}
+	this.css("backgroundImage", dat.image=="none"?false:"url('../as"+dat.image+"')");
+	this.css("backgroundRepeat", dat.repeat);
+	this.css("backgroundPosition", "center");
+	this.css("backgroundClip", dat.clip=="true"?"content-box":"border-box");
+	if(dat.size){
+		var sizes = ["auto", "contain", "cover"];
+		if(sizes.indexOf(dat.size) != -1) this.css("backgroundSize", dat.size);
+		else this.css("backgroundSize", parseInt(dat.size)+"%");
 	}
 };
 elex.font = function(dat){
