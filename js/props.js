@@ -187,6 +187,12 @@ function validPadding(val){
 }
 props.background = {
 	"init" : function(){
+		$("#backgroundColor").event("click", function(){
+			var initcolor = getEl(selectedAddr).getnorm("background", "color");
+			pickColor($("#backgroundColor").first(), initcolor, function(val){
+				getEl(selectedAddr).set("background", "color", val);
+			});
+		});
 	},
 	"disp" : function(data){
 		$("#backgroundColor").first().css("background", "rgba("+data.color+")");
@@ -331,4 +337,11 @@ function fieldClicked(field, test, vcolor, set, getRevert){
 		}
 	});
 	field.event("blur", finish);
+}
+function pickColor(to, start, callback){
+	showPicker(start);
+	pickerCall = function(val){
+		to.css("background", "rgba("+val+")");
+		if(callback) callback(val);
+	}
 }

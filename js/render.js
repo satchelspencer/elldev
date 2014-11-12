@@ -36,6 +36,11 @@ var elex = {};
 elex.data = function(){
 	return getData(this.addr);
 };
+elex.getnorm = function(type, prop){
+	var dat = this.data();
+	if(dat[type] && dat[type][prop]) return dat[type][prop];
+	else return defaults[type][prop]
+}
 elex.parent = function(){
 	return extcEl(this.parentNode);
 }
@@ -64,7 +69,7 @@ elex.setAddr = function(addr){
 	if(cs) for(var i=0;i<cs.length;i++){
 		cs[i].setAddr(addr.concat(String(i)));
 	}
-};
+}
 elex.set = function(type, prop, val){
 	var dat = this.data();
 	dat[type] = dat[type]||{};
@@ -162,6 +167,7 @@ elex.overflow = function(dat){
 	for(var z in axis) this.css("overflow"+z, ocss[dat[z]]||dat[z]);
 }
 elex.background = function(dat){
+	dat = dat||{};
 	if(dat.color) this.css("backgroundColor", "rgba("+dat.color+")");
 	if(dat.image){
 		this.css("backgroundImage", "url('../as"+dat.image+"')");

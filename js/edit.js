@@ -23,6 +23,7 @@ function editInit(){
 		$("#selectorcenter").css("opacity", "0.5");
 		$("#selectorcenter").css("background", "none");
 	});
+	pickerInit();
 }
 function editPage(e){
 	var path;
@@ -130,6 +131,7 @@ function selectEl(addr, nani){
 	showSelectOn(el);
 	selectedAddr = addr;
 	displayProps(addr);
+	hidePicker();
 }
 function gotoChild(addr){
 	var childAddr = addr.concat("0");
@@ -423,4 +425,62 @@ function getEl(addr){
 	var r = $("#canvas");
 	for(var i in addr) r = r.childs(addr[i]);
 	return extcEl(extEl(r));
+}
+var pfields = ["red", "green", "blue", "alpha"];
+function pickerInit(){
+	for(var x in pfields){
+		(function(x){
+			$("#"+pfields[x]).event("mousedown", function(e){
+				var initx = e.x;
+				var w = $("#"+pfields[x]).cssn("width");
+				var l = $("#"+pfields[x]).x();
+				var alpha = pfields[x]=="alpha";
+				$("#"+pfields[x]).first().css("left", (e.x-l)+"px");
+				$("body").event("mousemove", function(ev){
+					var offset = ev.x-l;
+					offset = offset>w?w:offset<0?0:offset;
+					var value = Math.round((offset/w)*(alpha?100:255))*(alpha?.01:1);
+					$("#"+pfields[x]).first().css("left", offset+"px");
+					$("#"+pfields[x]).childs(1).innerHTML = String(value).replace(/^(0\.[\d]{2}).*$/i, "$1");
+					pickerCall(getPickerVal());
+				});
+				$("body").event("mouseup", function(ev){
+					$("body").rmEvent("mousemove");
+					$("body").rmEvent("mouseup");
+				});
+			});
+		})(x);
+	}
+}
+function getPickerVal(){
+	var o = [];
+	for(var x in pfields){
+		o.push($("#"+pfields[x]).childs(1).innerHTML);
+	}
+	return o.join(",");
+}
+var pickerOut = false;
+var pickerCall = function(c){};
+function showPicker(value){
+	if(pickerOut) return false;
+	pickerOut = true;
+	ani(0, 80, 4, function(h){
+		$("#colorPicker").css("height", h+"px");
+		$("#propertiesList").scrollTop += 20;
+		$("#propertiesList").css("bottom", h+"px");
+	});
+	var vals = value.split(",");
+	for(var x in pfields){
+		$("#"+pfields[x]).first().css("left", ((parseFloat(vals[x])/(pfields[x]=="alpha"?1:255))*$("#"+pfields[x]).cssn("width"))+"px");
+		$("#"+pfields[x]).childs(1).innerHTML = vals[x];
+	}
+}
+function hidePicker(){
+	if(!pickerOut) return false;
+	pickerOut = false;
+	ani(80, 0, 4, function(h){
+		$("#colorPicker").css("height", h+"px");
+		$("#propertiesList").scrollTop -= 20;
+		$("#propertiesList").css("bottom", h+"px");
+	});
 }

@@ -64,8 +64,8 @@
 		border-radius:0px 2px 2px 0px;
 	}
 	#rgbHandle{
-		top:-5px;
-		bottom:-5px;
+		top:-4px;
+		bottom:-4px;
 		width:2px;
 		background:#777777;
 		
@@ -133,8 +133,8 @@
 		.sliderHandle{
 			width:2px;
 			background:white;
-			top:-5px;
-			bottom:-5px;
+			top:-4px;
+			bottom:-4px;
 			cursor:col-resize;
 		}
 		.sliderNotch{
