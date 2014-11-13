@@ -218,9 +218,9 @@ props.background = {
 				});
 			})(i);
 		}
-		sliderInit($("#bgSize"), [[0,100], false, false],function(val){
-			log(val);
-		})
+		sliderInit($("#bgSize"), [[0,100]],function(val){
+			getEl(selectedAddr).set("background", "size", val);
+		}, "%");
 	},
 	"disp" : function(data){
 		$("#backgroundColor").first().css("background", "rgba("+data.color+")");
@@ -236,9 +236,9 @@ props.background = {
 		$("#backgroundImage").css("background", !hasImg?"#474747":"url('../as"+data.image+"')");
 		$("#backgroundImage").css("backgroundSize", "cover");
 		$("#backgroundImageClear").css("display", hasImg?"block":"none");
-		var sizelefts = {"auto" : "2px", "contain" : ($("#bgSizeFit").offsetLeft+2)+"px", "cover" : ($("#bgSizeCover").offsetLeft+2)+"px"};
+		var sizelefts = {"auto" : "2px", "contain" : ($("#fit").offsetLeft+2)+"px", "cover" : ($("#cover").offsetLeft+2)+"px"};
 		if(sizelefts[data.size]) $("#bgHandle").css("left", sizelefts[data.size]);
-		else $("#bgHandle").css("left", (((parseInt(data.size)/100)*($("#bgSizeFit").offsetLeft-6))+6)+"px");
+		else $("#bgHandle").css("left", (((parseInt(data.size)/100)*($("#fit").offsetLeft-6))+6)+"px");
 		$("#bgSizeValue").innerHTML = data.size=="contain"?"fitted":data.size+(sizelefts[data.size]?"":"%");
 	}
 };
@@ -301,7 +301,7 @@ defaults.background = function(){
 	return {
 		"color" : "0,0,0,0",
 		"repeat" : "no-repeat",
-		"size" : "auto",
+		"size" : "cover",
 		"clip" : "false",
 		"image" : "none"
 	};

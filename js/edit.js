@@ -484,25 +484,46 @@ function hidePicker(){
 		$("#propertiesList").css("bottom", h+"px");
 	});
 }
-function sliderInit(el, ranges,callback){
+function sliderInit(el, ranges, callback, suffix){
 	var field = el.childs(1);
 	var slider = el.childs(2);
 	var sw = slider.cssn("width");
 	var handle = slider.last();
 	var offset = slider.x();
 	var cs = slider.childs();
-	var notches = {};
+	var notches = [];
 	for(var i=0;i<cs.length-1;i++){
-		notches[cs[i].id] = cs[i].offsetLeft;
+		notches.push({"id" : cs[i].id, "left" : cs[i].offsetLeft, "range" : ranges[i]});
 	}
-	//log(notches);
+	var call = function(val, suff){
+		field.innerHTML = val+suff;
+		if(callback) callback(val);
+	};
 	slider.event("mousedown", function(ev){
-		handle.css("left", (ev.x-offset)+"px");
-		$("body").event("mousemove", function(e){
+		var track = function(e){
+			var offset = slider.x();
 			var l = e.x-offset;
 			l = l>sw?sw:l<0?0:l;
+			var hit = false;
+			var prev = false;
+			for(var n=0;n<notches.length;n++){
+				if(l-notches[n].left <= 6 && l-notches[n].left >= 0) hit = n;
+				else if(notches[n].left < l) prev = n;
+			}
+			if(hit !== false){
+				l = notches[hit].left+2;
+				call(notches[hit].id, "");
+			}else if(prev !== false && notches[prev].range){
+				var ran = notches[prev].range;
+				var rsize = ran[1]-ran[0];
+				var dsize = (notches[prev+1]?notches[prev+1].left:sw)-(notches[prev].left+6);
+				var off = l-notches[prev].left-6;
+				call(Math.round(((off/dsize)*rsize)+ran[0]), suffix);
+			}
 			handle.css("left", l+"px");
-		});
+		};
+		track(ev);
+		$("body").event("mousemove", track);
 		$("body").event("mouseup", function(e){
 			$("body").rmEvent("mousemove");
 			$("body").rmEvent("mouseup");
