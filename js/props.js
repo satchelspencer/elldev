@@ -313,6 +313,33 @@ function validFont(font){
 }
 props.border = {
 	"init" : function(){
+		$("#borderColor").event("click", function(){
+			var initcolor = getEl(selectedAddr).getnorm("border").color;
+			pickColor($("#borderColor").first(), initcolor, function(val){
+				getEl(selectedAddr).set("border", "color", val);
+			});
+		});
+		$("#borderStyle").event("click", function(){
+			var bstyles = ["none", "solid", "dashed", "dotted", "double"];
+			var prev = getEl(selectedAddr).getnorm("border").style;
+			getEl(selectedAddr).showset("border", "style", bstyles[(bstyles.indexOf(prev)+1)%bstyles.length]);
+		});
+		var bedges = ["borderTop", "borderLeft", "borderBottom", "borderRight"];
+		for(var i in bedges){
+			(function(i){
+				$("#"+bedges[i]).event("click", function(e){
+					var prev = getEl(selectedAddr).getnorm("border").edges;
+					prev[i] = prev[i]?0:1;
+					getEl(selectedAddr).showset("border", "edges", prev);
+				});
+			})(i);
+		}
+		sliderInit($("#borderWidth"), [0,100],function(val){
+			getEl(selectedAddr).set("border", "width", val);
+		}, "px");
+		sliderInit($("#borderRadius"), [0,1000],function(val){
+			getEl(selectedAddr).set("border", "radius", val);
+		}, "px");
 	},
 	"disp" : function(data){
 		$("#borderColor").first().css("background", "rgba("+data.color+")");
@@ -375,8 +402,8 @@ defaults.font = function(addr){
 }
 defaults.border = function(){
 	return {
-		"color" : "0,0,0,0",
-		"width" : "0",
+		"color" : "0,0,0,1",
+		"width" : "1",
 		"style" : "none",
 		"radius" : "0",
 		"edges" : [0,0,0,0]

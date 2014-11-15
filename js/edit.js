@@ -5,9 +5,11 @@ var tool = "select";
 var showWireframe = true;
 var add = "addContent";
 var sendingEditData = false;
+var editingText = false;
 function editInit(){
 	editPage("/");
 	$("#workspace").kevent(function(e){
+		if(editingText) return false;
 		if(e.code == 72) setTool({"el" : $("#select"), "e" : {"shiftKey" : "true"}});
 		else if(e.code == 65) setTool({"el" : $("#select")});
 		else if(e.code == 66) setTool({"el" : $("#add")});
