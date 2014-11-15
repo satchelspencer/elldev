@@ -462,13 +462,14 @@ function getPickerVal(){
 var pickerOut = false;
 var pickerCall = function(c){};
 function showPicker(value){
-	if(pickerOut) return false;
-	pickerOut = true;
-	ani(0, 80, 4, function(h){
-		$("#colorPicker").css("height", h+"px");
-		$("#propertiesList").scrollTop += 20;
-		$("#propertiesList").css("bottom", h+"px");
-	});
+	if(!pickerOut){
+		pickerOut = true;
+		ani(0, 80, 4, function(h){
+			$("#colorPicker").css("height", h+"px");
+			$("#propertiesList").scrollTop += 20;
+			$("#propertiesList").css("bottom", h+"px");
+		});
+	}
 	var vals = value.split(",");
 	for(var x in pfields){
 		$("#"+pfields[x]).first().css("left", ((parseFloat(vals[x])/(pfields[x]=="alpha"?1:255))*$("#"+pfields[x]).cssn("width"))+"px");
@@ -493,7 +494,7 @@ function sliderInit(el, ranges, callback, suffix){
 	var cs = slider.childs();
 	var notches = [];
 	for(var i=0;i<cs.length-1;i++){
-		notches.push({"id" : cs[i].id, "left" : cs[i].offsetLeft, "range" : ranges[i]});
+		notches.push({"id" : cs[i].className.split(" ")[1], "left" : cs[i].offsetLeft, "range" : ranges[i]});
 	}
 	var call = function(val, suff){
 		field.innerHTML = val+suff;
@@ -506,19 +507,24 @@ function sliderInit(el, ranges, callback, suffix){
 			l = l>sw?sw:l<0?0:l;
 			var hit = false;
 			var prev = false;
-			for(var n=0;n<notches.length;n++){
-				if(l-notches[n].left <= 6 && l-notches[n].left >= 0) hit = n;
-				else if(notches[n].left < l) prev = n;
-			}
-			if(hit !== false){
-				l = notches[hit].left+2;
-				call(notches[hit].id, "");
-			}else if(prev !== false && notches[prev].range){
-				var ran = notches[prev].range;
-				var rsize = ran[1]-ran[0];
-				var dsize = (notches[prev+1]?notches[prev+1].left:sw)-(notches[prev].left+6);
-				var off = l-notches[prev].left-6;
-				call(Math.round(((off/dsize)*rsize)+ran[0]), suffix);
+			if(notches.length){
+				for(var n=0;n<notches.length;n++){
+					if(l-notches[n].left <= 6 && l-notches[n].left >= 0) hit = n;
+					else if(notches[n].left < l) prev = n;
+				}
+				if(hit !== false){
+					l = notches[hit].left+2;
+					call(notches[hit].id, "");
+				}else if(prev !== false && notches[prev].range !== false){
+					var ran = notches[prev].range;
+					var rsize = ran[1]-ran[0];
+					var dsize = (notches[prev+1]?notches[prev+1].left:sw)-(notches[prev].left+6);
+					var off = l-notches[prev].left-6;
+					call(Math.round(((off/dsize)*rsize)+ran[0]), suffix);
+				}
+			}else{
+				var rsize = ranges[1]-ranges[0];
+				call(Math.round(((l/sw)*rsize)+ranges[0]), suffix);
 			}
 			handle.css("left", l+"px");
 		};

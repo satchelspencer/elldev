@@ -103,6 +103,7 @@ elex.showset = function(type, prop, val){
 	displayProps(selectedAddr);
 }
 elex.disp = function(prop, val){
+	val = val||{};
 	if(this[prop]) this[prop].call(this, val);
 };
 elex.position = function(dat){
@@ -145,6 +146,7 @@ elex.position = function(dat){
 };
 elex.fit = function(axis){
 	var childs = this.childs();
+	if(!childs) return false;
 	var anchor = false;
 	var axisAnchors = {"X" : ["left", "right"], "Y" : ["top", "bottom"]};
 	var axisAlts = {"X" : "width", "Y" : "height"};
@@ -191,6 +193,7 @@ elex.background = function(dat){
 	}
 };
 elex.font = function(dat){
+	var fpropscss = {"family" : "fontFamily", "size" : "fontSize", "color" : "color", "align" : "textAlign", "bold" : "fontWeight", "underline" : "textDecoration", "italic" : "fontStyle", "height" : "lineHeight"};
 	if(dat.family) this.css("fontFamily", dat.family);
 	if(dat.size) this.css("fontSize", dat.size+"px");
 	if(dat.color) this.css("color", "rgba("+dat.color+")");
@@ -198,7 +201,8 @@ elex.font = function(dat){
 	if(dat.bold) this.css("fontWeight", dat.bold=="true"?"bold":"normal");
 	if(dat.underline) this.css("textDecoration", dat.underline=="true"?"underline":"none");
 	if(dat.italic) this.css("fontStyle", dat.italic=="true"?"italic":"normal");
-	this.css("lineHeight", dat.height?dat.height+"px":"normal");
+	if(dat.height )this.css("lineHeight", dat.height=="auto"?"normal":dat.height+"px");
+	for(var i in defaults.font(this.addr)) if(!dat[i]) this.css(fpropscss[i], false);
 };
 elex.border = function(dat){
 	if(dat.width) this.css("borderWidth", dat.width+"px");

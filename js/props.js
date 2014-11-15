@@ -218,7 +218,7 @@ props.background = {
 				});
 			})(i);
 		}
-		sliderInit($("#bgSize"), [[0,100]],function(val){
+		sliderInit($("#bgSize"), [[0,100], false],function(val){
 			getEl(selectedAddr).set("background", "size", val=="fitted"?"contain":val);
 		}, "%");
 	},
@@ -245,11 +245,43 @@ props.background = {
 props.font = {
 	"init" : function(){
 		$("#fontColor").event("click", function(){
-			var initcolor = getEl(selectedAddr).getnorm("font", "color");
-			pickColor($("#backgroundColor").first(), initcolor, function(val){
-				getEl(selectedAddr).set("background", "color", val);
+			var initcolor = getEl(selectedAddr).getnorm("font").color;
+			pickColor($("#fontColor").first(), initcolor, function(val){
+				getEl(selectedAddr).set("font", "color", val);
 			});
 		});
+		$("#fontFamily").event("click", function(e){
+			fieldClicked($("#fontFamily"), validFont, "#fff", function(val){
+				getEl(selectedAddr).set("font", "family", val);
+			}, function(){
+				return getEl(selectedAddr).getnorm("font").family;
+			});
+		});
+		var tstyles = {"fontBold" : "bold", "fontUnderline" : "underline", "fontItalic" : "italic"};
+		for(var i in tstyles){
+			(function(i){
+				$("#"+i).event("click", function(e){
+					var prev = getEl(selectedAddr).getnorm("font")[tstyles[i]];
+					getEl(selectedAddr).showset("font", tstyles[i], prev=="true"?"false":"true");
+				});
+			})(i);
+		}
+		$("#fontAlign").event("click", function(e){
+			var aligns = ["left", "right", "center"];
+			var prev = getEl(selectedAddr).getnorm("font").align;
+			getEl(selectedAddr).showset("font", "align", aligns[(aligns.indexOf(prev)+1)%3]);
+		});
+		$("#fontClear").event("click", function(e){
+			delete getData(selectedAddr).font;
+			getEl(selectedAddr).disp("font");
+			displayProps(selectedAddr);
+		});
+		sliderInit($("#fontSize"), [1,500],function(val){
+			getEl(selectedAddr).set("font", "size", val);
+		}, "px");
+		sliderInit($("#fontLineHeight"), [[1,100]],function(val){
+			getEl(selectedAddr).set("font", "height", val);
+		}, "px");
 	},
 	"disp" : function(data){
 		$("#fontFamily").innerHTML = data.family;
@@ -275,6 +307,10 @@ props.font = {
 		"height" : "normal"
 	}
 };
+function validFont(font){
+	var validFonts = ["georgia", "palatino", "times", "arial", "helvetica", "impact", "charcoal", "tahoma", "geneva", "verdana"];
+	return validFonts.indexOf(font.toLowerCase()) != -1;
+}
 props.border = {
 	"init" : function(){
 	},
@@ -325,6 +361,7 @@ defaults.font = function(addr){
 	};
 	for(var x in def){
 		var a = addr;
+		a = a.slice(0,-1);
 		while(a.length > 0){
 			var fprop = getData(a).font||{};
 			if(fprop.hasOwnProperty(x)){
