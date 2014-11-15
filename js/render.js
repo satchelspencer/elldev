@@ -44,7 +44,7 @@ elex.getnorm = function(type, prop){
 	}else{
 		var r = {};
 		var d = dat[type]||{};
-		var def = defaults[type]();
+		var def = defaults[type](this.addr);
 		for(var i in dat[type]) r[i] = dat[type][i];
 		for(var j in def){
 			r[j] = r[j]||def[j];

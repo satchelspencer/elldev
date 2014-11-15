@@ -219,7 +219,7 @@ props.background = {
 			})(i);
 		}
 		sliderInit($("#bgSize"), [[0,100]],function(val){
-			getEl(selectedAddr).set("background", "size", val);
+			getEl(selectedAddr).set("background", "size", val=="fitted"?"contain":val);
 		}, "%");
 	},
 	"disp" : function(data){
@@ -236,14 +236,20 @@ props.background = {
 		$("#backgroundImage").css("background", !hasImg?"#474747":"url('../as"+data.image+"')");
 		$("#backgroundImage").css("backgroundSize", "cover");
 		$("#backgroundImageClear").css("display", hasImg?"block":"none");
-		var sizelefts = {"auto" : "2px", "contain" : ($("#fit").offsetLeft+2)+"px", "cover" : ($("#cover").offsetLeft+2)+"px"};
+		var sizelefts = {"auto" : "2px", "contain" : ($("#fitted").offsetLeft+2)+"px", "cover" : ($("#cover").offsetLeft+2)+"px"};
 		if(sizelefts[data.size]) $("#bgHandle").css("left", sizelefts[data.size]);
-		else $("#bgHandle").css("left", (((parseInt(data.size)/100)*($("#fit").offsetLeft-6))+6)+"px");
+		else $("#bgHandle").css("left", (((parseInt(data.size)/100)*($("#fitted").offsetLeft-6))+6)+"px");
 		$("#bgSizeValue").innerHTML = data.size=="contain"?"fitted":data.size+(sizelefts[data.size]?"":"%");
 	}
 };
 props.font = {
 	"init" : function(){
+		$("#fontColor").event("click", function(){
+			var initcolor = getEl(selectedAddr).getnorm("font", "color");
+			pickColor($("#backgroundColor").first(), initcolor, function(val){
+				getEl(selectedAddr).set("background", "color", val);
+			});
+		});
 	},
 	"disp" : function(data){
 		$("#fontFamily").innerHTML = data.family;
