@@ -208,16 +208,12 @@ elex.font = function(dat){
 	for(var i in defaults.font(this.addr)) if(!dat[i]) this.css(fpropscss[i], false);
 };
 elex.border = function(dat){
+	dat = this.getnorm("border");
 	if(dat.width) this.css("borderWidth", dat.width+"px");
 	if(dat.color) this.css("borderColor", "rgba("+dat.color+")");
 	if(dat.radius) this.css("borderRadius", dat.radius+"px");
 	if(dat.style && dat.edges){
 		for(var e in dat.edges) this.css("border"+dirs[e]+"Style", dat.edges[e]?dat.style:"none");
-	}
-	var cssCleanup = {"width" : "borderWidth", "color" : "borderColor", "radius" : "borderRadius", "style" : "borderStyle"};
-	for(var i in cssCleanup) if(!dat[i]) this.css(cssCleanup[i], false);
-	if(!dat.edges){
-		for(var d in dirs) this.css("border"+dirs[d]+"Style", false);
 	}
 }; 
 elex.content = function(content){

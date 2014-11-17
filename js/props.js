@@ -406,7 +406,7 @@ defaults.border = function(){
 		"width" : "1",
 		"style" : "none",
 		"radius" : "0",
-		"edges" : [0,0,0,0]
+		"edges" : [1,1,1,1]
 	};
 };
 function fieldClicked(field, test, vcolor, set, getRevert){
